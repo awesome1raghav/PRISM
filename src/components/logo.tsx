@@ -10,50 +10,56 @@ export default function Logo({
   isAnimated?: boolean;
 }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={cn('h-6 w-6', isAnimated && 'animate-slow-spin', className)}
+    <div
+      className={cn(
+        'h-6 w-6',
+        isAnimated && 'animate-cube-spin',
+        'transform-style-3d',
+        className
+      )}
     >
-      <path
-        d="M12 2 L2 8 L12 14 L22 8 L12 2 Z"
-        stroke="currentColor"
-        fill="currentColor"
-        fillOpacity="0.1"
-      />
-      <path
-        d="M2 8 L2 16 L12 22 L12 14 Z"
-        stroke="currentColor"
-        fill="currentColor"
-        fillOpacity="0.1"
-      />
-      <path
-        d="M22 8 L22 16 L12 22 L12 14 Z"
-        stroke="currentColor"
-        fill="currentColor"
-        fillOpacity="0.1"
-      />
-
-      <path d="M16 11 L20 9" strokeWidth="1.5" className="text-primary" />
-      <path d="M18 13 L22 11" strokeWidth="1" className="text-accent" />
+      <div className="relative h-full w-full transform-style-3d">
+        <div className="absolute h-full w-full border border-primary/50 bg-primary/10 transform-translate-z-3"></div>
+        <div className="absolute h-full w-full border border-primary/50 bg-primary/10 transform-rotate-y-90 transform-translate-z-3"></div>
+        <div className="absolute h-full w-full border border-primary/50 bg-primary/10 transform-rotate-y-180 transform-translate-z-3"></div>
+        <div className="absolute h-full w-full border border-primary/50 bg-primary/10 transform-rotate-y-270 transform-translate-z-3"></div>
+        <div className="absolute h-full w-full border border-primary/50 bg-primary/10 transform-rotate-x-90 transform-translate-z-3"></div>
+        <div className="absolute h-full w-full border border-primary/50 bg-primary/10 transform-rotate-x-270 transform-translate-z-3"></div>
+      </div>
       <style jsx>{`
-        @keyframes spin {
-          from {
-            transform: rotateY(0deg);
-          }
-          to {
-            transform: rotateY(360deg);
-          }
+        .transform-style-3d {
+          transform-style: preserve-3d;
         }
-        .animate-slow-spin {
+        .animate-cube-spin {
           animation: spin 15s linear infinite;
         }
+        @keyframes spin {
+          from {
+            transform: rotateX(0deg) rotateY(0deg);
+          }
+          to {
+            transform: rotateX(360deg) rotateY(360deg);
+          }
+        }
+        .transform-translate-z-3 {
+            transform: translateZ(12px);
+        }
+        .transform-rotate-y-90 {
+            transform: rotateY(90deg) translateZ(12px);
+        }
+        .transform-rotate-y-180 {
+            transform: rotateY(180deg) translateZ(12px);
+        }
+        .transform-rotate-y-270 {
+            transform: rotateY(-90deg) translateZ(12px);
+        }
+        .transform-rotate-x-90 {
+            transform: rotateX(90deg) translateZ(12px);
+        }
+        .transform-rotate-x-270 {
+            transform: rotateX(-90deg) translateZ(12px);
+        }
       `}</style>
-    </svg>
+    </div>
   );
 }
