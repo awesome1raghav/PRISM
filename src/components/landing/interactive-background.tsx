@@ -1,180 +1,53 @@
 'use client';
 
-import React, { useRef, useEffect, useCallback } from 'react';
-
-const PARTICLE_COUNT = 50;
-const PARTICLE_SPEED_MAX = 0.5;
-const INTERACTION_STRENGTH = 0.05;
-const INERTIA = 0.95; // Higher inertia for smoother trails
-const GLOW_BLUR = 10;
-const PARTICLE_MIN_LENGTH = 150;
-const PARTICLE_MAX_LENGTH = 350;
-const PARTICLE_THICKNESS = 1.5;
-
-const COLORS = [
-  'hsla(180, 100%, 50%, 0.3)', // Cyan
-  'hsla(160, 100%, 40%, 0.3)', // Teal
-  'hsla(140, 100%, 60%, 0.3)', // Soft Green
-];
-
-type Particle = {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  len: number;
-  color: string;
-};
+import React, { useRef, useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const InteractiveBackground: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particles = useRef<Particle[]>([]);
-  const mouse = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });
-  const animationFrameId = useRef<number>();
-  const isTabActive = useRef<boolean>(true);
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
-
-  const initParticles = useCallback((width: number, height: number) => {
-    particles.current = Array.from({ length: PARTICLE_COUNT }, () => {
-      const angle = Math.random() * 2 * Math.PI;
-      const speed = Math.random() * PARTICLE_SPEED_MAX;
-      return {
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        len: PARTICLE_MIN_LENGTH + Math.random() * (PARTICLE_MAX_LENGTH - PARTICLE_MIN_LENGTH),
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      };
-    });
-  }, []);
-
-  const animate = useCallback((canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
-    if (!isTabActive.current) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    particles.current.forEach((p) => {
-      // Apply mouse influence
-      if (mouse.current.x !== null && mouse.current.y !== null) {
-        const dx = mouse.current.x - p.x;
-        const dy = mouse.current.y - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        // Attract particles to the mouse
-        if (dist > 1) { // Avoid division by zero and extreme force at center
-            const force = (1 / (dist * 0.1)) * INTERACTION_STRENGTH;
-            p.vx += dx * force;
-            p.vy += dy * force;
-        }
-      }
-      
-      // Apply inertia (damping)
-      p.vx *= INERTIA;
-      p.vy *= INERTIA;
-
-      // Update position
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Boundary checks (wrap around)
-      if (p.x > canvas.width + p.len / 2) p.x = -p.len / 2;
-      if (p.x < -p.len / 2) p.x = canvas.width + p.len / 2;
-      if (p.y > canvas.height + p.len / 2) p.y = -p.len / 2;
-      if (p.y < -p.len / 2) p.y = canvas.height + p.len / 2;
-
-      const angle = Math.atan2(p.vy, p.vx);
-
-      // Draw particle
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(angle);
-      
-      ctx.beginPath();
-      ctx.moveTo(-p.len / 2, 0);
-      ctx.lineTo(p.len / 2, 0);
-      
-      ctx.lineWidth = PARTICLE_THICKNESS;
-      ctx.strokeStyle = p.color;
-      ctx.shadowColor = p.color;
-      ctx.shadowBlur = GLOW_BLUR;
-      ctx.stroke();
-      
-      ctx.restore();
-    });
-
-    animationFrameId.current = requestAnimationFrame(() => animate(canvas, ctx));
-  }, []);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     // This check ensures the code only runs on the client-side.
-    setIsMobile(window.innerWidth < 768);
-    const handleResizeCheck = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResizeCheck);
-    return () => window.removeEventListener('resize', handleResizeCheck);
+    const checkIsMobile = () => window.innerWidth < 768;
+    setIsMobile(checkIsMobile());
+    
+    const handleResize = () => setIsMobile(checkIsMobile());
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
     if (isMobile) return;
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      const parent = canvas.parentElement;
-      if (parent) {
-        canvas.width = parent.clientWidth;
-        canvas.height = parent.clientHeight;
-        initParticles(canvas.width, canvas.height);
-      }
-    };
-    resizeCanvas();
+    let animationFrameId: number;
 
     const handleMouseMove = (e: MouseEvent) => {
-        const rect = canvas.getBoundingClientRect();
-        mouse.current.x = e.clientX - rect.left;
-        mouse.current.y = e.clientY - rect.top;
-    };
-
-    const handleMouseLeave = () => {
-      mouse.current.x = null;
-      mouse.current.y = null;
-    }
-
-    const handleVisibilityChange = () => {
-      isTabActive.current = !document.hidden;
-      if (isTabActive.current && animationFrameId.current === undefined) {
-        animationFrameId.current = requestAnimationFrame(() => animate(canvas, ctx));
-      } else {
-        if(animationFrameId.current) {
-            cancelAnimationFrame(animationFrameId.current);
-            animationFrameId.current = undefined;
-        }
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
       }
+      animationFrameId = requestAnimationFrame(() => {
+        const x = e.clientX;
+        const y = e.clientY;
+        container.style.setProperty('--cursor-x', `${x}px`);
+        container.style.setProperty('--cursor-y', `${y}px`);
+      });
     };
 
-    window.addEventListener('resize', resizeCanvas);
-    // Listen on the window to track movement over the entire page
     window.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    animate(canvas, ctx);
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [animate, initParticles, isMobile]);
-  
+  }, [isMobile]);
+
   if (isMobile === undefined) {
     return null; // Don't render on the server
   }
@@ -186,10 +59,87 @@ const InteractiveBackground: React.FC = () => {
   }
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 -z-10 bg-background"
-    />
+    <div
+      ref={containerRef}
+      className={cn(
+        'interactive-glow-background absolute inset-0 -z-10 bg-background overflow-hidden'
+      )}
+    >
+      <div className="glow-field" />
+      {/* This creates the animated signal lines */}
+      <div className="lines">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <div key={i} className="line" />
+        ))}
+      </div>
+       <style jsx>{`
+        .interactive-glow-background {
+          --cursor-x: 50vw;
+          --cursor-y: 50vh;
+        }
+        .glow-field {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            600px circle at var(--cursor-x) var(--cursor-y),
+            hsla(180, 100%, 50%, 0.08),
+            transparent 40%
+          );
+          transition: background 0.2s ease-out;
+        }
+
+        .lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .line {
+            position: absolute;
+            width: 1.5px;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                hsl(var(--primary) / 0.2) 50%,
+                transparent 100%
+            );
+            animation: move-line 20s linear infinite;
+        }
+
+        .line:nth-child(1) { top: -50%; left: 10%; height: 200%; animation-duration: 15s; }
+        .line:nth-child(2) { top: -50%; left: 20%; height: 200%; animation-duration: 25s; }
+        .line:nth-child(3) { top: -50%; left: 30%; height: 200%; animation-duration: 18s; }
+        .line:nth-child(4) { top: -50%; left: 40%; height: 200%; animation-duration: 30s; }
+        .line:nth-child(5) { top: -50%; left: 50%; height: 200%; animation-duration: 12s; }
+        .line:nth-child(6) { top: -50%; left: 60%; height: 200%; animation-duration: 22s; }
+        .line:nth-child(7) { top: -50%; left: 70%; height: 200%; animation-duration: 17s; }
+        .line:nth-child(8) { top: -50%; left: 80%; height: 200%; animation-duration: 28s; }
+        .line:nth-child(9) { top: -50%; left: 90%; height: 200%; animation-duration: 14s; }
+        .line:nth-child(10) { top: -50%; left: 5%; height: 200%; animation-duration: 26s; }
+        .line:nth-child(11) { top: 0%; left: 0%; height: 100%; width: 100%; background: linear-gradient(to right, transparent 0%, hsl(var(--accent)/0.1) 50%, transparent 100%); animation: move-line-h 20s linear infinite; animation-delay: -10s; }
+        .line:nth-child(12) { top: 10%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 25s linear infinite; }
+        .line:nth-child(13) { top: 20%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 18s linear infinite; }
+        .line:nth-child(14) { top: 30%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 30s linear infinite; }
+        .line:nth-child(15) { top: 40%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 12s linear infinite; }
+        .line:nth-child(16) { top: 50%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 22s linear infinite; }
+        .line:nth-child(17) { top: 60%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 17s linear infinite; }
+        .line:nth-child(18) { top: 70%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 28s linear infinite; }
+        .line:nth-child(19) { top: 80%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 14s linear infinite; }
+        .line:nth-child(20) { top: 90%; left: 0%; height: 1.5px; width: 200%; animation: move-line-h 26s linear infinite; }
+
+        @keyframes move-line {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); }
+        }
+         @keyframes move-line-h {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+      `}</style>
+    </div>
   );
 };
 
