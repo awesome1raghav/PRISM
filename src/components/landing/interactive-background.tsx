@@ -3,9 +3,9 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 
 const PARTICLE_COUNT = 50;
-const PARTICLE_SPEED = 0.5;
+const PARTICLE_SPEED_MAX = 0.5;
 const INTERACTION_STRENGTH = 0.05;
-const INERTIA = 0.9;
+const INERTIA = 0.95; // Higher inertia for smoother trails
 const GLOW_BLUR = 10;
 const PARTICLE_MIN_LENGTH = 150;
 const PARTICLE_MAX_LENGTH = 350;
@@ -37,11 +37,12 @@ const InteractiveBackground: React.FC = () => {
   const initParticles = useCallback((width: number, height: number) => {
     particles.current = Array.from({ length: PARTICLE_COUNT }, () => {
       const angle = Math.random() * 2 * Math.PI;
+      const speed = Math.random() * PARTICLE_SPEED_MAX;
       return {
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: Math.cos(angle) * PARTICLE_SPEED,
-        vy: Math.sin(angle) * PARTICLE_SPEED,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
         len: PARTICLE_MIN_LENGTH + Math.random() * (PARTICLE_MAX_LENGTH - PARTICLE_MIN_LENGTH),
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
       };
@@ -58,11 +59,17 @@ const InteractiveBackground: React.FC = () => {
       if (mouse.current.x !== null && mouse.current.y !== null) {
         const dx = mouse.current.x - p.x;
         const dy = mouse.current.y - p.y;
-        p.vx += dx * INTERACTION_STRENGTH * 0.01; // Scale down for smoother effect
-        p.vy += dy * INTERACTION_STRENGTH * 0.01;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        // Attract particles to the mouse
+        if (dist > 1) { // Avoid division by zero and extreme force at center
+            const force = (1 / (dist * 0.1)) * INTERACTION_STRENGTH;
+            p.vx += dx * force;
+            p.vy += dy * force;
+        }
       }
       
-      // Apply inertia
+      // Apply inertia (damping)
       p.vx *= INERTIA;
       p.vy *= INERTIA;
 
@@ -71,10 +78,10 @@ const InteractiveBackground: React.FC = () => {
       p.y += p.vy;
 
       // Boundary checks (wrap around)
-      if (p.x > canvas.width + p.len) p.x = -p.len;
-      if (p.x < -p.len) p.x = canvas.width + p.len;
-      if (p.y > canvas.height + p.len) p.y = -p.len;
-      if (p.y < -p.len) p.y = canvas.height + p.len;
+      if (p.x > canvas.width + p.len / 2) p.x = -p.len / 2;
+      if (p.x < -p.len / 2) p.x = canvas.width + p.len / 2;
+      if (p.y > canvas.height + p.len / 2) p.y = -p.len / 2;
+      if (p.y < -p.len / 2) p.y = canvas.height + p.len / 2;
 
       const angle = Math.atan2(p.vy, p.vx);
 
@@ -100,6 +107,7 @@ const InteractiveBackground: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // This check ensures the code only runs on the client-side.
     setIsMobile(window.innerWidth < 768);
     const handleResizeCheck = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResizeCheck);
@@ -116,9 +124,12 @@ const InteractiveBackground: React.FC = () => {
     if (!ctx) return;
 
     const resizeCanvas = () => {
-      canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
-      canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
-      initParticles(canvas.width, canvas.height);
+      const parent = canvas.parentElement;
+      if (parent) {
+        canvas.width = parent.clientWidth;
+        canvas.height = parent.clientHeight;
+        initParticles(canvas.width, canvas.height);
+      }
     };
     resizeCanvas();
 
@@ -135,17 +146,19 @@ const InteractiveBackground: React.FC = () => {
 
     const handleVisibilityChange = () => {
       isTabActive.current = !document.hidden;
-      if (isTabActive.current) {
+      if (isTabActive.current && animationFrameId.current === undefined) {
         animationFrameId.current = requestAnimationFrame(() => animate(canvas, ctx));
       } else {
         if(animationFrameId.current) {
             cancelAnimationFrame(animationFrameId.current);
+            animationFrameId.current = undefined;
         }
       }
     };
 
     window.addEventListener('resize', resizeCanvas);
-    canvas.addEventListener('mousemove', handleMouseMove);
+    // Listen on the window to track movement over the entire page
+    window.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
@@ -153,7 +166,7 @@ const InteractiveBackground: React.FC = () => {
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      canvas.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (animationFrameId.current) {
@@ -163,7 +176,7 @@ const InteractiveBackground: React.FC = () => {
   }, [animate, initParticles, isMobile]);
   
   if (isMobile === undefined) {
-    return null;
+    return null; // Don't render on the server
   }
 
   if (isMobile) {
