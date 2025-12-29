@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -168,8 +168,6 @@ const features = [
 ];
 
 export default function KeyFeatures() {
-  const [selectedFeature, setSelectedFeature] = useState<(typeof features)[0] | null>(null);
-
   return (
     <section id="features" className="py-16 sm:py-24 bg-background">
       <div className="container">
@@ -182,15 +180,10 @@ export default function KeyFeatures() {
             environment.
           </p>
         </div>
-
-        <Dialog>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature) => (
-              <DialogTrigger
-                asChild
-                key={feature.id}
-                onClick={() => setSelectedFeature(feature)}
-              >
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature) => (
+            <Dialog key={feature.id}>
+              <DialogTrigger asChild>
                 <Card className="bg-card/40 border border-border/30 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 relative overflow-hidden group hover:-translate-y-1 cursor-pointer">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <CardHeader>
@@ -223,44 +216,41 @@ export default function KeyFeatures() {
                   </CardContent>
                 </Card>
               </DialogTrigger>
-            ))}
-          </div>
-
-          {selectedFeature && (
-            <DialogContent className="sm:max-w-[425px] bg-card/60 border-border/30 backdrop-blur-xl">
-               <DialogHeader>
-                <DialogTitle className="flex items-center gap-3 text-xl">
-                  {selectedFeature.icon} {selectedFeature.expanded.title}
-                </DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col gap-6 py-4">
-                {selectedFeature.expanded.sections.map((section, index) => (
-                  <div key={index} className="space-y-3">
-                    <h4 className="font-semibold text-muted-foreground">
-                      {section.title}
-                    </h4>
-                    <div className="flex flex-col gap-2">
-                      {section.items.map((item, itemIndex) => (
-                        <div
-                          key={itemIndex}
-                          className="flex items-center gap-3 text-sm"
-                        >
-                          <div className="text-primary">{item.icon}</div>
-                          <span>{item.text}</span>
-                        </div>
-                      ))}
+              <DialogContent className="sm:max-w-[425px] bg-card/60 border-border/30 backdrop-blur-xl">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-3 text-xl">
+                    {feature.icon} {feature.expanded.title}
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-6 py-4">
+                  {feature.expanded.sections.map((section, index) => (
+                    <div key={index} className="space-y-3">
+                      <h4 className="font-semibold text-muted-foreground">
+                        {section.title}
+                      </h4>
+                      <div className="flex flex-col gap-2">
+                        {section.items.map((item, itemIndex) => (
+                          <div
+                            key={itemIndex}
+                            className="flex items-center gap-3 text-sm"
+                          >
+                            <div className="text-primary">{item.icon}</div>
+                            <span>{item.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                      {index < feature.expanded.sections.length - 1 && <Separator className="mt-4 bg-border/40"/>}
                     </div>
-                    {index < selectedFeature.expanded.sections.length - 1 && <Separator className="mt-4 bg-border/40"/>}
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
                 <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                     <X className="h-4 w-4" />
                     <span className="sr-only">Close</span>
                 </DialogClose>
-            </DialogContent>
-          )}
-        </Dialog>
+              </DialogContent>
+            </Dialog>
+          ))}
+        </div>
       </div>
     </section>
   );
