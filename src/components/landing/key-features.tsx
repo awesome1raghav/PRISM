@@ -10,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog';
 import {
   Wind,
@@ -25,7 +24,6 @@ import {
   BrainCircuit,
   TrendingUp,
   Users,
-  X,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
@@ -224,29 +222,27 @@ export default function KeyFeatures() {
                 </DialogHeader>
                 <div className="flex flex-col gap-6 py-4">
                   {feature.expanded.sections.map((section, index) => (
-                    <div key={index} className="space-y-3">
-                      <h4 className="font-semibold text-muted-foreground">
-                        {section.title}
-                      </h4>
-                      <div className="flex flex-col gap-2">
-                        {section.items.map((item, itemIndex) => (
-                          <div
-                            key={itemIndex}
-                            className="flex items-center gap-3 text-sm"
-                          >
-                            <div className="text-primary">{item.icon}</div>
-                            <span>{item.text}</span>
-                          </div>
-                        ))}
+                    <React.Fragment key={index}>
+                      <div className="space-y-3">
+                        <h4 className="font-semibold text-muted-foreground">
+                          {section.title}
+                        </h4>
+                        <div className="flex flex-col gap-2">
+                          {section.items.map((item, itemIndex) => (
+                            <div
+                              key={itemIndex}
+                              className="flex items-center gap-3 text-sm"
+                            >
+                              <div className="text-primary">{item.icon}</div>
+                              <span>{item.text}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      {index < feature.expanded.sections.length - 1 && <Separator className="mt-4 bg-border/40"/>}
-                    </div>
+                      {index < feature.expanded.sections.length - 1 && <Separator className="bg-border/40"/>}
+                    </React.Fragment>
                   ))}
                 </div>
-                <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                    <X className="h-4 w-4" />
-                    <span className="sr-only">Close</span>
-                </DialogClose>
               </DialogContent>
             </Dialog>
           ))}
@@ -255,3 +251,5 @@ export default function KeyFeatures() {
     </section>
   );
 }
+
+    
