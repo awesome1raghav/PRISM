@@ -1,16 +1,15 @@
 'use client';
 
 import React, { useRef, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils';
 
-const LASER_COUNT = 30;
-const LASER_MIN_SPEED = 0.0005;
-const LASER_MAX_SPEED = 0.002;
-const LASER_MIN_LENGTH = 100;
-const LASER_MAX_LENGTH = 300;
-const LASER_THICKNESS = 1;
-const CURSOR_INFLUENCE = 0.0008;
-const INERTIA = 0.95;
+const PARTICLE_COUNT = 50;
+const PARTICLE_SPEED = 0.5;
+const INTERACTION_STRENGTH = 0.05;
+const INERTIA = 0.9;
+const GLOW_BLUR = 10;
+const PARTICLE_MIN_LENGTH = 150;
+const PARTICLE_MAX_LENGTH = 350;
+const PARTICLE_THICKNESS = 1.5;
 
 const COLORS = [
   'hsla(180, 100%, 50%, 0.3)', // Cyan
@@ -18,36 +17,33 @@ const COLORS = [
   'hsla(140, 100%, 60%, 0.3)', // Soft Green
 ];
 
-type Laser = {
+type Particle = {
   x: number;
   y: number;
   vx: number;
   vy: number;
   len: number;
   color: string;
-  angle: number;
 };
 
 const InteractiveBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const lasers = useRef<Laser[]>([]);
-  const mouse = useRef<{ x: number; y: number; vx: number; vy: number }>({ x: 0, y: 0, vx: 0, vy: 0 });
+  const particles = useRef<Particle[]>([]);
+  const mouse = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });
   const animationFrameId = useRef<number>();
   const isTabActive = useRef<boolean>(true);
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
 
-  const initLasers = useCallback((width: number, height: number) => {
-    lasers.current = Array.from({ length: LASER_COUNT }, () => {
-      const speed = LASER_MIN_SPEED + Math.random() * (LASER_MAX_SPEED - LASER_MIN_SPEED);
+  const initParticles = useCallback((width: number, height: number) => {
+    particles.current = Array.from({ length: PARTICLE_COUNT }, () => {
       const angle = Math.random() * 2 * Math.PI;
       return {
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: Math.cos(angle) * speed * width,
-        vy: Math.sin(angle) * speed * height,
-        len: LASER_MIN_LENGTH + Math.random() * (LASER_MAX_LENGTH - LASER_MIN_LENGTH),
+        vx: Math.cos(angle) * PARTICLE_SPEED,
+        vy: Math.sin(angle) * PARTICLE_SPEED,
+        len: PARTICLE_MIN_LENGTH + Math.random() * (PARTICLE_MAX_LENGTH - PARTICLE_MIN_LENGTH),
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        angle: 0,
       };
     });
   }, []);
@@ -57,47 +53,44 @@ const InteractiveBackground: React.FC = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    lasers.current.forEach((laser) => {
-      // Update mouse velocity
-      mouse.current.vx *= INERTIA;
-      mouse.current.vy *= INERTIA;
-
-      // Influence from mouse
-      const dx = mouse.current.x - laser.x;
-      const dy = mouse.current.y - laser.y;
-      const distSq = dx * dx + dy * dy;
+    particles.current.forEach((p) => {
+      // Apply mouse influence
+      if (mouse.current.x !== null && mouse.current.y !== null) {
+        const dx = mouse.current.x - p.x;
+        const dy = mouse.current.y - p.y;
+        p.vx += dx * INTERACTION_STRENGTH * 0.01; // Scale down for smoother effect
+        p.vy += dy * INTERACTION_STRENGTH * 0.01;
+      }
       
-      const influence = Math.max(0, 1 - distSq / (canvas.width * canvas.width * 0.25));
-      laser.vx += dx * CURSOR_INFLUENCE * influence;
-      laser.vy += dy * CURSOR_INFLUENCE * influence;
-      
-      laser.vx *= INERTIA;
-      laser.vy *= INERTIA;
+      // Apply inertia
+      p.vx *= INERTIA;
+      p.vy *= INERTIA;
 
-      laser.x += laser.vx;
-      laser.y += laser.vy;
+      // Update position
+      p.x += p.vx;
+      p.y += p.vy;
 
-      // Boundary checks
-      if (laser.x < -laser.len) laser.x = canvas.width + laser.len;
-      if (laser.x > canvas.width + laser.len) laser.x = -laser.len;
-      if (laser.y < -laser.len) laser.y = canvas.height + laser.len;
-      if (laser.y > canvas.height + laser.len) laser.y = -laser.len;
+      // Boundary checks (wrap around)
+      if (p.x > canvas.width + p.len) p.x = -p.len;
+      if (p.x < -p.len) p.x = canvas.width + p.len;
+      if (p.y > canvas.height + p.len) p.y = -p.len;
+      if (p.y < -p.len) p.y = canvas.height + p.len;
 
-      laser.angle = Math.atan2(laser.vy, laser.vx);
+      const angle = Math.atan2(p.vy, p.vx);
 
-      // Draw laser
+      // Draw particle
       ctx.save();
-      ctx.translate(laser.x, laser.y);
-      ctx.rotate(laser.angle);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(angle);
       
       ctx.beginPath();
-      ctx.moveTo(-laser.len / 2, 0);
-      ctx.lineTo(laser.len / 2, 0);
+      ctx.moveTo(-p.len / 2, 0);
+      ctx.lineTo(p.len / 2, 0);
       
-      ctx.lineWidth = LASER_THICKNESS;
-      ctx.strokeStyle = laser.color;
-      ctx.shadowColor = laser.color;
-      ctx.shadowBlur = 10;
+      ctx.lineWidth = PARTICLE_THICKNESS;
+      ctx.strokeStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = GLOW_BLUR;
       ctx.stroke();
       
       ctx.restore();
@@ -105,7 +98,7 @@ const InteractiveBackground: React.FC = () => {
 
     animationFrameId.current = requestAnimationFrame(() => animate(canvas, ctx));
   }, []);
-  
+
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
     const handleResizeCheck = () => setIsMobile(window.innerWidth < 768);
@@ -125,22 +118,20 @@ const InteractiveBackground: React.FC = () => {
     const resizeCanvas = () => {
       canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
       canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
-      initLasers(canvas.width, canvas.height);
+      initParticles(canvas.width, canvas.height);
     };
-
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
 
     const handleMouseMove = (e: MouseEvent) => {
         const rect = canvas.getBoundingClientRect();
-        const newX = e.clientX - rect.left;
-        const newY = e.clientY - rect.top;
-        mouse.current.vx = newX - mouse.current.x;
-        mouse.current.vy = newY - mouse.current.y;
-        mouse.current.x = newX;
-        mouse.current.y = newY;
+        mouse.current.x = e.clientX - rect.left;
+        mouse.current.y = e.clientY - rect.top;
     };
-    window.addEventListener('mousemove', handleMouseMove);
+
+    const handleMouseLeave = () => {
+      mouse.current.x = null;
+      mouse.current.y = null;
+    }
 
     const handleVisibilityChange = () => {
       isTabActive.current = !document.hidden;
@@ -152,22 +143,27 @@ const InteractiveBackground: React.FC = () => {
         }
       }
     };
+
+    window.addEventListener('resize', resizeCanvas);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     animate(canvas, ctx);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [animate, initLasers, isMobile]);
-
+  }, [animate, initParticles, isMobile]);
+  
   if (isMobile === undefined) {
-    return null; // Or a loading spinner
+    return null;
   }
 
   if (isMobile) {
