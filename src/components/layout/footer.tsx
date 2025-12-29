@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center space-x-2">
-              <Logo className="text-primary" />
+              <Logo className="text-primary" isAnimated={true} />
               <span className="text-lg font-bold">PRISM</span>
             </Link>
             <p className="text-muted-foreground">
