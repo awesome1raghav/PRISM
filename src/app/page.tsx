@@ -1,7 +1,7 @@
 import Header from '@/components/layout/header';
 import Hero from '@/components/landing/hero';
-import MetricsStrip from '@/components/landing/metrics-strip';
 import KeyFeatures from '@/components/landing/key-features';
+import MetricsStrip from '@/components/landing/metrics-strip';
 import Footer from '@/components/layout/footer';
 
 export default function Home() {
