@@ -39,12 +39,16 @@ export default function Header() {
           </ul>
         </nav>
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/report">Report Pollution</Link>
-          </Button>
-          <Button asChild size="sm">
-            <Link href="/dashboard">View Live Dashboard</Link>
-          </Button>
+          {pathname !== '/report' && (
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/report">Report Pollution</Link>
+            </Button>
+          )}
+          {pathname !== '/dashboard' && (
+            <Button asChild size="sm">
+              <Link href="/dashboard">View Live Dashboard</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

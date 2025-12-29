@@ -23,7 +23,7 @@ export default function Footer() {
              </div>
              <div className="flex gap-4">
                 <Button asChild variant="outline">
-                    <Link href="/report">Report Pollution</Link>
+                    <Link href="/report">Report an Issue</Link>
                 </Button>
                 <Button asChild>
                     <Link href="/dashboard">View Live Dashboard</Link>
