@@ -67,3 +67,20 @@
     scroll-behavior: smooth;
   }
 }
+
+@layer components {
+  .mobile-fallback {
+    background: radial-gradient(ellipse at 50% 50%, hsl(var(--background)) 0%, transparent 100%),
+                linear-gradient(135deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--accent) / 0.1) 100%);
+    animation: pulse 10s infinite alternate;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.8;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
