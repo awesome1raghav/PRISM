@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center space-x-2">
               <Logo className="text-primary" />
-              <span className="text-lg font-bold">P.R.I.S.M</span>
+              <span className="text-lg font-bold">PRISM</span>
             </Link>
             <p className="text-muted-foreground">
               Real-time intelligence for a cleaner, healthier planet.
@@ -28,7 +28,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} P.R.I.S.M Initiative. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} PRISM Initiative. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

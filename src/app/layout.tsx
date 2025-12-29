@@ -3,9 +3,9 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'P.R.I.S.M - Real-Time Pollution Intelligence',
+  title: 'PRISM - Real-Time Pollution Intelligence',
   description:
-    'P.R.I.S.M uses AI, IoT sensors, and predictive analytics to monitor pollution across air, water, and land in real time for a cleaner planet.',
+    'PRISM uses AI, IoT sensors, and predictive analytics to monitor pollution across air, water, and land in real time for a cleaner planet.',
 };
 
 export default function RootLayout({

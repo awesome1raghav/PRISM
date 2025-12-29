@@ -8,7 +8,7 @@ export default function Header() {
       <div className="container flex h-14 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <Logo className="text-primary" />
-          <span className="font-bold sm:inline-block">P.R.I.S.M</span>
+          <span className="font-bold sm:inline-block">PRISM</span>
         </Link>
         <div className="flex-1" />
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">

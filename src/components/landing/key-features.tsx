@@ -47,7 +47,8 @@ export default function KeyFeatures() {
         </div>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
-            <Card key={feature.title} className="bg-card/50 border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 relative overflow-hidden group">
+            <Card key={feature.title} className="bg-card/40 border border-border/30 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 relative overflow-hidden group hover:-translate-y-1">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <CardHeader>
                  <div className="flex items-start justify-between">
                     <div className="bg-primary/10 p-3 rounded-lg">
