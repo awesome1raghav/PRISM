@@ -34,7 +34,7 @@ const InteractiveBackground: React.FC = () => {
   const mouse = useRef<{ x: number; y: number; vx: number; vy: number }>({ x: 0, y: 0, vx: 0, vy: 0 });
   const animationFrameId = useRef<number>();
   const isTabActive = useRef<boolean>(true);
-  const isMobile = useRef<boolean>(false);
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
 
   const initLasers = useCallback((width: number, height: number) => {
     lasers.current = Array.from({ length: LASER_COUNT }, () => {
@@ -105,11 +105,16 @@ const InteractiveBackground: React.FC = () => {
 
     animationFrameId.current = requestAnimationFrame(() => animate(canvas, ctx));
   }, []);
+  
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResizeCheck = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResizeCheck);
+    return () => window.removeEventListener('resize', handleResizeCheck);
+  }, []);
 
   useEffect(() => {
-    isMobile.current = window.innerWidth < 768;
-
-    if (isMobile.current) return;
+    if (isMobile) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -118,8 +123,8 @@ const InteractiveBackground: React.FC = () => {
     if (!ctx) return;
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
+      canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
       initLasers(canvas.width, canvas.height);
     };
 
@@ -141,6 +146,10 @@ const InteractiveBackground: React.FC = () => {
       isTabActive.current = !document.hidden;
       if (isTabActive.current) {
         animationFrameId.current = requestAnimationFrame(() => animate(canvas, ctx));
+      } else {
+        if(animationFrameId.current) {
+            cancelAnimationFrame(animationFrameId.current);
+        }
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -155,9 +164,13 @@ const InteractiveBackground: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [animate, initLasers]);
+  }, [animate, initLasers, isMobile]);
 
-  if (isMobile.current) {
+  if (isMobile === undefined) {
+    return null; // Or a loading spinner
+  }
+
+  if (isMobile) {
     return (
         <div className="absolute inset-0 -z-10 bg-background mobile-fallback" />
     );
