@@ -12,8 +12,12 @@ export default function Header() {
         </Link>
         <div className="flex-1" />
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
-          <Button variant="outline" size="sm">Report Pollution</Button>
-          <Button size="sm">View Live Dashboard</Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href="#">Report Pollution</Link>
+          </Button>
+          <Button asChild size="sm">
+            <Link href="#">View Live Dashboard</Link>
+          </Button>
         </div>
       </div>
     </header>
