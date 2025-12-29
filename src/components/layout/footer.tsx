@@ -22,8 +22,12 @@ export default function Footer() {
                 <p className="text-muted-foreground">Join us in the mission for environmental transparency.</p>
              </div>
              <div className="flex gap-4">
-                <Button variant="outline">Report Pollution</Button>
-                <Button>View Live Dashboard</Button>
+                <Button asChild variant="outline">
+                    <Link href="/report">Report Pollution</Link>
+                </Button>
+                <Button asChild>
+                    <Link href="/dashboard">View Live Dashboard</Link>
+                </Button>
             </div>
           </div>
         </div>

@@ -20,14 +20,14 @@ export default function Hero() {
             Environmental Intelligence, Refracted in Real Time.
           </h1>
           <p className="mt-6 text-lg text-muted-foreground sm:text-xl max-w-3xl mx-auto">
-            PRISM transforms raw environmental data into clear, actionable insight.
+            Transforming environmental data into clarity and action.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Button asChild size="lg">
-              <Link href="#">View Live Dashboard</Link>
+              <Link href="/dashboard">View Live Dashboard</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <Link href="#">Report Pollution</Link>
+              <Link href="/report">Report Pollution</Link>
             </Button>
           </div>
         </div>

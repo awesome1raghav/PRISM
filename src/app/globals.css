@@ -10,14 +10,14 @@
     --card-foreground: 210 40% 98%;
     --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 173 95% 42%;
-    --primary-foreground: 173 95% 10%;
+    --primary: 94 89% 51%;
+    --primary-foreground: 94 89% 10%;
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217 33% 17%;
     --muted-foreground: 215 28% 65%;
-    --accent: 142 71% 45%;
-    --accent-foreground: 142 71% 15%;
+    --accent: 173 95% 42%;
+    --accent-foreground: 173 95% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 217 33% 22%;
@@ -29,6 +29,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --font-sans: 'Inter', sans-serif;
   }
   .dark {
     --background: 224 71% 4%;
@@ -37,14 +38,14 @@
     --card-foreground: 210 40% 98%;
     --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 173 95% 42%;
-    --primary-foreground: 173 95% 10%;
+    --primary: 94 89% 51%;
+    --primary-foreground: 94 89% 10%;
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217 33% 17%;
     --muted-foreground: 215 28% 65%;
-    --accent: 142 71% 45%;
-    --accent-foreground: 142 71% 15%;
+    --accent: 173 95% 42%;
+    --accent-foreground: 173 95% 15%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 217 33% 22%;
@@ -65,26 +66,5 @@
   body {
     @apply bg-background text-foreground;
     scroll-behavior: smooth;
-  }
-}
-
-@layer utilities {
-  .gradient-line {
-    position: relative;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, theme('colors.primary.DEFAULT'), theme('colors.accent.DEFAULT'));
-    animation: pulse-line 2s infinite alternate;
-  }
-
-  @keyframes pulse-line {
-    0% {
-      opacity: 0.6;
-      transform: scaleX(0.8);
-    }
-    100% {
-      opacity: 1;
-      transform: scaleX(1);
-    }
   }
 }
