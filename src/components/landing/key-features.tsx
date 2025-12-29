@@ -1,25 +1,34 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Wind, Droplets, Leaf, AlertTriangle } from 'lucide-react';
 
 const features = [
   {
     icon: <Wind className="h-8 w-8 text-primary" />,
     title: 'Air Monitoring',
-    description: 'Track air quality with real-time data on pollutants like PM2.5, NO2, and Ozone.',
+    details: 'PM2.5 · NO₂ · O₃',
+    badge: 'Live',
+    description: 'Track air quality with real-time data on key pollutants for immediate insights.',
   },
   {
     icon: <Droplets className="h-8 w-8 text-primary" />,
     title: 'Water Monitoring',
-    description: 'Monitor water bodies for contaminants, pH levels, and turbidity to ensure public safety.',
+    details: 'pH · Turbidity · Contaminants',
+    badge: '24x7',
+    description: 'Continuously monitor water bodies for contaminants to ensure public safety.',
   },
   {
     icon: <Leaf className="h-8 w-8 text-primary" />,
     title: 'Land Monitoring',
-    description: 'Assess soil health and detect land pollution through satellite imagery and sensor data.',
+    details: 'Soil Health · Contamination',
+    badge: '24x7',
+    description: 'Assess soil health and detect land pollution using sensor and satellite data.',
   },
   {
     icon: <AlertTriangle className="h-8 w-8 text-primary" />,
     title: 'Predictive Alerts',
+    details: 'Event Forecasting',
+    badge: 'Predictive',
     description: 'Receive AI-powered alerts on potential pollution events before they become critical.',
   },
 ];
@@ -38,13 +47,19 @@ export default function KeyFeatures() {
         </div>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
-            <Card key={feature.title} className="bg-card/50 border-border/50 hover:border-primary/50 transition-colors duration-300 hover:shadow-lg hover:shadow-primary/10">
+            <Card key={feature.title} className="bg-card/50 border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 relative overflow-hidden group">
               <CardHeader>
-                <div className="flex items-center gap-4">
-                  <div className="bg-primary/10 p-3 rounded-lg">
-                    {feature.icon}
-                  </div>
-                  <CardTitle>{feature.title}</CardTitle>
+                 <div className="flex items-start justify-between">
+                    <div className="bg-primary/10 p-3 rounded-lg">
+                        {feature.icon}
+                    </div>
+                    <Badge variant={feature.badge === 'Predictive' ? 'default' : 'secondary'} className="absolute top-4 right-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                        {feature.badge}
+                    </Badge>
+                </div>
+                <div className="pt-2">
+                    <CardTitle>{feature.title}</CardTitle>
+                    <p className="text-xs text-muted-foreground pt-1">{feature.details}</p>
                 </div>
               </CardHeader>
               <CardContent>
