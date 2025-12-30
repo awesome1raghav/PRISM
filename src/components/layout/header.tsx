@@ -61,7 +61,7 @@ export default function Header() {
         </nav>
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
           <Button asChild className="group">
-            <Link href="/citizen">
+            <Link href="/dashboard">
               Access PRISM <MoveRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>
