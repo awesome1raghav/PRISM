@@ -13,7 +13,7 @@ export function Prism() {
   return (
     <div
       className={cn(
-        'absolute inset-0 z-0 flex items-center justify-center opacity-20 perspective-[1000px] pointer-events-none'
+        'absolute inset-0 z-0 flex items-center justify-center opacity-30 perspective-[1000px] pointer-events-none'
       )}
     >
       <div
@@ -25,7 +25,7 @@ export function Prism() {
         <div className="absolute w-full h-full transform-style-3d">
           {/* Base */}
           <div
-            className="absolute top-0 left-0 w-full h-full border-b-[100px] border-b-primary/30 border-l-[60px] border-l-transparent border-r-[60px] border-r-transparent opacity-80"
+            className="absolute top-0 left-0 w-full h-full border-b-[100px] border-b-primary/40 border-l-[60px] border-l-transparent border-r-[60px] border-r-transparent opacity-80"
             style={{
               transform: 'rotateX(-90deg) translateZ(50px)',
             }}
@@ -33,7 +33,7 @@ export function Prism() {
 
           {/* Side 1 */}
           <div
-            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/10 to-accent/20 opacity-50"
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/20 to-accent/30 opacity-60"
             style={{
               transform: 'rotateY(0deg) translateZ(58px)',
               clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
@@ -46,7 +46,7 @@ export function Prism() {
 
           {/* Side 2 */}
           <div
-            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/10 to-accent/20 opacity-50"
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/20 to-accent/30 opacity-60"
             style={{
               transform: 'rotateY(120deg) translateZ(58px)',
               clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
@@ -59,7 +59,7 @@ export function Prism() {
 
           {/* Side 3 */}
           <div
-            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/10 to-accent/20 opacity-50"
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/20 to-accent/30 opacity-60"
             style={{
               transform: 'rotateY(240deg) translateZ(58px)',
               clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
