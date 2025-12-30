@@ -7,11 +7,10 @@ const InteractiveBackground: React.FC = () => {
   return (
     <div
       className={cn(
-        'absolute inset-0 z-0 overflow-hidden bg-[#0a0f18] isolate'
+        'absolute inset-0 z-0 overflow-hidden bg-[#0a0f18] isolate noise-background'
       )}
     >
       <div className="background-gradient" />
-      <div className="background-noise" />
       <div className="background-vignette" />
 
       <style jsx>{`
@@ -25,39 +24,29 @@ const InteractiveBackground: React.FC = () => {
           width: 100%;
           height: 100%;
           background: radial-gradient(
-            circle at 50% 50%,
-            #003049,
-            #021b2b,
+            ellipse 80% 50% at 50% 120%,
+            hsl(195, 100%, 9%),
+            hsl(210, 30%, 15%),
             #0a0f18 70%
           );
-          animation: drift 25s infinite alternate ease-in-out;
-        }
-        
-        .background-noise {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#noise)"/></svg>');
-          background-repeat: repeat;
-          opacity: 0.02;
-          pointer-events: none;
+          animation: drift 30s infinite alternate ease-in-out;
+          will-change: transform;
         }
 
         .background-vignette {
           position: absolute;
           inset: 0;
-          background: radial-gradient(ellipse at center, transparent 60%, black 100%);
-          opacity: 0.5;
+          background: radial-gradient(ellipse at center, transparent 65%, black 100%);
+          opacity: 0.7;
           pointer-events: none;
         }
 
         @keyframes drift {
           0% {
-            transform: scale(1.2) translate(-2%, -2%);
+            transform: scale(1.3) translate(-3%, 3%);
           }
           100% {
-            transform: scale(1.2) translate(2%, 2%);
+            transform: scale(1.3) translate(3%, -3%);
           }
         }
       `}</style>
