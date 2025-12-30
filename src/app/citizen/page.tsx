@@ -36,31 +36,31 @@ export default function CitizenPage() {
             </div>
             
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto text-center">
-              <Card className="bg-green-500/10 border-green-500/30">
+              <Card className="bg-card/40 border-border/30 border-l-4 border-l-green-500">
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-center gap-2 text-green-300"><Wind />Air Quality</CardTitle>
-                  <p className="text-3xl font-bold text-green-200">Good</p>
+                  <CardTitle className="flex items-center justify-center gap-2 text-foreground"><Wind className="text-green-500" />Air Quality</CardTitle>
+                  <p className="text-3xl font-bold text-green-600">Good</p>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-green-400/80">Great for outdoor activities!</p>
+                  <p className="text-sm text-muted-foreground">Great for outdoor activities!</p>
                 </CardContent>
               </Card>
-               <Card className="bg-green-500/10 border-green-500/30">
+               <Card className="bg-card/40 border-border/30 border-l-4 border-l-green-500">
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-center gap-2 text-green-300"><Droplets />Water Quality</CardTitle>
-                   <p className="text-3xl font-bold text-green-200">Safe</p>
+                  <CardTitle className="flex items-center justify-center gap-2 text-foreground"><Droplets className="text-green-500" />Water Quality</CardTitle>
+                   <p className="text-3xl font-bold text-green-600">Safe</p>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-green-400/80">Tap water is safe for consumption.</p>
+                  <p className="text-sm text-muted-foreground">Tap water is safe for consumption.</p>
                 </CardContent>
               </Card>
-               <Card className="bg-yellow-500/10 border-yellow-500/30">
+               <Card className="bg-card/40 border-border/30 border-l-4 border-l-yellow-500">
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-center gap-2 text-yellow-300"><Waves />Noise Level</CardTitle>
-                   <p className="text-3xl font-bold text-yellow-200">Moderate</p>
+                  <CardTitle className="flex items-center justify-center gap-2 text-foreground"><Waves className="text-yellow-500" />Noise Level</CardTitle>
+                   <p className="text-3xl font-bold text-yellow-600">Moderate</p>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-yellow-400/80">Minor traffic noise expected.</p>
+                  <p className="text-sm text-muted-foreground">Minor traffic noise expected.</p>
                 </CardContent>
               </Card>
             </div>
@@ -69,20 +69,20 @@ export default function CitizenPage() {
           <section>
             <h2 className="text-2xl font-bold mb-6 text-center">Health Advisory</h2>
              <div className="grid gap-4 md:grid-cols-2 max-w-4xl mx-auto">
-                <Card className="bg-yellow-500/10 border-yellow-500/30">
+                <Card className="bg-card/40 border-border/30">
                     <CardContent className="p-6 flex items-center gap-4">
-                        <AlertTriangle className="h-8 w-8 text-yellow-400 shrink-0" />
+                        <AlertTriangle className="h-8 w-8 text-yellow-500 shrink-0" />
                         <div>
-                            <h3 className="font-semibold text-yellow-300">Moderate PM2.5 Levels</h3>
-                            <p className="text-sm text-yellow-400/80">Sensitive groups (children, elderly) should limit prolonged outdoor exertion.</p>
+                            <h3 className="font-semibold text-foreground">Moderate PM2.5 Levels</h3>
+                            <p className="text-sm text-muted-foreground">Sensitive groups (children, elderly) should limit prolonged outdoor exertion.</p>
                         </div>
                     </CardContent>
                 </Card>
-                 <Card className="bg-secondary/40">
+                 <Card className="bg-card/40 border-border/30">
                     <CardContent className="p-6 flex items-center gap-4">
                         <CheckCircle className="h-8 w-8 text-muted-foreground shrink-0" />
                         <div>
-                            <h3 className="font-semibold">No Critical Alerts</h3>
+                            <h3 className="font-semibold text-foreground">No Critical Alerts</h3>
                             <p className="text-sm text-muted-foreground">No immediate severe risks detected in your area.</p>
                         </div>
                     </CardContent>
