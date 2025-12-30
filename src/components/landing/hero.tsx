@@ -3,20 +3,21 @@ import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="relative w-full flex items-center justify-center pt-32 pb-40 overflow-hidden border-b">
+    <section className="relative w-full flex items-center justify-center pt-32 pb-40 overflow-hidden border-b border-border/20">
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background z-0"></div>
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-foreground">
         <div className="container max-w-5xl">
-          <h1 className="text-6xl font-extrabold tracking-tight sm:text-7xl md:text-8xl text-slate-800">
+          <h1 className="text-6xl font-extrabold tracking-tight sm:text-7xl md:text-8xl text-foreground">
             PRISM
           </h1>
-          <p className="mt-4 text-xl font-semibold text-slate-600 sm:text-2xl max-w-3xl mx-auto">
+          <p className="mt-4 text-xl font-semibold text-muted-foreground sm:text-2xl max-w-3xl mx-auto">
             Pollution Reporting & Intelligent Surveillance Mechanism
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="bg-slate-800 text-white hover:bg-slate-700 shadow-lg">
+            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20">
               <Link href="/dashboard">View Live Dashboard</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-slate-700 border-slate-400 hover:bg-slate-100 hover:text-slate-800">
+            <Button asChild size="lg" variant="outline" className="text-foreground border-border hover:bg-accent hover:text-accent-foreground">
               <Link href="/report">Report an Issue</Link>
             </Button>
           </div>

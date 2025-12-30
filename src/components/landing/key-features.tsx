@@ -29,7 +29,7 @@ import { Separator } from '@/components/ui/separator';
 const features = [
   {
     id: 'air',
-    icon: <Wind className="h-8 w-8 text-sky-500" />,
+    icon: <Wind className="h-8 w-8 text-sky-400" />,
     title: 'Air Monitoring',
     details: 'PM2.5 · NO₂ · O₃',
     badge: 'Live',
@@ -68,7 +68,7 @@ const features = [
   },
   {
     id: 'water',
-    icon: <Droplets className="h-8 w-8 text-blue-500" />,
+    icon: <Droplets className="h-8 w-8 text-blue-400" />,
     title: 'Water Monitoring',
     details: 'pH · Turbidity · Contaminants',
     badge: '24x7',
@@ -104,7 +104,7 @@ const features = [
   },
   {
     id: 'land',
-    icon: <Leaf className="h-8 w-8 text-green-500" />,
+    icon: <Leaf className="h-8 w-8 text-green-400" />,
     title: 'Land Monitoring',
     details: 'Soil Health · Contamination',
     badge: '24x7',
@@ -136,7 +136,7 @@ const features = [
   },
   {
     id: 'alerts',
-    icon: <AlertTriangle className="h-8 w-8 text-yellow-500" />,
+    icon: <AlertTriangle className="h-8 w-8 text-yellow-400" />,
     title: 'Predictive Alerts',
     details: 'Event Forecasting',
     badge: 'AI-Powered',
@@ -169,10 +169,10 @@ export default function KeyFeatures() {
     <section id="features" className="py-16 sm:py-24 bg-transparent">
       <div className="container">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-slate-800">
+          <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-foreground">
             A New Standard in Environmental Intelligence
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-slate-600">
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
             Our platform provides a comprehensive, real-time view of your environment, making complex data simple and actionable.
           </p>
         </div>
@@ -180,10 +180,10 @@ export default function KeyFeatures() {
           {features.map((feature) => (
             <Dialog key={feature.id}>
               <DialogTrigger asChild>
-                <Card className="glassmorphism-card transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer group">
+                <Card className="glassmorphism-card transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer group hover:shadow-primary/20 hover:border-primary/30">
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="bg-white/80 p-3 rounded-lg shadow-inner">
+                      <div className="bg-background/80 p-3 rounded-lg shadow-inner">
                         {feature.icon}
                       </div>
                       <Badge
@@ -199,13 +199,13 @@ export default function KeyFeatures() {
                     </div>
                     <div className="pt-4">
                       <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
-                      <p className="text-xs text-slate-500 pt-1 font-medium tracking-wider">
+                      <p className="text-xs text-muted-foreground pt-1 font-medium tracking-wider">
                         {feature.details}
                       </p>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-slate-600">
+                    <p className="text-muted-foreground">
                       {feature.description}
                     </p>
                   </CardContent>
@@ -221,7 +221,7 @@ export default function KeyFeatures() {
                   {feature.expanded.sections.map((section, index) => (
                     <React.Fragment key={index}>
                       <div className="space-y-3">
-                        <h4 className="font-semibold text-slate-500">
+                        <h4 className="font-semibold text-muted-foreground">
                           {section.title}
                         </h4>
                         <div className="flex flex-col gap-2">
@@ -231,12 +231,12 @@ export default function KeyFeatures() {
                               className="flex items-center gap-3 text-sm"
                             >
                               <div className="text-primary">{item.icon}</div>
-                              <span className="text-slate-700 font-medium">{item.text}</span>
+                              <span className="text-foreground font-medium">{item.text}</span>
                             </div>
                           ))}
                         </div>
                       </div>
-                      {index < feature.expanded.sections.length - 1 && <Separator className="bg-slate-200/60"/>}
+                      {index < feature.expanded.sections.length - 1 && <Separator className="bg-border/60"/>}
                     </React.Fragment>
                   ))}
                 </div>
