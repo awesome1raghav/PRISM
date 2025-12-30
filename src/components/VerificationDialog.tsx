@@ -14,7 +14,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Landmark, Building, ShieldAlert, KeyRound, CheckCircle, Info } from 'lucide-react';
+import { User, Landmark, Building, ShieldAlert, KeyRound, CheckCircle, Info, PieChart, Clock, AlertOctagon } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 type Role = 'government' | 'company' | 'citizen' | null;
 
@@ -37,6 +38,8 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
         setOtp('');
         setIsVerifying(false);
       }, 300); // Wait for dialog close animation
+    } else {
+        setStep(1);
     }
   }, [role]);
 
@@ -52,7 +55,12 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
     setIsVerifying(true);
     setTimeout(() => {
       setIsVerifying(false);
-      setStep(3); // Success step
+      // For government and company, go to the responsibility gate
+      if (role === 'government' || role === 'company') {
+        setStep(4);
+      } else {
+        setStep(3); // Success step for citizens
+      }
     }, 1500);
   };
   
@@ -66,6 +74,7 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
     if (!role) return null;
 
     if (step === 3) {
+      // Citizen Success Screen
       return (
         <div className="text-center p-8">
             <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
@@ -76,6 +85,81 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
       )
     }
 
+    if (step === 4) {
+      // Responsibility Gate for Government & Company
+      if (role === 'government') {
+        return (
+          <>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-3 text-2xl">
+                <Landmark className="h-6 w-6 text-primary" /> Government Responsibility Overview
+              </DialogTitle>
+              <DialogDescription>
+                You are responsible for monitoring, verifying, and acting on environmental risks in your assigned jurisdiction.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-4 py-4 text-center">
+                <Card className="bg-muted/40">
+                    <CardHeader><CardTitle>Bengaluru Urban</CardTitle></CardHeader>
+                    <CardContent><p className="text-sm text-muted-foreground">Assigned Jurisdiction</p></CardContent>
+                </Card>
+                <Card className="bg-muted/40">
+                    <CardHeader><CardTitle className="text-red-500">18</CardTitle></CardHeader>
+                    <CardContent><p className="text-sm text-muted-foreground">Active Pollution Issues</p></CardContent>
+                </Card>
+                <Card className="bg-muted/40">
+                    <CardHeader><CardTitle className="text-yellow-500">42h</CardTitle></CardHeader>
+                    <CardContent><p className="text-sm text-muted-foreground">Avg. Response Time</p></CardContent>
+                </Card>
+                 <Card className="bg-muted/40">
+                    <CardHeader><CardTitle>112</CardTitle></CardHeader>
+                    <CardContent><p className="text-sm text-muted-foreground">Unresolved Reports</p></CardContent>
+                </Card>
+            </div>
+            <DialogFooter>
+                <Button onClick={handleRedirect} className="w-full">Confirm Responsibility & Enter</Button>
+            </DialogFooter>
+          </>
+        )
+      }
+      if (role === 'company') {
+        return (
+           <>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-3 text-2xl">
+                <Building className="h-6 w-6 text-primary" /> Company Impact Overview
+              </DialogTitle>
+              <DialogDescription>
+               Your operations are monitored for environmental compliance and transparency.
+              </DialogDescription>
+            </DialogHeader>
+             <div className="grid grid-cols-2 gap-4 py-4 text-center">
+                <Card className="bg-muted/40">
+                    <CardHeader><CardTitle>Whitefield Industrial</CardTitle></CardHeader>
+                    <CardContent><p className="text-sm text-muted-foreground">Area of Impact</p></CardContent>
+                </Card>
+                <Card className="bg-muted/40">
+                    <CardHeader><CardTitle className="text-yellow-500">Moderate</CardTitle></CardHeader>
+                    <CardContent><p className="text-sm text-muted-foreground">Compliance Risk</p></CardContent>
+                </Card>
+                <Card className="bg-muted/40">
+                    <CardHeader><CardTitle className="text-red-500">3</CardTitle></CardHeader>
+                    <CardContent><p className="text-sm text-muted-foreground">Active Notices</p></CardContent>
+                </Card>
+                 <Card className="bg-muted/40">
+                    <CardHeader><CardTitle>1</CardTitle></CardHeader>
+                    <CardContent><p className="text-sm text-muted-foreground">AI Recommendations</p></CardContent>
+                </Card>
+            </div>
+            <DialogFooter>
+                <Button onClick={handleRedirect} className="w-full">Acknowledge & Enter</Button>
+            </DialogFooter>
+          </>
+        )
+      }
+    }
+
+
     const configs = {
       citizen: {
         title: 'Citizen Verification',
@@ -84,7 +168,6 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
         inputLabel: 'Aadhaar Number',
         inputPlaceholder: 'XXXX XXXX XXXX',
         privacyNote: 'Your Aadhaar is used only for verification and is not stored or shared.',
-        href: '/citizen'
       },
       government: {
         title: 'Government Access Verification',
@@ -93,7 +176,6 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
         inputLabel: 'Government / Department ID',
         inputPlaceholder: 'Enter your official ID',
         privacyNote: 'Access is monitored and audited for security purposes.',
-        href: '/dashboard'
       },
       company: {
         title: 'Company Verification',
@@ -102,7 +184,6 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
         inputLabel: 'GSTIN',
         inputPlaceholder: 'Enter your company GSTIN',
         privacyNote: 'Company access is monitored for compliance and transparency.',
-        href: '/company'
       },
     };
 
@@ -168,3 +249,5 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
 };
 
 export default VerificationDialog;
+
+    
