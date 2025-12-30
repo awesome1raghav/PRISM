@@ -13,54 +13,53 @@ import {
 import {
   Wind,
   Droplets,
-  Leaf,
   AlertTriangle,
-  Rss,
-  Satellite,
   Clock,
   AreaChart,
   ShieldCheck,
   BrainCircuit,
   TrendingUp,
   Users,
+  Waves,
+  Shield,
+  Rss,
+  CheckCircle,
+  XCircle,
+  MinusCircle,
+  Signal,
+  Sigma,
+  CalendarClock
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+
 
 const features = [
   {
     id: 'air',
-    icon: <Wind className="h-8 w-8 text-sky-400" />,
-    title: 'Air Monitoring',
-    details: 'PM2.5 · NO₂ · O₃',
-    badge: 'Live',
-    description:
-      'Track air quality with real-time data on key pollutants for immediate insights.',
-    expanded: {
-      title: 'Air Monitoring Intelligence',
+    category: 'Air Quality',
+    icon: <Wind className="h-6 w-6 text-sky-400" />,
+    status: 'Good',
+    statusColor: 'text-status-green',
+    statusIcon: <CheckCircle className="h-5 w-5" />,
+    metric: 'AQI 32',
+    recommendation: 'Ideal for outdoor activities.',
+    details: {
+      title: 'Live Air Quality Report',
       sections: [
         {
-          title: 'What PRISM Analyzes',
+          title: 'Pollutant Levels',
           items: [
-            { icon: <AreaChart className="h-4 w-4" />, text: 'PM2.5' },
-            { icon: <AreaChart className="h-4 w-4" />, text: 'PM10' },
-            { icon: <AreaChart className="h-4 w-4" />, text: 'NO₂' },
-            { icon: <AreaChart className="h-4 w-4" />, text: 'O₃' },
+            { icon: <Sigma className="h-4 w-4" />, text: 'PM2.5: 12 μg/m³' },
+            { icon: <Sigma className="h-4 w-4" />, text: 'O₃: 45 ppb' },
           ],
         },
         {
-          title: 'Data Sources',
+          title: 'Trust Indicators',
           items: [
-            { icon: <Rss className="h-4 w-4" />, text: 'IoT Sensors' },
-            { icon: <Satellite className="h-4 w-4" />, text: 'Satellite Feeds' },
-          ],
-        },
-        {
-          title: 'Update Frequency',
-          items: [
-            {
-              icon: <Clock className="h-4 w-4" />,
-              text: 'Real-time (every few seconds)',
-            },
+            { icon: <Rss className="h-4 w-4" />, text: 'Source: IoT Sensor Network' },
+            { icon: <ShieldCheck className="h-4 w-4" />, text: 'Confidence: High' },
+            { icon: <Clock className="h-4 w-4" />, text: 'Verified: 2 mins ago' },
           ],
         },
       ],
@@ -68,67 +67,59 @@ const features = [
   },
   {
     id: 'water',
-    icon: <Droplets className="h-8 w-8 text-blue-400" />,
-    title: 'Water Monitoring',
-    details: 'pH · Turbidity · Contaminants',
-    badge: '24x7',
-    description:
-      'Continuously monitor water bodies for contaminants to ensure public safety.',
-    expanded: {
-      title: 'Water Monitoring Intelligence',
+    category: 'Water Safety',
+    icon: <Droplets className="h-6 w-6 text-blue-400" />,
+    status: 'Warning',
+    statusColor: 'text-status-yellow',
+    statusIcon: <AlertTriangle className="h-5 w-5" />,
+    metric: 'High Turbidity',
+    recommendation: 'Boil tap water before use.',
+    details: {
+      title: 'Water Safety Advisory',
       sections: [
         {
-          title: 'What PRISM Analyzes',
+          title: 'Key Risk Factors',
           items: [
-            { icon: <AreaChart className="h-4 w-4" />, text: 'pH Levels' },
-            { icon: <AreaChart className="h-4 w-4" />, text: 'Turbidity' },
-            {
-              icon: <AreaChart className="h-4 w-4" />,
-              text: 'Chemical Contaminants',
-            },
+            { icon: <AreaChart className="h-4 w-4" />, text: 'Turbidity: 8.2 NTU (Elevated)' },
+            { icon: <AreaChart className="h-4 w-4" />, text: 'pH Level: 7.1 (Normal)' },
           ],
         },
-        {
-          title: 'Risk Levels',
+         {
+          title: 'Trust Indicators',
           items: [
-            { icon: <ShieldCheck className="h-4 w-4 text-green-500" />, text: 'Safe' },
-            {
-              icon: <ShieldCheck className="h-4 w-4 text-yellow-500" />,
-              text: 'Moderate',
-            },
-            { icon: <ShieldCheck className="h-4 w-4 text-red-500" />, text: 'Critical' },
+            { icon: <Rss className="h-4 w-4" />, text: 'Source: River Probe' },
+            { icon: <ShieldCheck className="h-4 w-4" />, text: 'Confidence: High' },
+            { icon: <Clock className="h-4 w-4" />, text: 'Verified: 15 mins ago' },
           ],
         },
       ],
     },
   },
   {
-    id: 'land',
-    icon: <Leaf className="h-8 w-8 text-green-400" />,
-    title: 'Land Monitoring',
-    details: 'Soil Health · Contamination',
-    badge: '24x7',
-    description:
-      'Assess soil health and detect land pollution using sensor and satellite data.',
-    expanded: {
-      title: 'Land Monitoring Intelligence',
+    id: 'noise',
+    category: 'Noise Pollution',
+    icon: <Waves className="h-6 w-6 text-orange-400" />,
+    status: 'Moderate',
+    statusColor: 'text-status-yellow',
+    statusIcon: <MinusCircle className="h-5 w-5" />,
+    metric: '68 dB Avg.',
+    recommendation: 'Exceeds residential night limits.',
+    details: {
+      title: 'Noise Pollution Analysis',
       sections: [
         {
-          title: 'What PRISM Analyzes',
+          title: 'Impact Assessment',
           items: [
-            { icon: <AreaChart className="h-4 w-4" />, text: 'Soil Health Index' },
-            {
-              icon: <AreaChart className="h-4 w-4" />,
-              text: 'Contamination Levels',
-            },
-            { icon: <AreaChart className="h-4 w-4" />, text: 'Land-Use Change' },
+            { icon: <AreaChart className="h-4 w-4" />, text: 'Potential for sleep disturbance.' },
+            { icon: <AreaChart className="h-4 w-4" />, text: 'Source: Traffic & Construction' },
           ],
         },
         {
-          title: 'Data Sources',
+          title: 'Trust Indicators',
           items: [
-            { icon: <Satellite className="h-4 w-4" />, text: 'Geospatial Imaging' },
-            { icon: <Rss className="h-4 w-4" />, text: 'On-Ground Sensors' },
+            { icon: <Users className="h-4 w-4" />, text: 'Source: Citizen Reports & Sensors' },
+            { icon: <Shield className="h-4 w-4" />, text: 'Confidence: Medium' },
+            { icon: <Clock className="h-4 w-4" />, text: 'Verified: 45 mins ago' },
           ],
         },
       ],
@@ -136,33 +127,36 @@ const features = [
   },
   {
     id: 'alerts',
-    icon: <AlertTriangle className="h-8 w-8 text-yellow-400" />,
-    title: 'Predictive Alerts',
-    details: 'Event Forecasting',
-    badge: 'AI-Powered',
-    description:
-      'Receive AI-powered alerts on potential pollution events before they become critical.',
-    expanded: {
-      title: 'Predictive Alert System',
+    category: 'Predictive Alert',
+    icon: <BrainCircuit className="h-6 w-6 text-purple-400" />,
+    status: 'High Risk',
+    statusColor: 'text-status-red',
+    statusIcon: <XCircle className="h-5 w-5" />,
+    metric: 'Air Quality Drop',
+    recommendation: 'High PM2.5 levels expected.',
+    details: {
+      title: 'Predictive Alert Details',
       sections: [
         {
-          title: 'Primary Inputs',
+          title: 'Forecast',
           items: [
-            { icon: <TrendingUp className="h-4 w-4" />, text: 'Historical Trends' },
-            { icon: <Users className="h-4 w-4" />, text: 'Community Signals' },
+            { icon: <TrendingUp className="h-4 w-4" />, text: 'Event: Industrial Effluent Drift' },
+            { icon: <CalendarClock className="h-4 w-4" />, text: 'Time Window: Next 6 Hours' },
           ],
         },
         {
-          title: 'System Outputs',
+          title: 'System Inputs',
           items: [
-            { icon: <BrainCircuit className="h-4 w-4" />, text: 'Early Warnings' },
-            { icon: <BrainCircuit className="h-4 w-4" />, text: 'Risk Forecasts' },
+            { icon: <Signal className="h-4 w-4" />, text: 'Source: AI Trend Analysis' },
+            { icon: <Shield className="h-4 w-4" />, text: 'Confidence: Medium' },
+            { icon: <Clock className="h-4 w-4" />, text: 'Generated: 5 mins ago' },
           ],
         },
       ],
     },
   },
 ];
+
 
 export default function KeyFeatures() {
   return (
@@ -172,53 +166,47 @@ export default function KeyFeatures() {
           <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-foreground">
             A New Standard in Environmental Intelligence
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+          <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
             Our platform provides a comprehensive, real-time view of your environment, making complex data simple and actionable.
           </p>
         </div>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
             <Dialog key={feature.id}>
               <DialogTrigger asChild>
-                <Card className="glassmorphism-card transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer group hover:shadow-primary/20 hover:border-primary/30">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="bg-background/80 p-3 rounded-lg shadow-inner">
+                <Card className="glassmorphism-card transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer group hover:shadow-primary/20 hover:border-primary/30 flex flex-col">
+                  <CardHeader className="flex-shrink-0">
+                    <div className="flex items-center justify-between">
+                       <div className="bg-background/80 p-3 rounded-lg shadow-inner w-fit">
                         {feature.icon}
                       </div>
-                      <Badge
-                        variant={
-                          feature.badge === 'AI-Powered'
-                            ? 'default'
-                            : 'secondary'
-                        }
-                        className="bg-accent text-accent-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                      >
-                        {feature.badge}
+                      <Badge variant="outline" className="text-xs">
+                        {feature.metric}
                       </Badge>
                     </div>
-                    <div className="pt-4">
-                      <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
-                      <p className="text-xs text-muted-foreground pt-1 font-medium tracking-wider">
-                        {feature.details}
+                     <CardTitle className="pt-4 text-xl font-bold">{feature.category}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow flex flex-col justify-between">
+                    <div>
+                       <div className={cn("flex items-center gap-2 font-semibold text-lg", feature.statusColor)}>
+                        {feature.statusIcon}
+                        <span>{feature.status}</span>
+                      </div>
+                      <p className="text-muted-foreground text-sm mt-2">
+                        {feature.recommendation}
                       </p>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">
-                      {feature.description}
-                    </p>
                   </CardContent>
                 </Card>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] glassmorphism-card">
+              <DialogContent className="sm:max-w-md glassmorphism-card">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-3 text-2xl font-bold">
-                    {feature.icon} {feature.expanded.title}
+                    {feature.icon} {feature.details.title}
                   </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col gap-6 py-4">
-                  {feature.expanded.sections.map((section, index) => (
+                  {feature.details.sections.map((section, index) => (
                     <React.Fragment key={index}>
                       <div className="space-y-3">
                         <h4 className="font-semibold text-muted-foreground">
@@ -236,7 +224,7 @@ export default function KeyFeatures() {
                           ))}
                         </div>
                       </div>
-                      {index < feature.expanded.sections.length - 1 && <Separator className="bg-border/60"/>}
+                      {index < feature.details.sections.length - 1 && <Separator className="bg-border/60"/>}
                     </React.Fragment>
                   ))}
                 </div>
