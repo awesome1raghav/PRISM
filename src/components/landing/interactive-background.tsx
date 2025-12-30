@@ -27,16 +27,16 @@ const InteractiveBackground: React.FC = () => {
           height: 100%;
           background-image: radial-gradient(
             circle at 20% 30%,
-            hsla(175, 50%, 30%, 0.3),
-            transparent 30%
+            hsla(175, 50%, 30%, 0.45),
+            transparent 40%
           ),
           radial-gradient(
             circle at 80% 70%,
-            hsla(195, 50%, 40%, 0.25),
-            transparent 35%
+            hsla(195, 50%, 40%, 0.35),
+            transparent 45%
           );
           opacity: 0;
-          animation: fadeInAura 5s forwards, moveAura 35s infinite alternate ease-in-out;
+          animation: fadeInAura 4s forwards, moveAura 25s infinite alternate ease-in-out;
           will-change: transform, opacity;
         }
 
@@ -71,10 +71,10 @@ const InteractiveBackground: React.FC = () => {
         
         @keyframes moveAura {
           0% {
-            transform: scale(1.2) translate(-5%, -10%) rotate(0deg);
+            transform: scale(1.4) translate(-10%, -15%) rotate(-5deg);
           }
           100% {
-            transform: scale(1.4) translate(5%, 10%) rotate(10deg);
+            transform: scale(1.6) translate(10%, 15%) rotate(15deg);
           }
         }
 
