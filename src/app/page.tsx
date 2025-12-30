@@ -2,7 +2,6 @@ import Header from '@/components/layout/header';
 import Hero from '@/components/landing/hero';
 import KeyFeatures from '@/components/landing/key-features';
 import MetricsStrip from '@/components/landing/metrics-strip';
-import Footer from '@/components/layout/footer';
 import InteractiveBackground from '@/components/landing/interactive-background';
 
 export default function Home() {
@@ -15,7 +14,6 @@ export default function Home() {
         <MetricsStrip />
         <KeyFeatures />
       </main>
-      <Footer />
     </div>
   );
 }

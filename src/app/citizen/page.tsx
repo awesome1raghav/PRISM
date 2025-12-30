@@ -1,7 +1,6 @@
 'use client';
 
 import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
@@ -151,7 +150,6 @@ export default function CitizenPage() {
 
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
