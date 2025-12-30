@@ -212,8 +212,7 @@ export default function KeyFeatures() {
                       <div className="flex items-center gap-2 font-semibold text-lg">
                           <Badge className={cn("text-white", 
                             feature.status === 'Good' && "bg-status-green hover:bg-status-green/90",
-                            feature.status === 'Warning' && "bg-status-yellow hover:bg-status-yellow/90",
-                             feature.status === 'Moderate' && "bg-status-yellow hover:bg-status-yellow/90",
+                            (feature.status === 'Warning' || feature.status === 'Moderate') && "bg-status-yellow hover:bg-status-yellow/90 text-black",
                             feature.status === 'High Risk' && "bg-status-red hover:bg-status-red/90"
                           )}>{feature.status}</Badge>
                           <span className="text-muted-foreground text-sm font-medium">{feature.metric}</span>
