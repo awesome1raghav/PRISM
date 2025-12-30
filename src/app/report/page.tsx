@@ -21,15 +21,56 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { CheckCircle, MapPin, AlertTriangle, Wind, Droplets, Leaf, ShieldCheck, Siren, HeartPulse } from 'lucide-react';
+import { CheckCircle, MapPin, AlertTriangle, Wind, Droplets, Trash2, Siren, Waves, Upload, LocateFixed, ShieldCheck, HeartPulse } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ReportPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+  const [location, setLocation] = useState('');
+
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
   };
+  
+  const handleLocateMe = () => {
+    setIsLocating(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // For demo purposes, we'll just show the coordinates.
+          // In a real app, you'd use a reverse geocoding service.
+          setLocation(`Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}`);
+          setIsLocating(false);
+          toast({
+            title: "Location Found",
+            description: "Your current location has been filled in.",
+          });
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          setIsLocating(false);
+          toast({
+            variant: "destructive",
+            title: "Location Error",
+            description: "Could not get your location. Please enter it manually.",
+          });
+        }
+      );
+    } else {
+      setIsLocating(false);
+      toast({
+        variant: "destructive",
+        title: "Unsupported",
+        description: "Geolocation is not supported by your browser.",
+      });
+    }
+  };
+
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -49,7 +90,7 @@ export default function ReportPage() {
             <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-2">Signal Received</h2>
             <p className="text-muted-foreground">
-              Thank you. You’re helping make environmental data clearer for everyone.
+              Thank you for your contribution. Your report has been submitted and is being verified.
             </p>
             <Button onClick={() => setSubmitted(false)} className="mt-6">
               Submit Another Report
@@ -71,11 +112,19 @@ export default function ReportPage() {
                 <form onSubmit={handleSubmit} className="space-y-8">
                   <div className="space-y-4">
                     <Label htmlFor="location" className="text-lg font-semibold flex items-center gap-2"><MapPin className="h-5 w-5 text-primary" /> Location</Label>
-                    <Input
-                      id="location"
-                      placeholder="e.g., City Park, Riverfront"
-                      className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-                    />
+                    <div className="flex gap-2">
+                       <Input
+                        id="location"
+                        placeholder="e.g., City Park, Riverfront"
+                        className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                      />
+                      <Button variant="outline" type="button" onClick={handleLocateMe} disabled={isLocating}>
+                        <LocateFixed className={`h-4 w-4 ${isLocating ? 'animate-spin' : ''}`} />
+                        <span className="ml-2">Locate Me</span>
+                      </Button>
+                    </div>
                   </div>
                   <div className="space-y-4">
                     <Label htmlFor="pollution-type" className="text-lg font-semibold flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-primary" /> Pollution Type</Label>
@@ -94,14 +143,32 @@ export default function ReportPage() {
                             <Droplets className="h-4 w-4" /> Water
                           </div>
                         </SelectItem>
-                        <SelectItem value="land">
+                        <SelectItem value="waste">
                           <div className="flex items-center gap-2">
-                            <Leaf className="h-4 w-4" /> Land
+                            <Trash2 className="h-4 w-4" /> Waste
                           </div>
                         </SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                         <SelectItem value="noise">
+                          <div className="flex items-center gap-2">
+                            <Waves className="h-4 w-4" /> Noise
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="smell">
+                          <div className="flex items-center gap-2">
+                            <Wind className="h-4 w-4" /> Smell
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+                   <div className="space-y-4">
+                    <Label htmlFor="media" className="text-lg font-semibold flex items-center gap-2"><Upload className="h-5 w-5 text-primary" /> Upload Photo/Video</Label>
+                    <Input
+                      id="media"
+                      type="file"
+                      accept="image/*,video/*"
+                      className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background file:text-foreground"
+                    />
                   </div>
                   <div className="space-y-4">
                     <Label htmlFor="description" className="text-lg font-semibold">Details</Label>
