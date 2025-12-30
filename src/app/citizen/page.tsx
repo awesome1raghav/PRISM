@@ -39,7 +39,7 @@ export default function CitizenPage() {
               <Card className="bg-card/40 border-border/30 border-l-4 border-l-green-500">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-center gap-2 text-foreground"><Wind className="text-green-500" />Air Quality</CardTitle>
-                  <p className="text-3xl font-bold text-green-600">Good</p>
+                  <p className="text-3xl font-bold text-foreground">Good</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">Great for outdoor activities!</p>
@@ -48,7 +48,7 @@ export default function CitizenPage() {
                <Card className="bg-card/40 border-border/30 border-l-4 border-l-green-500">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-center gap-2 text-foreground"><Droplets className="text-green-500" />Water Quality</CardTitle>
-                   <p className="text-3xl font-bold text-green-600">Safe</p>
+                   <p className="text-3xl font-bold text-foreground">Safe</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">Tap water is safe for consumption.</p>
@@ -57,7 +57,7 @@ export default function CitizenPage() {
                <Card className="bg-card/40 border-border/30 border-l-4 border-l-yellow-500">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-center gap-2 text-foreground"><Waves className="text-yellow-500" />Noise Level</CardTitle>
-                   <p className="text-3xl font-bold text-yellow-600">Moderate</p>
+                   <p className="text-3xl font-bold text-foreground">Moderate</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">Minor traffic noise expected.</p>
@@ -108,7 +108,7 @@ export default function CitizenPage() {
                         <CardContent className="p-4 flex items-center gap-4">
                             <Map className="h-6 w-6 text-primary" />
                             <div>
-                                <h3 className="font-semibold">Track My Reports</h3>
+                                <h3 className="font-semibold text-foreground">Track My Reports</h3>
                                 <p className="text-sm text-muted-foreground">Check the status of issues you've reported.</p>
                             </div>
                         </CardContent>
@@ -117,7 +117,7 @@ export default function CitizenPage() {
                         <CardContent className="p-4 flex items-center gap-4">
                             <TrendingUp className="h-6 w-6 text-primary" />
                             <div>
-                                <h3 className="font-semibold">Your Area's Trends</h3>
+                                <h3 className="font-semibold text-foreground">Your Area's Trends</h3>
                                 <p className="text-sm text-muted-foreground">View weekly and monthly pollution data.</p>
                             </div>
                         </CardContent>
@@ -131,7 +131,7 @@ export default function CitizenPage() {
                         <CardContent className="p-4 flex items-center gap-4">
                             <Info className="h-6 w-6 text-primary" />
                             <div>
-                                <h3 className="font-semibold">Learn About Pollution</h3>
+                                <h3 className="font-semibold text-foreground">Learn About Pollution</h3>
                                 <p className="text-sm text-muted-foreground">What is PM2.5? How does noise affect health?</p>
                             </div>
                         </CardContent>
@@ -140,7 +140,7 @@ export default function CitizenPage() {
                         <CardContent className="p-4 flex items-center gap-4">
                             <User className="h-6 w-6 text-primary" />
                             <div>
-                                <h3 className="font-semibold">Privacy Settings</h3>
+                                <h3 className="font-semibold text-foreground">Privacy Settings</h3>
                                 <p className="text-sm text-muted-foreground">Manage your data and anonymous reporting.</p>
                             </div>
                         </CardContent>

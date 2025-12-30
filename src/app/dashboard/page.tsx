@@ -62,7 +62,7 @@ export default function DashboardPage() {
               <Gauge className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">78</div>
+              <div className="text-2xl font-bold text-foreground">78</div>
               <p className="text-xs text-muted-foreground">Moderate</p>
             </CardContent>
           </Card>
@@ -74,7 +74,7 @@ export default function DashboardPage() {
               <Droplets className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">92</div>
+              <div className="text-2xl font-bold text-foreground">92</div>
               <p className="text-xs text-muted-foreground">Good</p>
             </CardContent>
           </Card>
@@ -86,7 +86,7 @@ export default function DashboardPage() {
               <LandPlot className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">15%</div>
+              <div className="text-2xl font-bold text-foreground">15%</div>
               <p className="text-xs text-muted-foreground">Low Risk</p>
             </CardContent>
           </Card>
@@ -98,7 +98,7 @@ export default function DashboardPage() {
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">3</div>
+              <div className="text-2xl font-bold text-foreground">3</div>
               <p className="text-xs text-muted-foreground">
                 High priority events
               </p>

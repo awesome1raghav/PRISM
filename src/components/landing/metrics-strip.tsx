@@ -32,8 +32,8 @@ export default function MetricsStrip() {
             <div key={index} className="py-6 px-4 flex items-center justify-center gap-4">
               <div className="p-3 bg-slate-100 rounded-full">{metric.icon}</div>
               <div className="text-left">
-                <p className="text-2xl font-bold text-slate-800">{metric.value}</p>
-                <p className="text-sm text-slate-500 font-medium">{metric.label}</p>
+                <p className="text-2xl font-bold text-foreground">{metric.value}</p>
+                <p className="text-sm text-muted-foreground font-medium">{metric.label}</p>
               </div>
             </div>
           ))}
