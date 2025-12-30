@@ -91,7 +91,7 @@ export default function CitizenLoginPage() {
             <div className="mt-6 flex items-start gap-3 text-xs text-muted-foreground p-3 bg-secondary/30 rounded-md">
                 <Shield className="h-4 w-4 shrink-0 mt-0.5" />
                 <p>
-                    <span className="font-semibold text-foreground">Privacy Notice:</span> Your Aadhaar details are used only for OTP verification and are never stored or displayed publicly on the PRISM platform.
+                    <span className="font-semibold text-foreground">Privacy Notice:</span> Your Aadhaar is used only for verification and is not stored or shared.
                 </p>
             </div>
           </CardContent>

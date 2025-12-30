@@ -40,7 +40,7 @@ export default function AccessPage() {
       <Header />
       <main className="flex-grow container py-12 flex flex-col items-center justify-center">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold tracking-tight">Access PRISM</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Welcome to PRISM</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
             Select your role to securely access the PRISM platform. Each role has a tailored dashboard and specific permissions.
           </p>

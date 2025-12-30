@@ -89,9 +89,10 @@ export default function ReportPage() {
           <Card className="w-full max-w-2xl text-center bg-card/40 border border-border/30 backdrop-blur-sm p-8">
             <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-2">Signal Received</h2>
-            <p className="text-muted-foreground">
-              Thank you for your contribution. Your report has been submitted and is being verified.
+            <p className="text-muted-foreground mb-2">
+              Thank you for your contribution. Your report ID is <span className="font-semibold text-foreground">PR-183491</span>.
             </p>
+             <p className="text-muted-foreground">You can track its status on your dashboard.</p>
             <Button onClick={() => setSubmitted(false)} className="mt-6">
               Submit Another Report
             </Button>
@@ -171,7 +172,7 @@ export default function ReportPage() {
                     />
                   </div>
                   <div className="space-y-4">
-                    <Label htmlFor="description" className="text-lg font-semibold">Details</Label>
+                    <Label htmlFor="description" className="text-lg font-semibold">Details (Optional)</Label>
                     <Textarea
                       id="description"
                       placeholder="Describe the issue in detail..."

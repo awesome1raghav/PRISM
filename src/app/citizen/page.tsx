@@ -6,8 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   AlertTriangle,
-  Baby,
-  Building,
   CheckCircle,
   HelpCircle,
   Map,
@@ -65,14 +63,14 @@ export default function CitizenPage() {
 
           {/* Section 2: Health Risk Alerts */}
           <section>
-            <h2 className="text-2xl font-bold mb-4 text-center">Health Alerts</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center">Health Advisory</h2>
              <div className="grid gap-4 md:grid-cols-2 max-w-3xl mx-auto">
                 <Card className="bg-yellow-500/10 border-yellow-500/30">
                     <CardContent className="p-4 flex items-center gap-4">
                         <AlertTriangle className="h-8 w-8 text-yellow-400" />
                         <div>
                             <h3 className="font-semibold text-yellow-300">Moderate PM2.5 Levels</h3>
-                            <p className="text-sm text-yellow-400/80">Sensitive groups should limit outdoor exertion.</p>
+                            <p className="text-sm text-yellow-400/80">Sensitive groups (children, elderly) should limit outdoor exertion.</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -101,9 +99,18 @@ export default function CitizenPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {/* Section 4: Community & Education */}
             <section>
-                <h2 className="text-2xl font-bold mb-4">Community & Education</h2>
+                <h2 className="text-2xl font-bold mb-4">My Reports</h2>
                 <div className="space-y-4">
                     <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
+                        <CardContent className="p-4 flex items-center gap-4">
+                            <Map className="h-6 w-6 text-primary" />
+                            <div>
+                                <h3 className="font-semibold">Track My Reports</h3>
+                                <p className="text-sm text-muted-foreground">Check the status of issues you've reported.</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                     <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
                         <CardContent className="p-4 flex items-center gap-4">
                             <TrendingUp className="h-6 w-6 text-primary" />
                             <div>
@@ -112,27 +119,18 @@ export default function CitizenPage() {
                             </div>
                         </CardContent>
                     </Card>
-                     <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
+                </div>
+            </section>
+             {/* Section 5: Tracking & Privacy */}
+             <section>
+                 <h2 className="text-2xl font-bold mb-4">Education & Awareness</h2>
+                <div className="space-y-4">
+                    <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
                         <CardContent className="p-4 flex items-center gap-4">
                             <HelpCircle className="h-6 w-6 text-primary" />
                             <div>
                                 <h3 className="font-semibold">Learn About Pollution</h3>
                                 <p className="text-sm text-muted-foreground">What is PM2.5? How does noise affect health?</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-            </section>
-             {/* Section 5: Tracking & Privacy */}
-             <section>
-                 <h2 className="text-2xl font-bold mb-4">Your Reports & Privacy</h2>
-                <div className="space-y-4">
-                    <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
-                        <CardContent className="p-4 flex items-center gap-4">
-                            <Map className="h-6 w-6 text-primary" />
-                            <div>
-                                <h3 className="font-semibold">Track My Reports</h3>
-                                <p className="text-sm text-muted-foreground">Check the status of issues you've reported.</p>
                             </div>
                         </CardContent>
                     </Card>
