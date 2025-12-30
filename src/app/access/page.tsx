@@ -67,11 +67,11 @@ export default function AccessPage() {
                     {role.icon}
                     <CardTitle className="text-2xl pt-4">{role.name}</CardTitle>
                 </CardHeader>
-                <CardContent className="flex-grow flex flex-col justify-between">
-                    <p className="text-muted-foreground flex-grow">
+                <CardContent className="flex-grow flex flex-col justify-between pt-2">
+                    <p className="text-muted-foreground flex-grow px-4">
                         {role.description}
                     </p>
-                    <Button asChild className="mt-8 w-full">
+                    <Button asChild className="mt-6 w-full">
                         <Link href={role.href}>{role.action} <MoveRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
                     </Button>
                 </CardContent>
