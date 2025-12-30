@@ -9,22 +9,22 @@ export default function Hero() {
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-foreground">
         <div className="container max-w-5xl">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-green-600">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-green-700">
               Clarity for a
             </span>
             <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-sky-400">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-500">
               Cleaner Planet.
             </span>
           </h1>
-          <p className="mt-6 text-lg text-slate-600 sm:text-xl max-w-3xl mx-auto">
+          <p className="mt-6 text-lg font-medium text-slate-300 sm:text-xl max-w-3xl mx-auto">
             PRISM transforms environmental data into clear, actionable insights, empowering communities and authorities to build a sustainable future.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white shadow-lg">
               <Link href="/dashboard">View Live Dashboard</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="bg-white/80 border-2 border-blue-500 text-blue-600 font-semibold hover:bg-blue-50 hover:text-blue-700">
+            <Button asChild size="lg" variant="outline" className="bg-white/10 border-2 border-blue-500 text-blue-300 font-semibold hover:bg-blue-900/40 hover:text-blue-200">
               <Link href="/report">Report an Issue</Link>
             </Button>
           </div>
