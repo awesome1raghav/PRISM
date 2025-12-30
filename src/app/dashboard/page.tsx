@@ -46,59 +46,59 @@ const chartConfig = {
 
 export default function DashboardPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-800">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container py-12">
-        <h1 className="text-3xl font-bold tracking-tight mb-8 text-slate-900">
+        <h1 className="text-3xl font-bold tracking-tight mb-8">
           Live Environmental Dashboard
         </h1>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Card className="bg-white border-slate-200/60 shadow-sm">
+          <Card className="bg-card/40 border-border/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Air Quality Index
               </CardTitle>
-              <Gauge className="h-4 w-4 text-slate-500" />
+              <Gauge className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">78</div>
-              <p className="text-xs text-yellow-600 font-semibold">Moderate</p>
+              <div className="text-2xl font-bold">78</div>
+              <p className="text-xs text-yellow-400 font-semibold">Moderate</p>
             </CardContent>
           </Card>
-          <Card className="bg-white border-slate-200/60 shadow-sm">
+          <Card className="bg-card/40 border-border/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Water Quality Score
               </CardTitle>
-              <Droplets className="h-4 w-4 text-slate-500" />
+              <Droplets className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">92</div>
-              <p className="text-xs text-green-600 font-semibold">Good</p>
+              <div className="text-2xl font-bold">92</div>
+              <p className="text-xs text-green-400 font-semibold">Good</p>
             </CardContent>
           </Card>
-          <Card className="bg-white border-slate-200/60 shadow-sm">
+          <Card className="bg-card/40 border-border/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Land Risk Level
               </CardTitle>
-              <LandPlot className="h-4 w-4 text-slate-500" />
+              <LandPlot className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-slate-900">15%</div>
-              <p className="text-xs text-green-600 font-semibold">Low Risk</p>
+              <div className="text-2xl font-bold">15%</div>
+              <p className="text-xs text-green-400 font-semibold">Low Risk</p>
             </CardContent>
           </Card>
-          <Card className="bg-white border-slate-200/60 shadow-sm">
+          <Card className="bg-card/40 border-border/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Active Alerts
               </CardTitle>
-              <AlertTriangle className="h-4 w-4 text-slate-500" />
+              <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">3</div>
-              <p className="text-xs text-slate-500">
+              <div className="text-2xl font-bold text-red-500">3</div>
+              <p className="text-xs text-muted-foreground">
                 High priority events
               </p>
             </CardContent>
@@ -106,9 +106,9 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2">
-          <Card className="bg-white border-slate-200/60 shadow-sm">
+          <Card className="bg-card/40 border-border/30">
             <CardHeader>
-              <CardTitle className="text-slate-800">Air Pollutant Levels (PM2.5)</CardTitle>
+              <CardTitle>Air Pollutant Levels (PM2.5)</CardTitle>
             </CardHeader>
             <CardContent>
               <ChartContainer config={chartConfig} className="h-[250px] w-full">
@@ -148,9 +148,9 @@ export default function DashboardPage() {
               </ChartContainer>
             </CardContent>
           </Card>
-          <Card className="bg-white border-slate-200/60 shadow-sm">
+          <Card className="bg-card/40 border-border/30">
             <CardHeader>
-              <CardTitle className="text-slate-800">Water Turbidity (NTU)</CardTitle>
+              <CardTitle>Water Turbidity (NTU)</CardTitle>
             </CardHeader>
             <CardContent>
               <ChartContainer config={chartConfig} className="h-[250px] w-full">
