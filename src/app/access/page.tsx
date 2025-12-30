@@ -1,14 +1,18 @@
 
 'use client';
 
+import { useState } from 'react';
 import Header from '@/components/layout/header';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { User, Landmark, Building, ShieldCheck, MoveRight, FileLock2, Fingerprint } from 'lucide-react';
-import Link from 'next/link';
+import VerificationDialog from '@/components/VerificationDialog';
 
-const roles = [
+type Role = 'government' | 'company' | 'citizen';
+
+const roles: { id: Role, name: string, description: string, icon: JSX.Element, action: string, href: string }[] = [
   {
+    id: 'government',
     name: 'Government',
     description: 'Verify data, monitor compliance, and take corrective action.',
     icon: <Landmark className="h-10 w-10 text-primary" />,
@@ -16,13 +20,15 @@ const roles = [
     action: 'Enter as Government'
   },
   {
+    id: 'company',
     name: 'Company',
     description: 'View compliance status, receive alerts, and respond to notices.',
     icon: <Building className="h-10 w-10 text-primary" />,
     href: '/company',
     action: 'Enter as Company'
   },
-    {
+  {
+    id: 'citizen',
     name: 'Citizen',
     description: 'Monitor pollution in your area, receive health guidance, and report issues.',
     icon: <User className="h-10 w-10 text-primary" />,
@@ -47,6 +53,8 @@ const securityFeatures = [
 ]
 
 export default function AccessPage() {
+  const [activeDialog, setActiveDialog] = useState<Role | null>(null);
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
@@ -71,8 +79,8 @@ export default function AccessPage() {
                     <p className="text-muted-foreground flex-grow px-4">
                         {role.description}
                     </p>
-                    <Button asChild className="mt-6 w-full">
-                        <Link href={role.href}>{role.action} <MoveRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
+                    <Button onClick={() => setActiveDialog(role.id)} className="mt-6 w-full">
+                        {role.action} <MoveRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>
                 </CardContent>
             </Card>
@@ -95,6 +103,10 @@ export default function AccessPage() {
         </div>
 
       </main>
+       <VerificationDialog
+        role={activeDialog}
+        onClose={() => setActiveDialog(null)}
+      />
     </div>
   );
 }
