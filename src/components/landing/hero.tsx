@@ -8,7 +8,7 @@ export default function Hero() {
        <InteractiveBackground />
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-foreground">
         <div className="container max-w-5xl">
-          <h1 className="text-6xl font-extrabold tracking-tight sm:text-7xl md:text-8xl text-foreground">
+          <h1 className="text-6xl font-extrabold tracking-tight sm:text-7xl md:text-8xl text-foreground drop-shadow-[0_0_15px_rgba(0,255,255,0.4)]">
             PRISM
           </h1>
           <p className="mt-4 text-xl font-semibold text-muted-foreground sm:text-2xl max-w-3xl mx-auto">
