@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { MoveRight } from 'lucide-react';
-import RoleSelectionDialog from '../RoleSelectionDialog';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -61,11 +60,11 @@ export default function Header() {
           </ul>
         </nav>
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
-           <RoleSelectionDialog>
-            <Button className="group">
+           <Button asChild className="group">
+              <Link href="/access">
                 Access PRISM <MoveRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </RoleSelectionDialog>
+              </Link>
+          </Button>
         </div>
       </div>
     </header>
