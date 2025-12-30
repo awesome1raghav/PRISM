@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Landmark, Building, ShieldAlert, KeyRound, CheckCircle, Info, PieChart, Clock, AlertOctagon } from 'lucide-react';
+import { User, Landmark, Building, Info, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 type Role = 'government' | 'company' | 'citizen' | null;
@@ -55,18 +55,20 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
     setIsVerifying(true);
     setTimeout(() => {
       setIsVerifying(false);
-      // For government and company, go to the responsibility gate
       if (role === 'government' || role === 'company') {
         setStep(4);
       } else {
-        setStep(3); // Success step for citizens
+        setStep(3); 
       }
     }, 1500);
   };
   
   const handleRedirect = () => {
-    const redirectPath = role === 'citizen' ? '/citizen' : role === 'company' ? '/company' : '/dashboard';
-    router.push(redirectPath);
+    if (role === 'citizen') {
+        router.push('/citizen');
+    } else {
+        router.push(`/activate?role=${role}`);
+    }
     onClose();
   };
 
@@ -74,19 +76,17 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
     if (!role) return null;
 
     if (step === 3) {
-      // Citizen Success Screen
       return (
         <div className="text-center p-8">
             <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-2">Verification Successful</h2>
             <p className="text-muted-foreground mb-6">You now have access to the {role} dashboard.</p>
-            <Button onClick={handleRedirect} className="w-full">Proceed to Dashboard</Button>
+            <Button onClick={() => router.push('/citizen')} className="w-full">Proceed to Dashboard</Button>
         </div>
       )
     }
 
     if (step === 4) {
-      // Responsibility Gate for Government & Company
       if (role === 'government') {
         return (
           <>
@@ -249,5 +249,3 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
 };
 
 export default VerificationDialog;
-
-    
