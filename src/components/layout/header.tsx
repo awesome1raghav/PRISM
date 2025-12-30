@@ -15,11 +15,21 @@ const navLinks = [
 
 export default function Header() {
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300 bg-background/80 backdrop-blur-xl border-b border-border/20'
+        'sticky top-0 z-50 w-full transition-all duration-300',
+        scrolled ? 'bg-background/80 backdrop-blur-xl border-b border-border/20' : 'bg-transparent'
       )}
     >
       <div className="container flex h-24 max-w-screen-2xl items-center">
