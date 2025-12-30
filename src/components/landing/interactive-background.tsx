@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Prism } from './prism';
 
 const InteractiveBackground: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const InteractiveBackground: React.FC = () => {
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-sky-100 via-teal-50 to-green-100 opacity-60" />
+      <Prism />
       <div
         className="absolute bottom-0 left-[-20%] right-0 top-[-10%] h-[500px] w-[500px] rounded-full bg-gradient-to-br from-white to-sky-200 opacity-50"
         style={{ animation: 'bubble-float 25s infinite linear' }}

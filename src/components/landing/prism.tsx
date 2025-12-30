@@ -1,37 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useEffect, useState, useRef } from 'react';
 
 export function Prism() {
-  const [rotation, setRotation] = useState({ x: -15, y: 0 });
-  const requestRef = useRef<number>();
-
-  const handleMouseMove = (event: MouseEvent) => {
-    const { clientX, clientY, currentTarget } = event;
-    const { innerWidth, innerHeight } = window;
-    
-    // Normalize cursor position from -1 to 1
-    const x = (clientX / innerWidth) * 2 - 1;
-    const y = -((clientY / innerHeight) * 2 - 1);
-
-    // Update rotation. Multiply for more sensitivity.
-    setRotation({
-      x: y * 45 - 15, // Tilt between -60 and 30 degrees
-      y: x * 45,     // Rotate based on x position
-    });
-  };
-
-  useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      if(requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
-    };
-  }, []);
-
   return (
     <div
       className={cn(
@@ -41,58 +12,45 @@ export function Prism() {
       <div
         className={cn(
           'w-64 h-64 transform-style-3d',
-          'animate-prism-spin'
+          'animate-float'
         )}
-        style={{
-            transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-            transition: 'transform 0.1s ease-out'
-        }}
       >
-        <div className="absolute w-full h-full transform-style-3d">
-          {/* Base */}
-          <div
-            className="absolute top-0 left-0 w-full h-full border-b-[100px] border-b-primary/40 border-l-[60px] border-l-transparent border-r-[60px] border-r-transparent opacity-80"
-            style={{
-              transform: 'rotateX(-90deg) translateZ(50px)',
-            }}
-          ></div>
-
+        <div className="absolute w-full h-full transform-style-3d animate-prism-spin">
           {/* Side 1 */}
           <div
-            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/30 to-accent/40 opacity-70"
+            className="absolute top-0 left-0 w-[200px] h-[100px] bg-gradient-to-r from-cyan-400/20 to-blue-500/20 opacity-90 border border-cyan-300/30"
             style={{
-              transform: 'rotateY(0deg) translateZ(58px)',
-              clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-              height: '180px',
-              width: '120px',
-              left: '50%',
-              marginLeft: '-60px',
+              transform: 'rotateY(0deg) translateZ(28.87px)',
             }}
           ></div>
-
           {/* Side 2 */}
           <div
-            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/30 to-accent/40 opacity-70"
+            className="absolute top-0 left-0 w-[200px] h-[100px] bg-gradient-to-r from-green-400/20 to-teal-500/20 opacity-90 border border-green-300/30"
             style={{
-              transform: 'rotateY(120deg) translateZ(58px)',
-              clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-              height: '180px',
-              width: '120px',
-              left: '50%',
-              marginLeft: '-60px',
+              transform: 'rotateY(120deg) translateZ(28.87px)',
+            }}
+          ></div>
+          {/* Side 3 */}
+          <div
+            className="absolute top-0 left-0 w-[200px] h-[100px] bg-gradient-to-r from-sky-400/20 to-indigo-500/20 opacity-90 border border-sky-300/30"
+            style={{
+              transform: 'rotateY(240deg) translateZ(28.87px)',
             }}
           ></div>
 
-          {/* Side 3 */}
-          <div
-            className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-primary/30 to-accent/40 opacity-70"
+          {/* Top Cap */}
+           <div
+            className="absolute w-0 h-0 border-l-[25px] border-l-transparent border-r-[25px] border-r-transparent border-b-[50px] border-b-white/30"
             style={{
-              transform: 'rotateY(240deg) translateZ(58px)',
-              clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-              height: '180px',
-              width: '120px',
-              left: '50%',
-              marginLeft: '-60px',
+              transform: 'translateX(75px) translateY(-50px) rotateX(90deg) rotateZ(180deg) '
+            }}
+          ></div>
+
+           {/* Bottom Cap */}
+           <div
+            className="absolute w-0 h-0 border-l-[25px] border-l-transparent border-r-[25px] border-r-transparent border-b-[50px] border-b-white/30"
+            style={{
+              transform: 'translateX(75px) translateY(100px) rotateX(-90deg) '
             }}
           ></div>
         </div>
@@ -106,14 +64,35 @@ export function Prism() {
         }
         @keyframes prism-spin {
           from {
-            transform: rotateY(0deg);
+            transform: rotateY(0deg) rotateX(-15deg);
           }
           to {
-            transform: rotateY(360deg);
+            transform: rotateY(360deg) rotateX(-15deg);
           }
         }
         .animate-prism-spin {
-          animation: prism-spin 20s linear infinite;
+          animation: prism-spin 25s linear infinite;
+        }
+
+        @keyframes float {
+          0% {
+            transform: translate3d(0, 0, 0);
+          }
+          25% {
+            transform: translate3d(80px, -40px, 20px);
+          }
+          50% {
+            transform: translate3d(40px, 20px, -10px);
+          }
+          75% {
+            transform: translate3d(-60px, 50px, 10px);
+          }
+          100% {
+            transform: translate3d(0, 0, 0);
+          }
+        }
+        .animate-float {
+            animation: float 30s ease-in-out infinite;
         }
       `}</style>
     </div>

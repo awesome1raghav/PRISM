@@ -1,11 +1,9 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Prism } from './prism';
 
 export default function Hero() {
   return (
     <section className="relative w-full flex items-center justify-center pt-32 pb-40 overflow-hidden border-b">
-      <Prism />
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-foreground">
         <div className="container max-w-5xl">
           <h1 className="text-6xl font-extrabold tracking-tight sm:text-7xl md:text-8xl text-slate-800">
