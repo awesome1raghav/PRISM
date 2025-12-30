@@ -18,7 +18,7 @@ export default function Hero() {
             <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/10 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-primary/20">
               <Link href="/dashboard">View Live Dashboard</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-foreground border-border/60 hover:bg-accent/10 hover:border-border hover:text-foreground transition-all duration-300 hover:-translate-y-0.5">
+            <Button asChild size="lg" variant="outline" className="text-foreground border-border/60 hover:bg-white/5 hover:border-border hover:text-foreground transition-all duration-300 hover:-translate-y-0.5">
               <Link href="/report">Report an Issue</Link>
             </Button>
           </div>

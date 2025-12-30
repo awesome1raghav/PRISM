@@ -34,7 +34,7 @@ export default function Header() {
         'sticky top-0 z-50 w-full transition-all duration-300',
         scrolled
           ? 'bg-background/80 backdrop-blur-lg border-b border-border/30'
-          : 'bg-transparent'
+          : 'bg-transparent border-b border-transparent'
       )}
     >
       <div className="container flex h-20 max-w-screen-2xl items-center">
@@ -58,7 +58,7 @@ export default function Header() {
                   {link.label}
                 </Link>
                 {pathname === link.href && (
-                  <div className="absolute bottom-[-8px] left-0 w-full h-0.5 bg-primary rounded-full" />
+                  <div className="absolute bottom-[-8px] left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
                 )}
               </li>
             ))}

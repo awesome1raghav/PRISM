@@ -25,8 +25,8 @@ const InteractiveBackground: React.FC = () => {
           height: 100%;
           background: radial-gradient(
             ellipse 80% 50% at 50% 120%,
-            hsl(195, 100%, 9%),
-            hsl(210, 30%, 15%),
+            hsl(180, 25%, 15%), /* Desaturated Teal */
+            hsl(220, 20%, 10%), /* Deep Navy/Charcoal */
             #0a0f18 70%
           );
           animation: drift 30s infinite alternate ease-in-out;

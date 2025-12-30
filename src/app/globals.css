@@ -13,8 +13,8 @@
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
     
-    --primary: 84 70% 55%; /* #70e000 */
-    --primary-foreground: 222 47% 11%;
+    --primary: 175 41% 52%; /* Muted Teal */
+    --primary-foreground: 210 40% 98%;
     
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
@@ -22,15 +22,15 @@
     --muted: 217 33% 22%;
     --muted-foreground: 215 28% 65%;
     
-    --accent: 175 41% 52%; /* #74b49b */
-    --accent-foreground: 210 40% 98%;
+    --accent: 195 53% 79%; /* Soft Blue */
+    --accent-foreground: 222 47% 11%;
     
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
     
     --border: 217 33% 25%;
     --input: 217 33% 25%;
-    --ring: 84 70% 55%;
+    --ring: 175 41% 52%;
     
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -51,8 +51,8 @@
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
     
-    --primary: 84 70% 55%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 175 41% 52%;
+    --primary-foreground: 210 40% 98%;
     
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
@@ -60,15 +60,15 @@
     --muted: 217 33% 22%;
     --muted-foreground: 215 28% 65%;
     
-    --accent: 175 41% 52%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 195 53% 79%;
+    --accent-foreground: 222 47% 11%;
     
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
     
     --border: 217 33% 25%;
     --input: 217 33% 25%;
-    --ring: 84 70% 55%;
+    --ring: 175 41% 52%;
     
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
