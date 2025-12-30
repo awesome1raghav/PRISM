@@ -33,11 +33,11 @@ export default function Header() {
       className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300',
         scrolled
-          ? 'bg-background/80 backdrop-blur-lg border-b border-border/30'
+          ? 'bg-background/80 backdrop-blur-xl border-b border-border/20'
           : 'bg-transparent border-b border-transparent'
       )}
     >
-      <div className="container flex h-20 max-w-screen-2xl items-center">
+      <div className="container flex h-24 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <Logo className="text-primary" />
           <span className="font-bold sm:inline-block text-foreground">PRISM</span>
@@ -58,7 +58,7 @@ export default function Header() {
                   {link.label}
                 </Link>
                 {pathname === link.href && (
-                  <div className="absolute bottom-[-8px] left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
+                  <div className="absolute top-full mt-2 left-0 w-full h-0.5 bg-primary/50 rounded-full" />
                 )}
               </li>
             ))}
