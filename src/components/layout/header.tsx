@@ -7,8 +7,7 @@ import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/report', label: 'Report' },
-  { href: '/citizen', label: 'Citizen' },
+  { href: '/citizen', label: 'For Citizens' },
 ];
 
 export default function Header() {
@@ -40,16 +39,9 @@ export default function Header() {
           </ul>
         </nav>
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
-          {pathname !== '/report' && (
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/report">Report Pollution</Link>
-            </Button>
-          )}
-          {pathname !== '/dashboard' && (
-            <Button asChild size="sm">
-              <Link href="/dashboard">View Live Dashboard</Link>
-            </Button>
-          )}
+          <Button asChild>
+            <Link href="/access">Access PRISM</Link>
+          </Button>
         </div>
       </div>
     </header>
