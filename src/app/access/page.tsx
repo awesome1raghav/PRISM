@@ -9,13 +9,6 @@ import Link from 'next/link';
 
 const roles = [
   {
-    name: 'Citizen',
-    description: 'Monitor pollution in your area, receive health guidance, and report issues.',
-    icon: <User className="h-10 w-10 text-primary" />,
-    href: '/citizen',
-    action: 'Enter as Citizen'
-  },
-  {
     name: 'Government',
     description: 'Verify data, monitor compliance, and take corrective action.',
     icon: <Landmark className="h-10 w-10 text-primary" />,
@@ -28,6 +21,13 @@ const roles = [
     icon: <Building className="h-10 w-10 text-primary" />,
     href: '/company',
     action: 'Enter as Company'
+  },
+    {
+    name: 'Citizen',
+    description: 'Monitor pollution in your area, receive health guidance, and report issues.',
+    icon: <User className="h-10 w-10 text-primary" />,
+    href: '/citizen',
+    action: 'Enter as Citizen'
   },
 ];
 
@@ -62,7 +62,7 @@ export default function AccessPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl mb-16">
           {roles.map((role) => (
-             <Card key={role.name} className="bg-card/40 border-border/30 text-center flex flex-col hover:border-primary/40 hover:bg-card/60 transition-all duration-300 group">
+             <Card key={role.name} className="bg-card/40 border-border/30 text-center flex flex-col hover:border-primary/40 hover:bg-card/60 transition-all duration-300 group hover:-translate-y-1 hover:shadow-primary/10 hover:shadow-lg">
                 <CardHeader className="items-center">
                     {role.icon}
                     <CardTitle className="text-2xl pt-4">{role.name}</CardTitle>
