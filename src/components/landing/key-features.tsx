@@ -47,7 +47,6 @@ const features = [
     metric: 'AQI 32',
     trend: 'stable',
     trendIcon: <ArrowRight className="h-4 w-4" />,
-    impact: 'Ideal for all outdoor activities.',
     action: 'View Area Details',
     details: {
       title: 'Live Air Quality Report',
@@ -93,7 +92,6 @@ const features = [
     metric: 'High Turbidity',
     trend: 'improving',
     trendIcon: <TrendingDown className="h-4 w-4" />,
-    impact: 'Contaminant levels decreasing. Boil tap water before use.',
     action: 'See Health Advice',
     details: {
       title: 'Water Safety Report',
@@ -139,7 +137,6 @@ const features = [
     metric: '68 dB Avg.',
     trend: 'worsening',
     trendIcon: <TrendingUp className="h-4 w-4" />,
-    impact: 'Exceeds residential night limits. May cause sleep disturbance.',
     action: 'View Impact Details',
     details: {
       title: 'Noise Pollution Analysis',
@@ -185,7 +182,6 @@ const features = [
     metric: 'Air Quality Drop',
     trend: 'worsening',
     trendIcon: <TrendingUp className="h-4 w-4" />,
-    impact: 'High PM2.5 levels expected in your area soon.',
     action: 'View Forecast',
     details: {
       title: 'Predictive Alert Details',
@@ -270,9 +266,6 @@ export default function KeyFeatures() {
                           )}>{feature.status}</Badge>
                           <span className="text-muted-foreground text-sm font-medium">{feature.metric}</span>
                       </div>
-                      <p className="text-muted-foreground text-sm mt-3 h-10">
-                        {feature.impact}
-                      </p>
                     </div>
                      <div className="mt-4 text-primary font-semibold text-sm group-hover:underline flex items-center gap-1">
                       {feature.action}
