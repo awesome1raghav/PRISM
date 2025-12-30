@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import { LocationProvider } from '@/context/LocationContext';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -25,7 +26,9 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        {children}
+        <LocationProvider>
+          {children}
+        </LocationProvider>
         <Toaster />
       </body>
     </html>
