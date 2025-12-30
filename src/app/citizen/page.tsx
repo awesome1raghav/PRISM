@@ -3,17 +3,18 @@
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   AlertTriangle,
   CheckCircle,
-  HelpCircle,
   Map,
-  ShieldCheck,
   Siren,
   TrendingUp,
   User,
   Wind,
+  Droplets,
+  Waves,
+  Info
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -23,60 +24,63 @@ export default function CitizenPage() {
       <Header />
       <main className="flex-grow container py-12">
         <div className="grid gap-12">
-          {/* Section 1: Simple Pollution View */}
+          
           <section>
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold tracking-tight mb-2">
+              <h1 className="text-4xl font-bold tracking-tight mb-2">
                 Your Local Environment
               </h1>
               <p className="text-muted-foreground">
                 Live conditions for: <span className="font-semibold text-primary">Koramangala, Bengaluru</span>
               </p>
             </div>
-            <Card className="w-full max-w-3xl mx-auto bg-green-500/10 border-green-500/30">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl font-bold text-green-300">
-                  Good
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                <p className="text-lg text-green-200">
-                  Air quality is good. It's a great day for outdoor activities!
-                </p>
-                <div className="mt-6 flex justify-center gap-4 text-sm text-green-300/80">
-                  <div className="flex items-center gap-2">
-                    <Wind className="h-4 w-4" />
-                    <span>Air: Good</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4" />
-                    <span>Water: Safe</span>
-                  </div>
-                   <div className="flex items-center gap-2">
-                    <Siren className="h-4 w-4" />
-                    <span>Noise: Low</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            
+            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto text-center">
+              <Card className="bg-green-500/10 border-green-500/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-center gap-2 text-green-300"><Wind />Air Quality</CardTitle>
+                  <p className="text-3xl font-bold text-green-200">Good</p>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-green-400/80">Great for outdoor activities!</p>
+                </CardContent>
+              </Card>
+               <Card className="bg-green-500/10 border-green-500/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-center gap-2 text-green-300"><Droplets />Water Quality</CardTitle>
+                   <p className="text-3xl font-bold text-green-200">Safe</p>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-green-400/80">Tap water is safe for consumption.</p>
+                </CardContent>
+              </Card>
+               <Card className="bg-yellow-500/10 border-yellow-500/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-center gap-2 text-yellow-300"><Waves />Noise Level</CardTitle>
+                   <p className="text-3xl font-bold text-yellow-200">Moderate</p>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-yellow-400/80">Minor traffic noise expected.</p>
+                </CardContent>
+              </Card>
+            </div>
           </section>
 
-          {/* Section 2: Health Risk Alerts */}
           <section>
-            <h2 className="text-2xl font-bold mb-4 text-center">Health Advisory</h2>
-             <div className="grid gap-4 md:grid-cols-2 max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold mb-6 text-center">Health Advisory</h2>
+             <div className="grid gap-4 md:grid-cols-2 max-w-4xl mx-auto">
                 <Card className="bg-yellow-500/10 border-yellow-500/30">
-                    <CardContent className="p-4 flex items-center gap-4">
-                        <AlertTriangle className="h-8 w-8 text-yellow-400" />
+                    <CardContent className="p-6 flex items-center gap-4">
+                        <AlertTriangle className="h-8 w-8 text-yellow-400 shrink-0" />
                         <div>
                             <h3 className="font-semibold text-yellow-300">Moderate PM2.5 Levels</h3>
-                            <p className="text-sm text-yellow-400/80">Sensitive groups (children, elderly) should limit outdoor exertion.</p>
+                            <p className="text-sm text-yellow-400/80">Sensitive groups (children, elderly) should limit prolonged outdoor exertion.</p>
                         </div>
                     </CardContent>
                 </Card>
-                 <Card className="bg-secondary">
-                    <CardContent className="p-4 flex items-center gap-4">
-                        <CheckCircle className="h-8 w-8 text-muted-foreground" />
+                 <Card className="bg-secondary/40">
+                    <CardContent className="p-6 flex items-center gap-4">
+                        <CheckCircle className="h-8 w-8 text-muted-foreground shrink-0" />
                         <div>
                             <h3 className="font-semibold">No Critical Alerts</h3>
                             <p className="text-sm text-muted-foreground">No immediate severe risks detected in your area.</p>
@@ -86,10 +90,10 @@ export default function CitizenPage() {
             </div>
           </section>
 
-          {/* Section 3: Citizen Reporting */}
-          <section className="text-center bg-card/50 py-12 rounded-lg">
-             <h2 className="text-2xl font-bold mb-2">See something? Say something.</h2>
-             <p className="text-muted-foreground mb-6 max-w-xl mx-auto">Your reports help us identify and act on environmental issues faster.
+          <section className="text-center bg-card/50 py-12 rounded-lg border border-border/30">
+             <Siren className="h-10 w-10 text-primary mx-auto mb-4" />
+             <h2 className="text-3xl font-bold mb-2">See Something? Say Something.</h2>
+             <p className="text-muted-foreground mb-6 max-w-xl mx-auto">Your reports help authorities identify and act on environmental issues faster.
              </p>
              <Button asChild size="lg">
                 <Link href="/report">Report an Issue Now</Link>
@@ -97,11 +101,10 @@ export default function CitizenPage() {
           </section>
           
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Section 4: Community & Education */}
             <section>
-                <h2 className="text-2xl font-bold mb-4">My Reports</h2>
+                <h2 className="text-2xl font-bold mb-4">My Dashboard</h2>
                 <div className="space-y-4">
-                    <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
+                    <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors cursor-pointer">
                         <CardContent className="p-4 flex items-center gap-4">
                             <Map className="h-6 w-6 text-primary" />
                             <div>
@@ -110,7 +113,7 @@ export default function CitizenPage() {
                             </div>
                         </CardContent>
                     </Card>
-                     <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
+                     <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors cursor-pointer">
                         <CardContent className="p-4 flex items-center gap-4">
                             <TrendingUp className="h-6 w-6 text-primary" />
                             <div>
@@ -121,20 +124,19 @@ export default function CitizenPage() {
                     </Card>
                 </div>
             </section>
-             {/* Section 5: Tracking & Privacy */}
              <section>
-                 <h2 className="text-2xl font-bold mb-4">Education & Awareness</h2>
+                 <h2 className="text-2xl font-bold mb-4">Education & Controls</h2>
                 <div className="space-y-4">
-                    <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
+                    <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors cursor-pointer">
                         <CardContent className="p-4 flex items-center gap-4">
-                            <HelpCircle className="h-6 w-6 text-primary" />
+                            <Info className="h-6 w-6 text-primary" />
                             <div>
                                 <h3 className="font-semibold">Learn About Pollution</h3>
                                 <p className="text-sm text-muted-foreground">What is PM2.5? How does noise affect health?</p>
                             </div>
                         </CardContent>
                     </Card>
-                    <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
+                    <Card className="bg-secondary/50 hover:bg-secondary/80 transition-colors cursor-pointer">
                         <CardContent className="p-4 flex items-center gap-4">
                             <User className="h-6 w-6 text-primary" />
                             <div>

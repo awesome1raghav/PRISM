@@ -8,12 +8,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Lock, Shield } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function CitizenLoginPage() {
   const [step, setStep] = useState('aadhaar'); // 'aadhaar', 'otp'
   const [aadhaar, setAadhaar] = useState('');
   const [otp, setOtp] = useState('');
+  const router = useRouter();
 
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +28,7 @@ export default function CitizenLoginPage() {
     // In a real app, you would verify the OTP
     console.log('Verifying OTP:', otp);
     // On success, redirect to dashboard
-    window.location.href = '/citizen';
+    router.push('/citizen');
   };
 
   return (

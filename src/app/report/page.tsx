@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { CheckCircle, MapPin, AlertTriangle, Wind, Droplets, Trash2, Siren, Waves, Upload, LocateFixed, ShieldCheck, HeartPulse } from 'lucide-react';
+import { CheckCircle, MapPin, AlertTriangle, Wind, Droplets, Trash2, Waves, Upload, LocateFixed, ShieldCheck, HeartPulse, Siren } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ReportPage() {
@@ -92,7 +92,7 @@ export default function ReportPage() {
             <p className="text-muted-foreground mb-2">
               Thank you for your contribution. Your report ID is <span className="font-semibold text-foreground">PR-183491</span>.
             </p>
-             <p className="text-muted-foreground">You can track its status on your dashboard.</p>
+             <p className="text-muted-foreground">You can track its status on your citizen dashboard.</p>
             <Button onClick={() => setSubmitted(false)} className="mt-6">
               Submit Another Report
             </Button>
@@ -106,7 +106,7 @@ export default function ReportPage() {
                   Report an Environmental Issue
                 </CardTitle>
                 <CardDescription>
-                  Your report helps us track and verify environmental data.
+                  Your report helps us track and verify environmental data. A fast and frictionless process.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -120,43 +120,44 @@ export default function ReportPage() {
                         className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
+                        required
                       />
                       <Button variant="outline" type="button" onClick={handleLocateMe} disabled={isLocating}>
                         <LocateFixed className={`h-4 w-4 ${isLocating ? 'animate-spin' : ''}`} />
-                        <span className="ml-2">Locate Me</span>
+                        <span className="ml-2 hidden sm:inline">Locate Me</span>
                       </Button>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <Label htmlFor="pollution-type" className="text-lg font-semibold flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-primary" /> Pollution Type</Label>
-                    <Select>
+                    <Select required>
                       <SelectTrigger id="pollution-type" className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background">
-                        <SelectValue placeholder="Select a type" />
+                        <SelectValue placeholder="Select a type of issue" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="air">
                           <div className="flex items-center gap-2">
-                            <Wind className="h-4 w-4" /> Air
+                            <Wind className="h-4 w-4" /> Air (e.g. smoke, dust)
                           </div>
                         </SelectItem>
                         <SelectItem value="water">
                           <div className="flex items-center gap-2">
-                            <Droplets className="h-4 w-4" /> Water
+                            <Droplets className="h-4 w-4" /> Water (e.g. discoloration, chemical)
                           </div>
                         </SelectItem>
                         <SelectItem value="waste">
                           <div className="flex items-center gap-2">
-                            <Trash2 className="h-4 w-4" /> Waste
+                            <Trash2 className="h-4 w-4" /> Waste (e.g. illegal dumping)
                           </div>
                         </SelectItem>
                          <SelectItem value="noise">
                           <div className="flex items-center gap-2">
-                            <Waves className="h-4 w-4" /> Noise
+                            <Waves className="h-4 w-4" /> Noise (e.g. construction, loudspeakers)
                           </div>
                         </SelectItem>
                         <SelectItem value="smell">
                           <div className="flex items-center gap-2">
-                            <Wind className="h-4 w-4" /> Smell
+                            <Wind className="h-4 w-4" /> Smell (e.g. chemical, sewage)
                           </div>
                         </SelectItem>
                       </SelectContent>
@@ -169,14 +170,16 @@ export default function ReportPage() {
                       type="file"
                       accept="image/*,video/*"
                       className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background file:text-foreground"
+                      required
                     />
+                     <p className="text-xs text-muted-foreground">A photo or short video is required to verify the report.</p>
                   </div>
                   <div className="space-y-4">
                     <Label htmlFor="description" className="text-lg font-semibold">Details (Optional)</Label>
                     <Textarea
                       id="description"
-                      placeholder="Describe the issue in detail..."
-                      rows={4}
+                      placeholder="Describe what you see, smell, or hear..."
+                      rows={3}
                       className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
                     />
                   </div>
