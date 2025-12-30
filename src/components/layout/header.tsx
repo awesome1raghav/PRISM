@@ -15,7 +15,7 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/50 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 w-full">
       <div className="container flex h-16 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <Logo className="text-primary" isAnimated={false} />
