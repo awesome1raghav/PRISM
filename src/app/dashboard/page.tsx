@@ -37,69 +37,69 @@ const chartData = [
 const chartConfig = {
   desktop: {
     label: 'Desktop',
-    color: 'hsl(var(--primary))',
+    color: 'hsl(var(--chart-1))',
   },
   mobile: {
     label: 'Mobile',
-    color: 'hsl(var(--accent))',
+    color: 'hsl(var(--chart-2))',
   },
 };
 
 export default function DashboardPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-800">
       <Header />
       <main className="flex-grow container py-12">
-        <h1 className="text-3xl font-bold tracking-tight mb-8">
+        <h1 className="text-3xl font-bold tracking-tight mb-8 text-slate-900">
           Live Environmental Dashboard
         </h1>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Card>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <Card className="bg-white border-slate-200/60 shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-slate-600">
                 Air Quality Index
               </CardTitle>
-              <Gauge className="h-4 w-4 text-muted-foreground" />
+              <Gauge className="h-4 w-4 text-slate-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">78</div>
-              <p className="text-xs text-muted-foreground">Moderate</p>
+              <div className="text-2xl font-bold text-slate-900">78</div>
+              <p className="text-xs text-yellow-600 font-semibold">Moderate</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white border-slate-200/60 shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-slate-600">
                 Water Quality Score
               </CardTitle>
-              <Droplets className="h-4 w-4 text-muted-foreground" />
+              <Droplets className="h-4 w-4 text-slate-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">92</div>
-              <p className="text-xs text-muted-foreground">Good</p>
+              <div className="text-2xl font-bold text-slate-900">92</div>
+              <p className="text-xs text-green-600 font-semibold">Good</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white border-slate-200/60 shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-slate-600">
                 Land Risk Level
               </CardTitle>
-              <LandPlot className="h-4 w-4 text-muted-foreground" />
+              <LandPlot className="h-4 w-4 text-slate-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">15%</div>
-              <p className="text-xs text-muted-foreground">Low Risk</p>
+              <div className="text-2xl font-bold text-slate-900">15%</div>
+              <p className="text-xs text-green-600 font-semibold">Low Risk</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white border-slate-200/60 shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-slate-600">
                 Active Alerts
               </CardTitle>
-              <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+              <AlertTriangle className="h-4 w-4 text-slate-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">3</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold text-red-600">3</div>
+              <p className="text-xs text-slate-500">
                 High priority events
               </p>
             </CardContent>
@@ -107,9 +107,9 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2">
-          <Card>
+          <Card className="bg-white border-slate-200/60 shadow-sm">
             <CardHeader>
-              <CardTitle>Air Pollutant Levels (PM2.5)</CardTitle>
+              <CardTitle className="text-slate-800">Air Pollutant Levels (PM2.5)</CardTitle>
             </CardHeader>
             <CardContent>
               <ChartContainer config={chartConfig} className="h-[250px] w-full">
@@ -128,12 +128,12 @@ export default function DashboardPage() {
                     <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                       <stop
                         offset="5%"
-                        stopColor="hsl(var(--primary))"
-                        stopOpacity={0.8}
+                        stopColor="hsl(var(--chart-1))"
+                        stopOpacity={0.4}
                       />
                       <stop
                         offset="95%"
-                        stopColor="hsl(var(--primary))"
+                        stopColor="hsl(var(--chart-1))"
                         stopOpacity={0}
                       />
                     </linearGradient>
@@ -141,16 +141,17 @@ export default function DashboardPage() {
                   <Area
                     type="monotone"
                     dataKey="desktop"
-                    stroke="hsl(var(--primary))"
+                    stroke="hsl(var(--chart-1))"
+                    strokeWidth={2}
                     fill="url(#colorUv)"
                   />
                 </AreaChart>
               </ChartContainer>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white border-slate-200/60 shadow-sm">
             <CardHeader>
-              <CardTitle>Water Turbidity (NTU)</CardTitle>
+              <CardTitle className="text-slate-800">Water Turbidity (NTU)</CardTitle>
             </CardHeader>
             <CardContent>
               <ChartContainer config={chartConfig} className="h-[250px] w-full">
@@ -167,7 +168,7 @@ export default function DashboardPage() {
                   />
                   <Bar
                     dataKey="mobile"
-                    fill="hsl(var(--accent))"
+                    fill="hsl(var(--chart-2))"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>

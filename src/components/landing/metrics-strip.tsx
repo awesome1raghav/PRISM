@@ -25,15 +25,15 @@ const metrics = [
 
 export default function MetricsStrip() {
   return (
-    <section className="border-y bg-white/50 backdrop-blur-sm">
+    <section className="border-b bg-slate-50">
       <div className="container mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x text-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-200 text-center">
           {metrics.map((metric, index) => (
             <div key={index} className="py-6 px-4 flex items-center justify-center gap-4">
               <div className="p-3 bg-slate-100 rounded-full">{metric.icon}</div>
               <div className="text-left">
-                <p className="text-2xl font-bold text-foreground">{metric.value}</p>
-                <p className="text-sm text-muted-foreground font-medium">{metric.label}</p>
+                <p className="text-2xl font-bold text-slate-800">{metric.value}</p>
+                <p className="text-sm text-slate-500 font-medium">{metric.label}</p>
               </div>
             </div>
           ))}

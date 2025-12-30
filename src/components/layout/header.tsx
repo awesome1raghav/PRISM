@@ -15,7 +15,7 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/30 bg-white/50 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-lg">
       <div className="container flex h-16 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <Logo className="text-primary" isAnimated={false} />
@@ -28,9 +28,9 @@ export default function Header() {
                 <Link
                   href={link.href}
                   className={cn(
-                    'text-sm font-medium transition-colors hover:text-primary',
+                    'text-sm font-medium transition-colors hover:text-blue-600',
                     pathname === link.href
-                      ? 'text-primary'
+                      ? 'text-blue-600 font-semibold'
                       : 'text-slate-600'
                   )}
                 >
@@ -41,7 +41,7 @@ export default function Header() {
           </ul>
         </nav>
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
-          <Button asChild className="bg-gradient-to-r from-blue-500 to-sky-400 text-white group shadow-lg hover:shadow-xl">
+          <Button asChild className="bg-blue-600 text-white group shadow-lg hover:bg-blue-700">
             <Link href="/access">
               Access PRISM <MoveRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
