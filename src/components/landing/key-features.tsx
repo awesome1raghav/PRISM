@@ -3,7 +3,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -36,6 +35,7 @@ import {
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 const features = [
   {
@@ -221,8 +221,8 @@ const features = [
 ];
 
 const trendStyles = {
-  improving: 'text-status-green',
-  worsening: 'text-status-red',
+  improving: 'text-green-400',
+  worsening: 'text-red-400',
   stable: 'text-muted-foreground',
 };
 
@@ -259,11 +259,11 @@ export default function KeyFeatures() {
                   <CardContent className="flex-grow flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-2 font-semibold text-lg">
-                          <Badge className={cn("text-white flex items-center gap-1.5", 
-                            feature.status === 'Good' && "bg-status-green/90 shadow-lg shadow-status-green/40",
-                            feature.status === 'Moderate' && "bg-status-yellow/90 shadow-lg shadow-status-yellow/40 text-black",
-                            feature.status === 'Warning' && "bg-status-red/90 shadow-lg shadow-status-red/40",
-                            feature.status === 'High Risk' && "bg-status-red-dark/90 shadow-lg shadow-status-red-dark/40"
+                          <Badge className={cn("flex items-center gap-1.5", 
+                            feature.status === 'Good' && "bg-status-green/90 text-white shadow-lg shadow-status-green/40",
+                            feature.status === 'Moderate' && "bg-status-yellow/90 text-black shadow-lg shadow-status-yellow/40",
+                            feature.status === 'Warning' && "bg-status-red/90 text-white shadow-lg shadow-status-red/40",
+                            feature.status === 'High Risk' && "bg-status-red-dark/90 text-white shadow-lg shadow-status-red-dark/40"
                           )}>
                              {feature.status === 'High Risk' && <AlertTriangle className="h-3 w-3" />}
                             {feature.status}
