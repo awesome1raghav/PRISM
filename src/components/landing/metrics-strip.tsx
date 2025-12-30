@@ -1,18 +1,23 @@
-import { Wifi, AlertTriangle, Building } from 'lucide-react';
+import { Wifi, AlertTriangle, Building, Users } from 'lucide-react';
 
 const metrics = [
   {
-    icon: <Wifi className="h-5 w-5 text-muted-foreground" />,
-    value: '42',
-    label: 'Active Sensors',
+    icon: <Users className="h-6 w-6 text-blue-500" />,
+    value: '1,200+',
+    label: 'Citizen Reports',
   },
   {
-    icon: <AlertTriangle className="h-5 w-5 text-muted-foreground" />,
+    icon: <Wifi className="h-6 w-6 text-teal-500" />,
+    value: '42',
+    label: 'Live Sensors',
+  },
+  {
+    icon: <AlertTriangle className="h-6 w-6 text-yellow-500" />,
     value: '128',
     label: 'Alerts Predicted',
   },
   {
-    icon: <Building className="h-5 w-5 text-muted-foreground" />,
+    icon: <Building className="h-6 w-6 text-slate-500" />,
     value: '9',
     label: 'Cities Covered',
   },
@@ -20,15 +25,15 @@ const metrics = [
 
 export default function MetricsStrip() {
   return (
-    <section className="border-y border-border/40 bg-card/20">
+    <section className="border-y bg-white/50 backdrop-blur-sm">
       <div className="container mx-auto">
-        <div className="grid grid-cols-3 divide-x divide-border/40 text-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x text-center">
           {metrics.map((metric, index) => (
             <div key={index} className="py-6 px-4 flex items-center justify-center gap-4">
-              {metric.icon}
+              <div className="p-3 bg-slate-100 rounded-full">{metric.icon}</div>
               <div className="text-left">
-                <p className="text-2xl font-bold text-foreground">{metric.value}</p>
-                <p className="text-sm text-muted-foreground">{metric.label}</p>
+                <p className="text-2xl font-bold text-slate-800">{metric.value}</p>
+                <p className="text-sm text-slate-500 font-medium">{metric.label}</p>
               </div>
             </div>
           ))}

@@ -4,25 +4,14 @@ import { useState } from 'react';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { CheckCircle, MapPin, AlertTriangle, Wind, Droplets, Trash2, Waves, Upload, LocateFixed, ShieldCheck, HeartPulse, Siren } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import InteractiveBackground from '@/components/landing/interactive-background';
 
 export default function ReportPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -34,6 +23,12 @@ export default function ReportPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    toast({
+      title: "Signal Received!",
+      description: "Your report has been successfully submitted.",
+      variant: 'default',
+      className: 'bg-green-500 border-green-500 text-white'
+    });
   };
   
   const handleLocateMe = () => {
@@ -42,8 +37,6 @@ export default function ReportPage() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          // For demo purposes, we'll just show the coordinates.
-          // In a real app, you'd use a reverse geocoding service.
           setLocation(`Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}`);
           setIsLocating(false);
           toast({
@@ -73,146 +66,136 @@ export default function ReportPage() {
 
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background relative overflow-hidden">
+      <InteractiveBackground />
       <Header />
-      <main className="flex-grow container py-12 flex flex-col items-center justify-center">
+      <main className="flex-grow container py-12 flex flex-col items-center justify-center z-10">
         <div className="text-center mb-12 max-w-3xl">
-           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-            Be the Signal for a Cleaner Environment.
+           <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-green-600">
+            Be a Hero for Your Environment.
           </h1>
-          <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
-            Your report becomes part of PRISM’s real-time intelligence system, helping detect and prevent environmental harm.
+          <p className="mt-6 text-lg text-slate-600 sm:text-xl">
+            Your report helps create a cleaner, safer community. It’s fast, easy, and makes a real difference.
           </p>
         </div>
 
         {submitted ? (
-          <Card className="w-full max-w-2xl text-center bg-card/40 border border-border/30 backdrop-blur-sm p-8">
+          <Card className="w-full max-w-2xl text-center glassmorphism-card p-8">
             <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Signal Received</h2>
+            <h2 className="text-3xl font-bold mb-2">Signal Received!</h2>
             <p className="text-muted-foreground mb-2">
-              Thank you for your contribution. Your report ID is <span className="font-semibold text-foreground">PR-183491</span>.
+              Thank you! Your report ID is <span className="font-semibold text-foreground">PR-183491</span>.
             </p>
              <p className="text-muted-foreground">You can track its status on your citizen dashboard.</p>
-            <Button onClick={() => setSubmitted(false)} className="mt-6">
+            <Button 
+              onClick={() => setSubmitted(false)} 
+              className="mt-6 bg-gradient-to-r from-teal-500 to-green-500 text-white"
+            >
               Submit Another Report
             </Button>
           </Card>
         ) : (
           <>
-            <Card className="w-full max-w-2xl bg-card/40 border border-border/30 backdrop-blur-sm relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+            <Card className="w-full max-w-2xl glassmorphism-card relative overflow-hidden group">
               <CardHeader>
-                <CardTitle className="text-2xl">
+                <CardTitle className="text-3xl font-bold">
                   Report an Environmental Issue
                 </CardTitle>
-                <CardDescription>
-                  Your report helps us track and verify environmental data. A fast and frictionless process.
+                <CardDescription className="text-slate-500">
+                  Fill in the details below. Your contribution is valuable.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-8">
-                  <div className="space-y-4">
-                    <Label htmlFor="location" className="text-lg font-semibold flex items-center gap-2"><MapPin className="h-5 w-5 text-primary" /> Location</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="location" className="font-semibold flex items-center gap-2"><MapPin className="h-5 w-5 text-primary" /> Location</Label>
                     <div className="flex gap-2">
                        <Input
                         id="location"
-                        placeholder="e.g., City Park, Riverfront"
-                        className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                        placeholder="e.g., Near City Park, Main Riverfront"
+                        className="bg-white/80"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                         required
                       />
-                      <Button variant="outline" type="button" onClick={handleLocateMe} disabled={isLocating}>
+                      <Button variant="outline" type="button" onClick={handleLocateMe} disabled={isLocating} className="bg-white/80">
                         <LocateFixed className={`h-4 w-4 ${isLocating ? 'animate-spin' : ''}`} />
                         <span className="ml-2 hidden sm:inline">Locate Me</span>
                       </Button>
                     </div>
                   </div>
-                  <div className="space-y-4">
-                    <Label htmlFor="pollution-type" className="text-lg font-semibold flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-primary" /> Pollution Type</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="pollution-type" className="font-semibold flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-primary" /> Pollution Type</Label>
                     <Select required>
-                      <SelectTrigger id="pollution-type" className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background">
+                      <SelectTrigger id="pollution-type" className="bg-white/80">
                         <SelectValue placeholder="Select a type of issue" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="air">
-                          <div className="flex items-center gap-2">
-                            <Wind className="h-4 w-4" /> Air (e.g. smoke, dust)
-                          </div>
+                          <div className="flex items-center gap-2"><Wind className="h-4 w-4" /> Air (smoke, dust, smell)</div>
                         </SelectItem>
                         <SelectItem value="water">
-                          <div className="flex items-center gap-2">
-                            <Droplets className="h-4 w-4" /> Water (e.g. discoloration, chemical)
-                          </div>
+                          <div className="flex items-center gap-2"><Droplets className="h-4 w-4" /> Water (discoloration, chemical)</div>
                         </SelectItem>
                         <SelectItem value="waste">
-                          <div className="flex items-center gap-2">
-                            <Trash2 className="h-4 w-4" /> Waste (e.g. illegal dumping)
-                          </div>
+                          <div className="flex items-center gap-2"><Trash2 className="h-4 w-4" /> Waste (illegal dumping)</div>
                         </SelectItem>
                          <SelectItem value="noise">
-                          <div className="flex items-center gap-2">
-                            <Waves className="h-4 w-4" /> Noise (e.g. construction, loudspeakers)
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="smell">
-                          <div className="flex items-center gap-2">
-                            <Wind className="h-4 w-4" /> Smell (e.g. chemical, sewage)
-                          </div>
+                          <div className="flex items-center gap-2"><Waves className="h-4 w-4" /> Noise (construction, loudspeakers)</div>
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-                   <div className="space-y-4">
-                    <Label htmlFor="media" className="text-lg font-semibold flex items-center gap-2"><Upload className="h-5 w-5 text-primary" /> Upload Photo/Video</Label>
+                   <div className="space-y-2">
+                    <Label htmlFor="media" className="font-semibold flex items-center gap-2"><Upload className="h-5 w-5 text-primary" /> Upload Photo/Video (Required)</Label>
                     <Input
                       id="media"
                       type="file"
                       accept="image/*,video/*"
-                      className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background file:text-foreground"
+                      className="bg-white/80 file:text-primary file:font-semibold cursor-pointer"
                       required
                     />
-                     <p className="text-xs text-muted-foreground">A photo or short video is required to verify the report.</p>
+                     <p className="text-xs text-slate-500">A photo or short video helps us verify the report faster.</p>
                   </div>
-                  <div className="space-y-4">
-                    <Label htmlFor="description" className="text-lg font-semibold">Details (Optional)</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="description" className="font-semibold">Details (Optional)</Label>
                     <Textarea
                       id="description"
-                      placeholder="Describe what you see, smell, or hear..."
+                      placeholder="Describe what you see, smell, or hear. The more details, the better!"
                       rows={3}
-                      className="focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                      className="bg-white/80"
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" size="lg">
+                  <Button type="submit" className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white shadow-lg" size="lg">
                     Send Signal to PRISM
                   </Button>
                 </form>
               </CardContent>
             </Card>
 
-            <div className="w-full max-w-2xl mt-16 text-center">
-                <h3 className="text-2xl font-bold mb-6">Why Your Report Matters</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-muted-foreground">
-                    <div className="flex flex-col items-center gap-2">
-                        <div className="bg-secondary p-4 rounded-full">
-                            <ShieldCheck className="h-8 w-8 text-primary"/>
+            <div className="w-full max-w-3xl mt-16 text-center">
+                <h3 className="text-3xl font-bold mb-6 text-slate-700">Your Report Makes a Difference</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-slate-600">
+                    <div className="flex flex-col items-center gap-3">
+                        <div className="bg-white p-4 rounded-full shadow-md">
+                            <ShieldCheck className="h-8 w-8 text-blue-500"/>
                         </div>
-                        <p className="font-semibold text-foreground">Identify Hotspots</p>
-                        <p className="text-sm">Helps pinpoint areas with recurring environmental issues.</p>
+                        <p className="font-semibold text-slate-800">Identify Hotspots</p>
+                        <p className="text-sm">Help pinpoint areas with recurring environmental issues.</p>
                     </div>
-                    <div className="flex flex-col items-center gap-2">
-                        <div className="bg-secondary p-4 rounded-full">
-                            <Siren className="h-8 w-8 text-primary"/>
+                    <div className="flex flex-col items-center gap-3">
+                        <div className="bg-white p-4 rounded-full shadow-md">
+                            <Siren className="h-8 w-8 text-red-500"/>
                         </div>
-                         <p className="font-semibold text-foreground">Trigger Response</p>
-                        <p className="text-sm">Alerts authorities for faster investigation and action.</p>
+                         <p className="font-semibold text-slate-800">Trigger Action</p>
+                        <p className="text-sm">Alert authorities for faster investigation and response.</p>
                     </div>
-                    <div className="flex flex-col items-center gap-2">
-                        <div className="bg-secondary p-4 rounded-full">
-                            <HeartPulse className="h-8 w-8 text-primary"/>
+                    <div className="flex flex-col items-center gap-3">
+                        <div className="bg-white p-4 rounded-full shadow-md">
+                            <HeartPulse className="h-8 w-8 text-green-500"/>
                         </div>
-                        <p className="font-semibold text-foreground">Protect Health</p>
-                        <p className="text-sm">Contributes to a safer, healthier community environment.</p>
+                        <p className="font-semibold text-slate-800">Protect Health</p>
+                        <p className="text-sm">Contribute to a safer, healthier community environment for everyone.</p>
                     </div>
                 </div>
             </div>

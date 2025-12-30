@@ -4,23 +4,25 @@ import Logo from '@/components/logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { MoveRight } from 'lucide-react';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/citizen', label: 'For Citizens' },
+  { href: '/report', label: 'Report Issue' },
 ];
 
 export default function Header() {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center">
+    <header className="sticky top-0 z-50 w-full border-b border-white/30 bg-white/50 backdrop-blur-lg">
+      <div className="container flex h-16 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Logo className="text-primary" isAnimated={true} />
-          <span className="font-bold sm:inline-block">PRISM</span>
+          <Logo className="text-primary" isAnimated={false} />
+          <span className="font-bold sm:inline-block text-slate-800">PRISM</span>
         </Link>
         <nav className="flex-1">
-          <ul className="flex items-center space-x-4">
+          <ul className="flex items-center space-x-6">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
@@ -29,7 +31,7 @@ export default function Header() {
                     'text-sm font-medium transition-colors hover:text-primary',
                     pathname === link.href
                       ? 'text-primary'
-                      : 'text-muted-foreground'
+                      : 'text-slate-600'
                   )}
                 >
                   {link.label}
@@ -39,8 +41,10 @@ export default function Header() {
           </ul>
         </nav>
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
-          <Button asChild>
-            <Link href="/access">Access PRISM</Link>
+          <Button asChild className="bg-gradient-to-r from-blue-500 to-sky-400 text-white group shadow-lg hover:shadow-xl">
+            <Link href="/access">
+              Access PRISM <MoveRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </Button>
         </div>
       </div>

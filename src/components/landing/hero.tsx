@@ -1,32 +1,29 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import InteractiveBackground from './interactive-background';
 
 export default function Hero() {
   return (
-    <section className="relative h-[650px] w-full flex items-center justify-center overflow-hidden">
-      <InteractiveBackground />
-      <div
-        className="absolute inset-0 z-0 opacity-20"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle at 15% 20%, hsl(var(--primary) / 0.1), transparent 40%), radial-gradient(circle at 85% 80%, hsl(var(--accent) / 0.1), transparent 40%)',
-        }}
-      />
-      <div className="relative z-20 flex h-full flex-col items-center justify-center text-center text-foreground">
+    <section className="relative w-full flex items-center justify-center pt-24 pb-32 overflow-hidden">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-foreground">
         <div className="container max-w-5xl">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            Environmental Intelligence, Refracted in Real Time.
+          <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-green-600">
+              Clarity for a
+            </span>
+            <br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-sky-400">
+              Cleaner Planet.
+            </span>
           </h1>
-          <p className="mt-6 text-lg text-muted-foreground sm:text-xl max-w-3xl mx-auto">
-            Transforming environmental data into clarity and action.
+          <p className="mt-6 text-lg text-slate-600 sm:text-xl max-w-3xl mx-auto">
+            PRISM transforms environmental data into clear, actionable insights, empowering communities and authorities to build a sustainable future.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white shadow-lg">
               <Link href="/dashboard">View Live Dashboard</Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/report">Report Pollution</Link>
+            <Button asChild size="lg" variant="outline" className="bg-white/80 border-2 border-blue-500 text-blue-600 font-semibold hover:bg-blue-50 hover:text-blue-700">
+              <Link href="/report">Report an Issue</Link>
             </Button>
           </div>
         </div>

@@ -29,7 +29,7 @@ import { Separator } from '@/components/ui/separator';
 const features = [
   {
     id: 'air',
-    icon: <Wind className="h-8 w-8 text-primary" />,
+    icon: <Wind className="h-8 w-8 text-sky-500" />,
     title: 'Air Monitoring',
     details: 'PM2.5 · NO₂ · O₃',
     badge: 'Live',
@@ -68,7 +68,7 @@ const features = [
   },
   {
     id: 'water',
-    icon: <Droplets className="h-8 w-8 text-primary" />,
+    icon: <Droplets className="h-8 w-8 text-blue-500" />,
     title: 'Water Monitoring',
     details: 'pH · Turbidity · Contaminants',
     badge: '24x7',
@@ -91,12 +91,12 @@ const features = [
         {
           title: 'Risk Levels',
           items: [
-            { icon: <ShieldCheck className="h-4 w-4 text-green-400" />, text: 'Safe' },
+            { icon: <ShieldCheck className="h-4 w-4 text-green-500" />, text: 'Safe' },
             {
-              icon: <ShieldCheck className="h-4 w-4 text-yellow-400" />,
+              icon: <ShieldCheck className="h-4 w-4 text-yellow-500" />,
               text: 'Moderate',
             },
-            { icon: <ShieldCheck className="h-4 w-4 text-red-400" />, text: 'Critical' },
+            { icon: <ShieldCheck className="h-4 w-4 text-red-500" />, text: 'Critical' },
           ],
         },
       ],
@@ -104,7 +104,7 @@ const features = [
   },
   {
     id: 'land',
-    icon: <Leaf className="h-8 w-8 text-primary" />,
+    icon: <Leaf className="h-8 w-8 text-green-500" />,
     title: 'Land Monitoring',
     details: 'Soil Health · Contamination',
     badge: '24x7',
@@ -136,10 +136,10 @@ const features = [
   },
   {
     id: 'alerts',
-    icon: <AlertTriangle className="h-8 w-8 text-primary" />,
+    icon: <AlertTriangle className="h-8 w-8 text-yellow-500" />,
     title: 'Predictive Alerts',
     details: 'Event Forecasting',
-    badge: 'Predictive',
+    badge: 'AI-Powered',
     description:
       'Receive AI-powered alerts on potential pollution events before they become critical.',
     expanded: {
@@ -166,56 +166,54 @@ const features = [
 
 export default function KeyFeatures() {
   return (
-    <section id="features" className="py-16 sm:py-24 bg-background">
+    <section id="features" className="py-16 sm:py-24 bg-transparent">
       <div className="container">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-slate-800">
             A New Standard in Environmental Intelligence
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Our platform provides a comprehensive, real-time view of your
-            environment.
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-slate-600">
+            Our platform provides a comprehensive, real-time view of your environment, making complex data simple and actionable.
           </p>
         </div>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
             <Dialog key={feature.id}>
               <DialogTrigger asChild>
-                <Card className="bg-card/40 border border-border/30 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 relative overflow-hidden group hover:-translate-y-1 cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <Card className="glassmorphism-card transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer group">
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="bg-primary/10 p-3 rounded-lg">
+                      <div className="bg-white/80 p-3 rounded-lg shadow-inner">
                         {feature.icon}
                       </div>
                       <Badge
                         variant={
-                          feature.badge === 'Predictive'
+                          feature.badge === 'AI-Powered'
                             ? 'default'
                             : 'secondary'
                         }
-                        className="absolute top-4 right-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                        className="bg-accent text-accent-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                       >
                         {feature.badge}
                       </Badge>
                     </div>
-                    <div className="pt-2">
-                      <CardTitle>{feature.title}</CardTitle>
-                      <p className="text-xs text-muted-foreground pt-1">
+                    <div className="pt-4">
+                      <CardTitle className="text-xl font-bold">{feature.title}</CardTitle>
+                      <p className="text-xs text-slate-500 pt-1 font-medium tracking-wider">
                         {feature.details}
                       </p>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">
+                    <p className="text-slate-600">
                       {feature.description}
                     </p>
                   </CardContent>
                 </Card>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] bg-card/60 border-border/30 backdrop-blur-xl">
+              <DialogContent className="sm:max-w-[425px] glassmorphism-card">
                 <DialogHeader>
-                  <DialogTitle className="flex items-center gap-3 text-xl">
+                  <DialogTitle className="flex items-center gap-3 text-2xl font-bold">
                     {feature.icon} {feature.expanded.title}
                   </DialogTitle>
                 </DialogHeader>
@@ -223,7 +221,7 @@ export default function KeyFeatures() {
                   {feature.expanded.sections.map((section, index) => (
                     <React.Fragment key={index}>
                       <div className="space-y-3">
-                        <h4 className="font-semibold text-muted-foreground">
+                        <h4 className="font-semibold text-slate-500">
                           {section.title}
                         </h4>
                         <div className="flex flex-col gap-2">
@@ -233,12 +231,12 @@ export default function KeyFeatures() {
                               className="flex items-center gap-3 text-sm"
                             >
                               <div className="text-primary">{item.icon}</div>
-                              <span>{item.text}</span>
+                              <span className="text-slate-700 font-medium">{item.text}</span>
                             </div>
                           ))}
                         </div>
                       </div>
-                      {index < feature.expanded.sections.length - 1 && <Separator className="bg-border/40"/>}
+                      {index < feature.expanded.sections.length - 1 && <Separator className="bg-slate-200/60"/>}
                     </React.Fragment>
                   ))}
                 </div>
