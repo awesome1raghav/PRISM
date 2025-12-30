@@ -38,9 +38,10 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    --status-green: 140 60% 45%;
-    --status-yellow: 45 90% 55%;
-    --status-red: 0 80% 60%;
+    --status-green: 130 60% 45%;
+    --status-yellow: 45 85% 55%;
+    --status-red: 0 75% 55%;
+    --status-red-dark: 0 90% 40%;
     
     --radius: 0.5rem;
   }
@@ -80,9 +81,10 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    --status-green: 140 60% 45%;
-    --status-yellow: 45 90% 55%;
-    --status-red: 0 80% 60%;
+    --status-green: 130 60% 45%;
+    --status-yellow: 45 85% 55%;
+    --status-red: 0 75% 55%;
+    --status-red-dark: 0 90% 40%;
   }
 }
 

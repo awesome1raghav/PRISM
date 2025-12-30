@@ -259,11 +259,15 @@ export default function KeyFeatures() {
                   <CardContent className="flex-grow flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-2 font-semibold text-lg">
-                          <Badge className={cn("text-white", 
-                            feature.status === 'Good' && "bg-status-green hover:bg-status-green/90",
-                            (feature.status === 'Warning' || feature.status === 'Moderate') && "bg-status-yellow hover:bg-status-yellow/90 text-black",
-                            feature.status === 'High Risk' && "bg-status-red hover:bg-status-red/90"
-                          )}>{feature.status}</Badge>
+                          <Badge className={cn("text-white flex items-center gap-1.5", 
+                            feature.status === 'Good' && "bg-status-green/90 shadow-lg shadow-status-green/40",
+                            feature.status === 'Moderate' && "bg-status-yellow/90 shadow-lg shadow-status-yellow/40 text-black",
+                            feature.status === 'Warning' && "bg-status-red/90 shadow-lg shadow-status-red/40",
+                            feature.status === 'High Risk' && "bg-status-red-dark/90 shadow-lg shadow-status-red-dark/40"
+                          )}>
+                             {feature.status === 'High Risk' && <AlertTriangle className="h-3 w-3" />}
+                            {feature.status}
+                          </Badge>
                           <span className="text-muted-foreground text-sm font-medium">{feature.metric}</span>
                       </div>
                     </div>
