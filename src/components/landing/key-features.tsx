@@ -29,8 +29,6 @@ import {
   Signal,
   Sigma,
   CalendarClock,
-  ArrowUp,
-  ArrowDown,
   ArrowRight,
   TrendingDown,
 } from 'lucide-react';
@@ -45,7 +43,6 @@ const features = [
     icon: <Wind className="h-6 w-6 text-sky-400" />,
     status: 'Good',
     statusColor: 'text-status-green',
-    statusIcon: <CheckCircle className="h-5 w-5" />,
     metric: 'AQI 32',
     trend: 'stable',
     trendIcon: <ArrowRight className="h-4 w-4" />,
@@ -57,8 +54,9 @@ const features = [
         {
           title: 'Pollutant Levels',
           items: [
-            { icon: <Sigma className="h-4 w-4" />, text: 'PM2.5: 12 μg/m³' },
-            { icon: <Sigma className="h-4 w-4" />, text: 'O₃: 45 ppb' },
+            { icon: <Sigma className="h-4 w-4" />, text: 'PM2.5: 12 μg/m³ (Low)' },
+            { icon: <Sigma className="h-4 w-4" />, text: 'O₃: 45 ppb (Good)' },
+            { icon: <Sigma className="h-4 w-4" />, text: 'NO₂: 8 ppb (Good)' },
           ],
         },
         {
@@ -78,7 +76,6 @@ const features = [
     icon: <Droplets className="h-6 w-6 text-blue-400" />,
     status: 'Warning',
     statusColor: 'text-status-yellow',
-    statusIcon: <AlertTriangle className="h-5 w-5" />,
     metric: 'High Turbidity',
     trend: 'improving',
     trendIcon: <TrendingDown className="h-4 w-4" />,
@@ -91,13 +88,14 @@ const features = [
           title: 'Key Risk Factors',
           items: [
             { icon: <AreaChart className="h-4 w-4" />, text: 'Turbidity: 8.2 NTU (Elevated)' },
-            { icon: <AreaChart className="h-4 w-4" />, text: 'pH Level: 7.1 (Normal)' },
+            { icon: <CheckCircle className="h-4 w-4" />, text: 'pH Level: 7.1 (Normal)' },
+            { icon: <XCircle className="h-4 w-4" />, text: 'E. Coli: Detected' },
           ],
         },
          {
           title: 'Trust Indicators',
           items: [
-            { icon: <Rss className="h-4 w-4" />, text: 'Source: River Probe' },
+            { icon: <Rss className="h-4 w-4" />, text: 'Source: River Probe Sensor' },
             { icon: <ShieldCheck className="h-4 w-4" />, text: 'Confidence: High' },
             { icon: <Clock className="h-4 w-4" />, text: 'Verified: 15 mins ago' },
           ],
@@ -111,7 +109,6 @@ const features = [
     icon: <Waves className="h-6 w-6 text-orange-400" />,
     status: 'Moderate',
     statusColor: 'text-status-yellow',
-    statusIcon: <MinusCircle className="h-5 w-5" />,
     metric: '68 dB Avg.',
     trend: 'worsening',
     trendIcon: <TrendingUp className="h-4 w-4" />,
@@ -123,8 +120,9 @@ const features = [
         {
           title: 'Impact Assessment',
           items: [
-            { icon: <AreaChart className="h-4 w-4" />, text: 'Potential for sleep disturbance.' },
-            { icon: <AreaChart className="h-4 w-4" />, text: 'Source: Traffic & Construction' },
+            { icon: <AreaChart className="h-4 w-4" />, text: 'Average: 68 dB (Day)' },
+            { icon: <AlertTriangle className="h-4 w-4" />, text: 'Peak: 85 dB (Construction)' },
+            { icon: <MinusCircle className="h-4 w-4" />, text: 'Health Risk: Sleep disturbance' },
           ],
         },
         {
@@ -144,7 +142,6 @@ const features = [
     icon: <BrainCircuit className="h-6 w-6 text-purple-400" />,
     status: 'High Risk',
     statusColor: 'text-status-red',
-    statusIcon: <XCircle className="h-5 w-5" />,
     metric: 'Air Quality Drop',
     trend: 'worsening',
     trendIcon: <TrendingUp className="h-4 w-4" />,
@@ -158,6 +155,7 @@ const features = [
           items: [
             { icon: <TrendingUp className="h-4 w-4" />, text: 'Event: Industrial Effluent Drift' },
             { icon: <CalendarClock className="h-4 w-4" />, text: 'Time Window: Next 6 Hours' },
+            { icon: <XCircle className="h-4 w-4" />, text: 'Severity: High' },
           ],
         },
         {
@@ -211,7 +209,7 @@ export default function KeyFeatures() {
                   </CardHeader>
                   <CardContent className="flex-grow flex flex-col justify-between">
                     <div>
-                      <div className={cn("flex items-center gap-2 font-semibold text-lg", feature.statusColor)}>
+                      <div className="flex items-center gap-2 font-semibold text-lg">
                           <Badge className={cn("text-white", 
                             feature.status === 'Good' && "bg-status-green hover:bg-status-green/90",
                             feature.status === 'Warning' && "bg-status-yellow hover:bg-status-yellow/90",
