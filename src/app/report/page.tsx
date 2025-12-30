@@ -26,7 +26,6 @@ export default function ReportPage() {
       title: "Signal Received!",
       description: "Your report has been successfully submitted.",
       variant: 'default',
-      className: 'bg-green-500 border-green-500 text-white'
     });
   };
   
@@ -70,10 +69,10 @@ export default function ReportPage() {
       <Header />
       <main className="flex-grow container py-12 flex flex-col items-center justify-center z-10">
         <div className="text-center mb-12 max-w-3xl">
-           <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-green-600">
+           <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
             Be a Hero for Your Environment.
           </h1>
-          <p className="mt-6 text-lg text-slate-600 sm:text-xl">
+          <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
             Your report helps create a cleaner, safer community. It’s fast, easy, and makes a real difference.
           </p>
         </div>
@@ -88,7 +87,7 @@ export default function ReportPage() {
              <p className="text-muted-foreground">You can track its status on your citizen dashboard.</p>
             <Button 
               onClick={() => setSubmitted(false)} 
-              className="mt-6 bg-gradient-to-r from-teal-500 to-green-500 text-white"
+              className="mt-6"
             >
               Submit Another Report
             </Button>
@@ -100,7 +99,7 @@ export default function ReportPage() {
                 <CardTitle className="text-3xl font-bold">
                   Report an Environmental Issue
                 </CardTitle>
-                <CardDescription className="text-slate-500">
+                <CardDescription>
                   Fill in the details below. Your contribution is valuable.
                 </CardDescription>
               </CardHeader>
@@ -112,12 +111,11 @@ export default function ReportPage() {
                        <Input
                         id="location"
                         placeholder="e.g., Near City Park, Main Riverfront"
-                        className="bg-white/80"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                         required
                       />
-                      <Button variant="outline" type="button" onClick={handleLocateMe} disabled={isLocating} className="bg-white/80">
+                      <Button variant="outline" type="button" onClick={handleLocateMe} disabled={isLocating}>
                         <LocateFixed className={`h-4 w-4 ${isLocating ? 'animate-spin' : ''}`} />
                         <span className="ml-2 hidden sm:inline">Locate Me</span>
                       </Button>
@@ -126,7 +124,7 @@ export default function ReportPage() {
                   <div className="space-y-2">
                     <Label htmlFor="pollution-type" className="font-semibold flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-primary" /> Pollution Type</Label>
                     <Select required>
-                      <SelectTrigger id="pollution-type" className="bg-white/80">
+                      <SelectTrigger id="pollution-type">
                         <SelectValue placeholder="Select a type of issue" />
                       </SelectTrigger>
                       <SelectContent>
@@ -151,10 +149,10 @@ export default function ReportPage() {
                       id="media"
                       type="file"
                       accept="image/*,video/*"
-                      className="bg-white/80 file:text-primary file:font-semibold cursor-pointer"
+                      className="file:text-primary file:font-semibold cursor-pointer"
                       required
                     />
-                     <p className="text-xs text-slate-500">A photo or short video helps us verify the report faster.</p>
+                     <p className="text-xs text-muted-foreground">A photo or short video helps us verify the report faster.</p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="description" className="font-semibold">Details (Optional)</Label>
@@ -162,10 +160,9 @@ export default function ReportPage() {
                       id="description"
                       placeholder="Describe what you see, smell, or hear. The more details, the better!"
                       rows={3}
-                      className="bg-white/80"
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white shadow-lg" size="lg">
+                  <Button type="submit" className="w-full" size="lg">
                     Send Signal to PRISM
                   </Button>
                 </form>
@@ -173,27 +170,27 @@ export default function ReportPage() {
             </Card>
 
             <div className="w-full max-w-3xl mt-16 text-center">
-                <h3 className="text-3xl font-bold mb-6 text-slate-700">Your Report Makes a Difference</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-slate-600">
+                <h3 className="text-3xl font-bold mb-6 text-foreground">Your Report Makes a Difference</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-muted-foreground">
                     <div className="flex flex-col items-center gap-3">
-                        <div className="bg-white p-4 rounded-full shadow-md">
-                            <ShieldCheck className="h-8 w-8 text-blue-500"/>
+                        <div className="bg-card/80 p-4 rounded-full shadow-md">
+                            <ShieldCheck className="h-8 w-8 text-blue-400"/>
                         </div>
-                        <p className="font-semibold text-slate-800">Identify Hotspots</p>
+                        <p className="font-semibold text-foreground">Identify Hotspots</p>
                         <p className="text-sm">Help pinpoint areas with recurring environmental issues.</p>
                     </div>
                     <div className="flex flex-col items-center gap-3">
-                        <div className="bg-white p-4 rounded-full shadow-md">
-                            <Siren className="h-8 w-8 text-red-500"/>
+                        <div className="bg-card/80 p-4 rounded-full shadow-md">
+                            <Siren className="h-8 w-8 text-red-400"/>
                         </div>
-                         <p className="font-semibold text-slate-800">Trigger Action</p>
+                         <p className="font-semibold text-foreground">Trigger Action</p>
                         <p className="text-sm">Alert authorities for faster investigation and response.</p>
                     </div>
                     <div className="flex flex-col items-center gap-3">
-                        <div className="bg-white p-4 rounded-full shadow-md">
-                            <HeartPulse className="h-8 w-8 text-green-500"/>
+                        <div className="bg-card/80 p-4 rounded-full shadow-md">
+                            <HeartPulse className="h-8 w-8 text-primary"/>
                         </div>
-                        <p className="font-semibold text-slate-800">Protect Health</p>
+                        <p className="font-semibold text-foreground">Protect Health</p>
                         <p className="text-sm">Contribute to a safer, healthier community environment for everyone.</p>
                     </div>
                 </div>
