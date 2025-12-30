@@ -28,7 +28,11 @@ import {
   MinusCircle,
   Signal,
   Sigma,
-  CalendarClock
+  CalendarClock,
+  ArrowUp,
+  ArrowDown,
+  ArrowRight,
+  TrendingDown,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -43,7 +47,10 @@ const features = [
     statusColor: 'text-status-green',
     statusIcon: <CheckCircle className="h-5 w-5" />,
     metric: 'AQI 32',
-    recommendation: 'Ideal for outdoor activities.',
+    trend: 'stable',
+    trendIcon: <ArrowRight className="h-4 w-4" />,
+    impact: 'Ideal for all outdoor activities.',
+    action: 'View Area Details',
     details: {
       title: 'Live Air Quality Report',
       sections: [
@@ -73,7 +80,10 @@ const features = [
     statusColor: 'text-status-yellow',
     statusIcon: <AlertTriangle className="h-5 w-5" />,
     metric: 'High Turbidity',
-    recommendation: 'Boil tap water before use.',
+    trend: 'improving',
+    trendIcon: <TrendingDown className="h-4 w-4" />,
+    impact: 'Contaminant levels decreasing. Boil tap water before use.',
+    action: 'See Health Advice',
     details: {
       title: 'Water Safety Advisory',
       sections: [
@@ -103,7 +113,10 @@ const features = [
     statusColor: 'text-status-yellow',
     statusIcon: <MinusCircle className="h-5 w-5" />,
     metric: '68 dB Avg.',
-    recommendation: 'Exceeds residential night limits.',
+    trend: 'worsening',
+    trendIcon: <TrendingUp className="h-4 w-4" />,
+    impact: 'Exceeds residential night limits. May cause sleep disturbance.',
+    action: 'Report an Issue',
     details: {
       title: 'Noise Pollution Analysis',
       sections: [
@@ -133,7 +146,10 @@ const features = [
     statusColor: 'text-status-red',
     statusIcon: <XCircle className="h-5 w-5" />,
     metric: 'Air Quality Drop',
-    recommendation: 'High PM2.5 levels expected.',
+    trend: 'worsening',
+    trendIcon: <TrendingUp className="h-4 w-4" />,
+    impact: 'High PM2.5 levels expected in your area soon.',
+    action: 'View Area Details',
     details: {
       title: 'Predictive Alert Details',
       sections: [
@@ -156,6 +172,12 @@ const features = [
     },
   },
 ];
+
+const trendStyles = {
+  improving: 'text-status-green',
+  worsening: 'text-status-red',
+  stable: 'text-muted-foreground',
+};
 
 
 export default function KeyFeatures() {
@@ -180,21 +202,31 @@ export default function KeyFeatures() {
                        <div className="bg-background/80 p-3 rounded-lg shadow-inner w-fit">
                         {feature.icon}
                       </div>
-                      <Badge variant="outline" className="text-xs">
-                        {feature.metric}
-                      </Badge>
+                       <div className={cn("flex items-center gap-1.5 text-xs font-semibold", trendStyles[feature.trend as keyof typeof trendStyles])}>
+                        {feature.trendIcon}
+                        <span>{feature.trend.charAt(0).toUpperCase() + feature.trend.slice(1)}</span>
+                      </div>
                     </div>
                      <CardTitle className="pt-4 text-xl font-bold">{feature.category}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex-grow flex flex-col justify-between">
                     <div>
-                       <div className={cn("flex items-center gap-2 font-semibold text-lg", feature.statusColor)}>
-                        {feature.statusIcon}
-                        <span>{feature.status}</span>
+                      <div className={cn("flex items-center gap-2 font-semibold text-lg", feature.statusColor)}>
+                          <Badge className={cn("text-white", 
+                            feature.status === 'Good' && "bg-status-green hover:bg-status-green/90",
+                            feature.status === 'Warning' && "bg-status-yellow hover:bg-status-yellow/90",
+                             feature.status === 'Moderate' && "bg-status-yellow hover:bg-status-yellow/90",
+                            feature.status === 'High Risk' && "bg-status-red hover:bg-status-red/90"
+                          )}>{feature.status}</Badge>
+                          <span className="text-muted-foreground text-sm font-medium">{feature.metric}</span>
                       </div>
-                      <p className="text-muted-foreground text-sm mt-2">
-                        {feature.recommendation}
+                      <p className="text-muted-foreground text-sm mt-3 h-10">
+                        {feature.impact}
                       </p>
+                    </div>
+                     <div className="mt-4 text-primary font-semibold text-sm group-hover:underline flex items-center gap-1">
+                      {feature.action}
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </div>
                   </CardContent>
                 </Card>
