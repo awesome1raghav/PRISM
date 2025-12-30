@@ -3,6 +3,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -31,10 +32,10 @@ import {
   CalendarClock,
   ArrowRight,
   TrendingDown,
+  HeartPulse,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-
 
 const features = [
   {
@@ -69,6 +70,19 @@ const features = [
         },
       ],
     },
+    advice: {
+        title: 'Health Advisory: Air Quality',
+        sections: [
+            {
+                title: 'General Population',
+                description: 'Air quality is considered satisfactory, and air pollution poses little or no risk.'
+            },
+            {
+                title: 'Sensitive Groups',
+                description: 'No specific precautions needed. Enjoy your outdoor activities!'
+            }
+        ]
+    }
   },
   {
     id: 'water',
@@ -82,7 +96,7 @@ const features = [
     impact: 'Contaminant levels decreasing. Boil tap water before use.',
     action: 'See Health Advice',
     details: {
-      title: 'Water Safety Advisory',
+      title: 'Water Safety Report',
       sections: [
         {
           title: 'Key Risk Factors',
@@ -102,6 +116,19 @@ const features = [
         },
       ],
     },
+    advice: {
+        title: 'Health Advisory: Water Safety',
+        sections: [
+            {
+                title: 'Recommended Action',
+                description: 'Due to detected E. Coli, it is strongly recommended to boil all tap water for at least one minute before drinking, cooking, or brushing teeth.'
+            },
+            {
+                title: 'High-Risk Groups',
+                description: 'Infants, young children, the elderly, and individuals with compromised immune systems should use bottled water as an extra precaution.'
+            }
+        ]
+    }
   },
   {
     id: 'noise',
@@ -113,7 +140,7 @@ const features = [
     trend: 'worsening',
     trendIcon: <TrendingUp className="h-4 w-4" />,
     impact: 'Exceeds residential night limits. May cause sleep disturbance.',
-    action: 'Report an Issue',
+    action: 'View Impact Details',
     details: {
       title: 'Noise Pollution Analysis',
       sections: [
@@ -135,6 +162,19 @@ const features = [
         },
       ],
     },
+     advice: {
+        title: 'Health Advisory: Noise Levels',
+        sections: [
+            {
+                title: 'Guidance for Residents',
+                description: 'Current noise levels may disrupt sleep. Consider using earplugs or white noise machines at night. Limit exposure to peak noise periods if sensitive.'
+            },
+            {
+                title: 'Legal Awareness',
+                description: 'Noise levels exceed residential limits after 10 PM. You can report persistent disturbances to local authorities through our platform.'
+            }
+        ]
+    }
   },
   {
     id: 'alerts',
@@ -146,7 +186,7 @@ const features = [
     trend: 'worsening',
     trendIcon: <TrendingUp className="h-4 w-4" />,
     impact: 'High PM2.5 levels expected in your area soon.',
-    action: 'View Area Details',
+    action: 'View Forecast',
     details: {
       title: 'Predictive Alert Details',
       sections: [
@@ -168,6 +208,19 @@ const features = [
         },
       ],
     },
+    advice: {
+        title: 'Health Advisory: Predicted Air Quality Drop',
+        sections: [
+            {
+                title: 'Precautionary Measures',
+                description: 'Prepare to close windows and use air purifiers. It is advisable to reschedule strenuous outdoor activities planned for the next 6 hours.'
+            },
+            {
+                title: 'Sensitive Groups',
+                description: 'Individuals with respiratory conditions (like asthma), children, and the elderly should stay indoors during the predicted event window.'
+            }
+        ]
+    }
   },
 ];
 
@@ -256,6 +309,30 @@ export default function KeyFeatures() {
                       {index < feature.details.sections.length - 1 && <Separator className="bg-border/60"/>}
                     </React.Fragment>
                   ))}
+                   <Dialog>
+                        <DialogTrigger asChild>
+                           <Button>
+                               <HeartPulse className="mr-2 h-4 w-4" /> View Health Advice
+                           </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md glassmorphism-card">
+                             <DialogHeader>
+                                <DialogTitle className="flex items-center gap-3 text-2xl font-bold">
+                                    <HeartPulse className="h-6 w-6 text-primary" /> {feature.advice.title}
+                                </DialogTitle>
+                            </DialogHeader>
+                            <div className="flex flex-col gap-4 py-4">
+                                {feature.advice.sections.map((section, index) => (
+                                     <div key={index} className="space-y-1.5">
+                                        <h4 className="font-semibold text-muted-foreground">
+                                        {section.title}
+                                        </h4>
+                                        <p className="text-sm text-foreground/90">{section.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 </div>
               </DialogContent>
             </Dialog>
