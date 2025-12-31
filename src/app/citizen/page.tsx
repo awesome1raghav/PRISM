@@ -16,7 +16,6 @@ import {
   Waves,
   Info,
   LocateFixed,
-  Thermometer,
   Cloud,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -237,3 +236,5 @@ export default function CitizenPage() {
     </div>
   );
 }
+
+    

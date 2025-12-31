@@ -39,7 +39,6 @@ const locationData: LocationDataContext = {
         water: { status: 'Safe', advice: 'Tap water is safe for consumption.' },
         noise: { status: 'Moderate', advice: 'Minor traffic noise expected.' },
         advisories: [
-            { type: 'alert', title: 'Moderate PM2.5 Levels', description: 'Sensitive groups should limit prolonged outdoor exertion.' },
             { type: 'info', title: 'No Critical Alerts', description: 'No immediate severe risks detected in your area.' }
         ]
     },
@@ -60,7 +59,6 @@ const locationData: LocationDataContext = {
         noise: { status: 'High', advice: 'Constant city noise.' },
         advisories: [
             { type: 'alert', title: 'Air Quality Alert', description: 'High levels of ozone detected. Stay indoors if you have respiratory issues.' },
-            { type: 'info', title: 'Clean Waterways', description: 'Hudson river shows improving quality this month.' }
         ]
     }
 };
@@ -144,3 +142,5 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
     </LocationContext.Provider>
   );
 };
+
+    
