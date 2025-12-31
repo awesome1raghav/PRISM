@@ -5,124 +5,94 @@ import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 const InteractiveBackground: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameId = useRef<number>();
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    
-    const updateGlow = (x: number, y: number) => {
-        const surface = container.querySelector('.water-surface') as HTMLDivElement;
-        if (surface) {
-            surface.style.setProperty('--x', `${x}px`);
-            surface.style.setProperty('--y', `${y}px`);
-        }
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const setCanvasDimensions = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
-    
-    const createRipple = (x: number, y: number) => {
-      const ripple = document.createElement('span');
-      ripple.className = 'ripple';
-      ripple.style.left = x + 'px';
-      ripple.style.top = y + 'px';
 
-      container.appendChild(ripple);
+    setCanvasDimensions();
 
-      setTimeout(() => {
-        ripple.remove();
-      }, 600);
+    let target = { x: canvas.width / 2, y: canvas.height / 2 };
+    let point = { x: target.x, y: target.y };
+    let trail: { x: number; y: number; life: number }[] = [];
+
+    const lerp = (a: number, b: number, n: number) => a + (b - a) * n;
+
+    const animate = () => {
+      // Create inertia for the "drag" effect
+      point.x = lerp(point.x, target.x, 0.15);
+      point.y = lerp(point.y, target.y, 0.15);
+
+      trail.push({ x: point.x, y: point.y, life: 1 });
+
+      // Create a fading effect by repainting with a semi-transparent background
+      ctx.fillStyle = 'rgba(11, 18, 32, 0.15)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the trail
+      for (let i = 0; i < trail.length; i++) {
+        const p = trail[i];
+        p.life -= 0.02; // Decrease life
+
+        if (p.life > 0) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 40 * p.life, 0, Math.PI * 2); // Size based on life
+          ctx.fillStyle = `rgba(0, 180, 255, ${p.life * 0.4})`;
+          ctx.fill();
+        }
+      }
+
+      // Remove "dead" particles
+      trail = trail.filter(p => p.life > 0);
+
+      animationFrameId.current = requestAnimationFrame(animate);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      updateGlow(e.clientX, e.clientY);
+      target.x = e.clientX;
+      target.y = e.clientY;
     };
-    
+
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         const touch = e.touches[0];
-        updateGlow(touch.clientX, touch.clientY);
+        target.x = touch.clientX;
+        target.y = touch.clientY;
       }
     };
     
-    const handleTouchStart = (e: TouchEvent) => {
-        if (e.touches.length > 0) {
-            const touch = e.touches[0];
-            createRipple(touch.clientX, touch.clientY);
-        }
-    }
-
+    window.addEventListener('resize', setCanvasDimensions);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
 
+    animate();
+
+    // Cleanup function
     return () => {
+      window.removeEventListener('resize', setCanvasDimensions);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchstart', handleTouchStart);
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
     };
   }, []);
 
   return (
-    <>
-      <div
-        ref={containerRef}
-        className={cn(
-          'fixed inset-0 z-0 overflow-hidden bg-[#0b1220] isolate'
-        )}
-      >
-        <div className="water-surface" />
-        <div className="background-vignette" />
-      </div>
-       <style jsx global>{`
-        .water-surface {
-          width: 100%;
-          height: 100%;
-          filter: blur(2px);
-          touch-action: none;
-          background: radial-gradient(
-            circle at var(--x, 50%) var(--y, 50%),
-            rgba(0, 200, 255, 0.25),
-            rgba(0, 100, 255, 0.1),
-            rgba(0, 0, 0, 0) 40%
-          );
-           transition: background 0.08s linear;
-        }
-
-        .background-vignette {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(ellipse at center, transparent 65%, black 100%);
-          opacity: 0.7;
-          pointer-events: none;
-        }
-
-        .ripple {
-          position: fixed; /* Use fixed to position relative to viewport */
-          width: 140px; 
-          height: 140px;
-          border-radius: 50%;
-          pointer-events: none;
-          transform: translate(-50%, -50%);
-          background: radial-gradient(
-            circle,
-            rgba(0, 200, 255, 0.5),
-            transparent 65%
-          );
-          animation: ripple-animation 0.6s ease-out forwards;
-          z-index: -1;
-        }
-
-        @keyframes ripple-animation {
-          from {
-            transform: translate(-50%, -50%) scale(0.2);
-            opacity: 1;
-          }
-          to {
-            transform: translate(-50%, -50%) scale(1.5);
-            opacity: 0;
-          }
-        }
-      `}</style>
-    </>
+     <div className="fixed inset-0 z-0 overflow-hidden bg-[#0b1220] isolate">
+        <canvas ref={canvasRef} className="block" />
+        <div className="absolute inset-0 bg-transparent" />
+     </div>
   );
 };
 
