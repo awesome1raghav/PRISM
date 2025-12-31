@@ -8,6 +8,7 @@ import { useCollection, useFirestore } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface WardData {
+  id: string;
   name: string;
   lat: number;
   lng: number;
