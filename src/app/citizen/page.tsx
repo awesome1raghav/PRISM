@@ -24,7 +24,13 @@ import MetricDetailModal from '@/components/citizen/MetricDetailModal';
 import { type ReportCategory } from './types';
 import HeatmapGrid from '@/components/citizen/HeatmapGrid';
 import { useSearchParams, useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
 
+const CitizenHeatmap = dynamic(() => import('@/components/maps/CitizenHeatmap'), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[420px] w-full" />,
+});
 
 const LocationSelector = () => {
   const { location, setLocation, isLocating, handleLocateMe } = useContext(LocationContext);
@@ -160,12 +166,9 @@ function CitizenDashboardContent() {
                         <CardTitle>Pollution Heatmap</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="aspect-[16/10] bg-muted/30 rounded-md relative overflow-hidden p-4">
-                            <HeatmapGrid wards={cityData.wards} activeMetric="aqi" isPreview={true} />
+                        <div className="h-[420px] bg-muted/30 rounded-md relative overflow-hidden">
+                           <CitizenHeatmap />
                         </div>
-                        <Button asChild className="mt-4 w-full">
-                            <Link href={`/citizen/heatmap?location=${location}`}>Expand Heatmap</Link>
-                        </Button>
                     </CardContent>
                 </Card>
             </div>

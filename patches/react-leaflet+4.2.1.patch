@@ -1,0 +1,87 @@
+diff --git a/node_modules/react-leaflet/package.json b/node_modules/react-leaflet/package.json
+index 5124238..a183d73 100644
+--- a/node_modules/react-leaflet/package.json
++++ b/node_modules/react-leaflet/package.json
+@@ -37,7 +37,7 @@
+     "leaflet": ">=1.7.1",
+     "react": "^18.0.0",
+     "react-dom": "^18.0.0"
+-  }
++  },
++  "overrides": { "react-dom": "^18.0.0" }
+ }
+ 
+diff --git a/node_modules/react-leaflet/lib/MapContainer.js b/node_modules/react-leaflet/lib/MapContainer.js
+index 92c8135..1c7c989 100644
+--- a/node_modules/react-leaflet/lib/MapContainer.js
++++ b/node_modules/react-leaflet/lib/MapContainer.js
+@@ -3,7 +3,7 @@
+ Object.defineProperty(exports, "__esModule", {
+     value: true
+ });
+-Object.defineProperty(exports, "default", {
++Object.defineProperty(exports, "MapContainer", {
+     enumerable: true,
+     get: function() {
+         return MapContainer;
+@@ -11,7 +11,7 @@
+ });
+ const _react = require("react");
+ const _core = require("@react-leaflet/core");
+-const _reactdom = require("react-dom");
++const _reactdom = require("react-dom/client");
+ const _leaflet = /*#__PURE__*/ _interop_require_default(require("leaflet"));
+ function _interop_require_default(obj) {
+     return obj && obj.__esModule ? obj : {
+@@ -38,7 +38,7 @@
+     const [props] = (0, _react.useState)({
+         ...rest,
+         center,
+-        zoom
++        zoom,
+     });
+     const [context, setContext] = (0, _react.useState)(null);
+     const containerRef = (0, _react.useCallback)((node)=>{
+@@ -53,8 +53,10 @@
+             ...props,
+             ...whenReady ? {
+                 whenReady: ()=>whenReady(map)
+-            } : {}
++            } : {},
++            zoomControl: false,
+         });
++        map.attributionControl.setPrefix(false)
+         const newContext = (0, _core.createLeafletContext)(map);
+         setContext(newContext);
+     }, []);
+@@ -62,11 +64,15 @@
+         return context ? /*#__PURE__*/ (0, _react.createElement)(_core.LeafletProvider, {
+             value: context
+         }, children) : null;
+-    }, [
+-        context,
+-        children
+-    ]);
+-    return /*#__PURE__*/ (0, _react.createElement)("div", {
+-        ...getContainerProps(rest),
+-        ref: containerRef,
+-        style: {
+-            ...style,
+-            height,
+-            width
+-        }
+-    }, contents);
+-}
++    }, [context, children]);
++
++    // render portal
++    const portal = (0, _react.useMemo)(() => {
++        return containerRef.current ?
++            (0, _reactdom.createPortal)(contents, containerRef.current)
++            : null;
++    }, [contents, containerRef.current]);
++
++    return /*#__PURE__*/ (0, _react.createElement)("div", Object.assign({}, getContainerProps(rest), { ref: containerRef, style: { ...style, height, width } }), portal);
++}
++
++exports.default = MapContainer;

@@ -4,7 +4,7 @@
  * pollution heatmap. The primary goal is to make ward-level pollution data
  * freely and efficiently accessible for visualization by any user, including
  * anonymous visitors. Data integrity is maintained by disallowing all
-_ * client-side write operations, establishing the backend (e.g., Admin SDK,
+ * client-side write operations, establishing the backend (e.g., Admin SDK,
  * Cloud Functions) as the sole source of truth for data management.
  *
  * Data Structure:

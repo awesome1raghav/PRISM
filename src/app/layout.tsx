@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { LocationProvider } from '@/context/LocationContext';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -26,9 +27,11 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        <LocationProvider>
-          {children}
-        </LocationProvider>
+        <FirebaseClientProvider>
+          <LocationProvider>
+            {children}
+          </LocationProvider>
+        </FirebaseClientProvider>
         <Toaster />
       </body>
     </html>
