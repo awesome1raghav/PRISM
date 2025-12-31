@@ -29,7 +29,7 @@ const InteractiveBackground: React.FC = () => {
 
       rippleTimeoutRef.current = setTimeout(() => {
         ripple.remove();
-      }, 600);
+      }, 1000); // Increased duration
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -76,9 +76,9 @@ const InteractiveBackground: React.FC = () => {
         }
 
         .ripple {
-          position: absolute;
-          width: 120px;
-          height: 120px;
+          position: fixed; /* Use fixed to position relative to viewport */
+          width: 200px; /* Increased size */
+          height: 200px; /* Increased size */
           border-radius: 50%;
           pointer-events: none;
           transform: translate(-50%, -50%);
@@ -87,8 +87,8 @@ const InteractiveBackground: React.FC = () => {
             rgba(0, 200, 255, 0.4),
             transparent 60%
           );
-          animation: ripple-animation 0.6s ease-out forwards;
-          z-index: -1; /* Place ripples behind content but above background */
+          animation: ripple-animation 1s ease-out forwards; /* Slower animation */
+          z-index: -1;
         }
 
         @keyframes ripple-animation {
@@ -97,7 +97,7 @@ const InteractiveBackground: React.FC = () => {
             opacity: 1;
           }
           to {
-            transform: translate(-50%, -50%) scale(1.4);
+            transform: translate(-50%, -50%) scale(1.6); /* Larger end scale */
             opacity: 0;
           }
         }
