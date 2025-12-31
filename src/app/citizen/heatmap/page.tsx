@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -7,22 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wind, Droplets, Waves } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import GoogleMapsLoader from '@/components/GoogleMapsLoader';
+import Map from '@/components/citizen/Map';
 
 type PollutionLayerId = 'aqi' | 'wqi' | 'nqi';
 
 const pollutionLayers = [
-  { id: 'aqi' as PollutionLayerId, name: 'AQI (Air)', value: '78', status: 'Moderate', icon: <Wind className="h-5 w-5" />, mapId: 'heatmap-air' },
-  { id: 'wqi' as PollutionLayerId, name: 'WQI (Water)', value: '92', status: 'Good', icon: <Droplets className="h-5 w-5" />, mapId: 'heatmap-water' },
-  { id: 'nqi' as PollutionLayerId, name: 'NQI (Noise)', value: '68 dB', status: 'Moderate', icon: <Waves className="h-5 w-5" />, mapId: 'heatmap-noise' },
+  { id: 'aqi' as PollutionLayerId, name: 'AQI (Air)', value: '78', status: 'Moderate', icon: <Wind className="h-5 w-5" /> },
+  { id: 'wqi' as PollutionLayerId, name: 'WQI (Water)', value: '92', status: 'Good', icon: <Droplets className="h-5 w-5" /> },
+  { id: 'nqi' as PollutionLayerId, name: 'NQI (Noise)', value: '68 dB', status: 'Moderate', icon: <Waves className="h-5 w-5" /> },
 ];
 
 export default function HeatmapPage() {
   const [activeLayer, setActiveLayer] = useState<PollutionLayerId>('aqi');
-  
-  const activeMapId = pollutionLayers.find(p => p.id === activeLayer)?.mapId || 'heatmap-air';
-  const activeMapImage = PlaceHolderImages.find(img => img.id === activeMapId);
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -35,8 +31,8 @@ export default function HeatmapPage() {
               </CardHeader>
               <CardContent className="space-y-2">
                 {pollutionLayers.map(layer => (
-                  <div 
-                    key={layer.id} 
+                  <div
+                    key={layer.id}
                     onClick={() => setActiveLayer(layer.id)}
                     className={cn(
                         "flex items-center justify-between p-3 rounded-lg bg-background/50 cursor-pointer transition-all border",
@@ -66,19 +62,13 @@ export default function HeatmapPage() {
             </Card>
         </div>
         <div className="relative flex-grow">
-          <div className="absolute inset-0 bg-muted">
-            {activeMapImage && (
-              <Image
-                src={activeMapImage.imageUrl}
-                alt={`${activeLayer} Heatmap`}
-                fill
-                style={{objectFit: "cover"}}
-                className="opacity-100"
-                data-ai-hint={activeMapImage.imageHint}
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-background/10 to-transparent" />
-          </div>
+          <GoogleMapsLoader>
+            {(status) => {
+              if (status === 'loading') return <div className="absolute inset-0 bg-muted flex items-center justify-center">Loading pollution heatmap...</div>;
+              if (status === 'error') return <div className="absolute inset-0 bg-muted flex items-center justify-center text-destructive">Map failed to load. Check API key or network.</div>;
+              return <Map />;
+            }}
+          </GoogleMapsLoader>
         </div>
       </main>
     </div>
