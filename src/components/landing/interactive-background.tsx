@@ -26,34 +26,31 @@ const InteractiveBackground: React.FC = () => {
     let point = { x: target.x, y: target.y };
     let trail: { x: number; y: number; life: number }[] = [];
 
-    const lerp = (a: number, b: number, n: number) => a + (b - a) * n;
-
     const animate = () => {
-      // Create inertia for the "drag" effect
-      point.x = lerp(point.x, target.x, 0.15);
-      point.y = lerp(point.y, target.y, 0.15);
+      // Smooth inertia
+      point.x += (target.x - point.x) * 0.12;
+      point.y += (target.y - point.y) * 0.12;
 
       trail.push({ x: point.x, y: point.y, life: 1 });
 
-      // Create a fading effect by repainting with a semi-transparent background
-      ctx.fillStyle = 'rgba(11, 18, 32, 0.15)';
+      // Clean fade (NO IMPRINTS)
+      ctx.fillStyle = "rgba(11,18,32,0.35)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Limit trail length (VERY IMPORTANT)
+      if (trail.length > 18) trail.shift();
 
-      // Draw the trail
-      for (let i = 0; i < trail.length; i++) {
-        const p = trail[i];
-        p.life -= 0.02; // Decrease life
+      ctx.globalCompositeOperation = "lighter";
 
-        if (p.life > 0) {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 40 * p.life, 0, Math.PI * 2); // Size based on life
-          ctx.fillStyle = `rgba(0, 180, 255, ${p.life * 0.4})`;
-          ctx.fill();
-        }
+      for (const p of trail) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 32 * p.life, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,180,255,${p.life * 0.25})`;
+        ctx.fill();
+        p.life *= 0.85;
       }
 
-      // Remove "dead" particles
-      trail = trail.filter(p => p.life > 0);
+      ctx.globalCompositeOperation = "source-over";
 
       animationFrameId.current = requestAnimationFrame(animate);
     };
