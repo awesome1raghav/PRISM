@@ -27,24 +27,9 @@ export default function HeatmapPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
-      <main className="flex-grow flex flex-col">
-        <div className="relative flex-grow">
-          <div className="absolute inset-0 bg-muted">
-            {activeMapImage && (
-              <Image
-                src={activeMapImage.imageUrl}
-                alt={`${activeLayer} Heatmap`}
-                fill
-                objectFit="cover"
-                className="opacity-60"
-                data-ai-hint={activeMapImage.imageHint}
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-          </div>
-          
-          <div className="relative p-4 md:p-8 flex flex-col h-full justify-end">
-            <Card className="max-w-sm bg-card/80 backdrop-blur-md border-border/30">
+      <main className="flex-grow flex flex-col lg:flex-row">
+        <div className="lg:w-96 p-4 md:p-6 flex-shrink-0">
+            <Card className="bg-card/80 backdrop-blur-md border-border/30">
               <CardHeader>
                 <CardTitle>Pollution Layers</CardTitle>
               </CardHeader>
@@ -79,7 +64,27 @@ export default function HeatmapPage() {
                 ))}
               </CardContent>
             </Card>
+        </div>
+        <div className="relative flex-grow">
+          <div className="absolute inset-0 bg-muted">
+            {activeMapImage && (
+              <Image
+                src={activeMapImage.imageUrl}
+                alt={`${activeLayer} Heatmap`}
+                fill
+                style={{objectFit: "cover"}}
+                className="opacity-60"
+                data-ai-hint={activeMapImage.imageHint}
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-background/10 to-transparent" />
           </div>
+           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="text-center text-white p-4 bg-black/50 rounded-lg">
+                <h2 className="text-2xl font-bold">Interactive Map Placeholder</h2>
+                <p>A fully interactive Google Map would be rendered here.</p>
+              </div>
+           </div>
         </div>
       </main>
     </div>

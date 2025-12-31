@@ -10,14 +10,17 @@ type AdvisoryType = 'alert' | 'info';
 interface LocationData {
     name: string;
     air: {
+        value: number;
         status: LocationStatus;
         advice: string;
     },
     water: {
+        value: number;
         status: LocationStatus;
         advice: string;
     },
     noise: {
+        value: number;
         status: LocationStatus;
         advice: string;
     },
@@ -35,18 +38,18 @@ export interface LocationDataContext {
 const locationData: LocationDataContext = {
     'Koramangala, Bengaluru': {
         name: 'Koramangala, Bengaluru',
-        air: { status: 'Good', advice: 'Great for outdoor activities!' },
-        water: { status: 'Safe', advice: 'Tap water is safe for consumption.' },
-        noise: { status: 'Moderate', advice: 'Minor traffic noise expected.' },
+        air: { value: 45, status: 'Good', advice: 'Great for outdoor activities!' },
+        water: { value: 88, status: 'Safe', advice: 'Tap water is safe for consumption.' },
+        noise: { value: 65, status: 'Moderate', advice: 'Minor traffic noise expected.' },
         advisories: [
             { type: 'info', title: 'No Critical Alerts', description: 'No immediate severe risks detected in your area.' }
         ]
     },
     'Jayanagar, Bengaluru': {
         name: 'Jayanagar, Bengaluru',
-        air: { status: 'Moderate', advice: 'Sensitive groups should reduce outdoor time.' },
-        water: { status: 'Warning', advice: 'Boil tap water before consumption.' },
-        noise: { status: 'High', advice: 'High traffic and commercial noise.' },
+        air: { value: 82, status: 'Moderate', advice: 'Sensitive groups should reduce outdoor time.' },
+        water: { value: 65, status: 'Warning', advice: 'Boil tap water before consumption.' },
+        noise: { value: 78, status: 'High', advice: 'High traffic and commercial noise.' },
         advisories: [
             { type: 'alert', title: 'High Tree Pollen', description: 'Pollen counts are high, may affect allergy sufferers.' },
             { type: 'alert', title: 'Road Closure', description: 'Main road closed for metro construction.' }
@@ -54,9 +57,9 @@ const locationData: LocationDataContext = {
     },
     'New York, NY': {
         name: 'New York, NY',
-        air: { status: 'Poor', advice: 'Avoid outdoor activities if possible.' },
-        water: { status: 'Safe', advice: 'Tap water is safe for consumption.' },
-        noise: { status: 'High', advice: 'Constant city noise.' },
+        air: { value: 110, status: 'Poor', advice: 'Avoid outdoor activities if possible.' },
+        water: { value: 95, status: 'Safe', advice: 'Tap water is safe for consumption.' },
+        noise: { value: 85, status: 'High', advice: 'Constant city noise.' },
         advisories: [
             { type: 'alert', title: 'Air Quality Alert', description: 'High levels of ozone detected. Stay indoors if you have respiratory issues.' },
         ]
@@ -142,5 +145,3 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
     </LocationContext.Provider>
   );
 };
-
-    
