@@ -10,8 +10,6 @@ const InteractiveBackground: React.FC = () => {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
-    let rippleTimeout: NodeJS.Timeout | null = null;
     
     const updateGlow = (x: number, y: number) => {
         const surface = container.querySelector('.water-surface') as HTMLDivElement;
@@ -39,18 +37,22 @@ const InteractiveBackground: React.FC = () => {
     };
     
     const handleTouchMove = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      updateGlow(touch.clientX, touch.clientY);
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        updateGlow(touch.clientX, touch.clientY);
+      }
     };
     
     const handleTouchStart = (e: TouchEvent) => {
-        const touch = e.touches[0];
-        createRipple(touch.clientX, touch.clientY);
+        if (e.touches.length > 0) {
+            const touch = e.touches[0];
+            createRipple(touch.clientX, touch.clientY);
+        }
     }
 
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
@@ -64,7 +66,7 @@ const InteractiveBackground: React.FC = () => {
       <div
         ref={containerRef}
         className={cn(
-          'absolute inset-0 z-0 overflow-hidden bg-[#0b1220] isolate'
+          'fixed inset-0 z-0 overflow-hidden bg-[#0b1220] isolate'
         )}
       >
         <div className="water-surface" />
