@@ -45,7 +45,7 @@ const InteractiveBackground: React.FC = () => {
       for (const p of trail) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, 32 * p.life, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,180,255,${p.life * 0.25})`;
+        ctx.fillStyle = `rgba(120,220,255,${p.life * 0.18})`;
         ctx.fill();
         p.life *= 0.85;
       }
@@ -86,9 +86,11 @@ const InteractiveBackground: React.FC = () => {
   }, []);
 
   return (
-     <div className="fixed inset-0 z-0 overflow-hidden bg-[#0b1220] isolate">
+     <div 
+        className="fixed inset-0 z-0 overflow-hidden isolate"
+        style={{ background: 'radial-gradient(circle at center, #0f1c2d, #070b14)' }}
+     >
         <canvas ref={canvasRef} className="block" />
-        <div className="absolute inset-0 bg-transparent" />
      </div>
   );
 };
