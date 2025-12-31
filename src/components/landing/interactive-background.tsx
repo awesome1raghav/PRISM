@@ -1,58 +1,70 @@
+
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 const InteractiveBackground: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rippleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (rippleTimeoutRef.current) {
+        clearTimeout(rippleTimeoutRef.current);
+      }
+
+      const x = e.clientX;
+      const y = e.clientY;
+
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+
+      container.appendChild(ripple);
+
+      rippleTimeoutRef.current = setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (rippleTimeoutRef.current) {
+        clearTimeout(rippleTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div
-      className={cn(
-        'absolute inset-0 z-0 overflow-hidden bg-[#0a0f18] isolate noise-background'
-      )}
-    >
-      <div className="aura" />
-      <div className="background-gradient" />
-      <div className="background-vignette" />
-
-      <style jsx>{`
-        .isolate {
-          isolation: isolate;
-        }
-
-        .aura {
-          position: absolute;
-          top: 0;
-          left: 0;
+    <>
+      <div
+        ref={containerRef}
+        className={cn(
+          'absolute inset-0 z-0 overflow-hidden bg-[#0b1220] isolate'
+        )}
+      >
+        <div className="water-surface" />
+        <div className="background-vignette" />
+      </div>
+       <style jsx global>{`
+        .water-surface {
           width: 100%;
           height: 100%;
-          background-image: radial-gradient(
-            circle at 20% 30%,
-            hsla(175, 50%, 30%, 0.45),
-            transparent 40%
-          ),
-          radial-gradient(
-            circle at 80% 70%,
-            hsla(195, 50%, 40%, 0.35),
-            transparent 45%
-          );
-          opacity: 0;
-          animation: fadeInAura 4s forwards, moveAura 25s infinite alternate ease-in-out;
-          will-change: transform, opacity;
-        }
-
-        .background-gradient {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
+          filter: blur(2px);
           background: radial-gradient(
-            ellipse 80% 50% at 50% 120%,
-            hsl(180, 25%, 15%), /* Desaturated Teal */
-            hsl(220, 20%, 10%), /* Deep Navy/Charcoal */
-            #0a0f18 70%
+            circle at var(--x, 50%) var(--y, 50%),
+            rgba(0, 200, 255, 0.25),
+            rgba(0, 100, 255, 0.1),
+            rgba(0, 0, 0, 0) 40%
           );
-          animation: drift 30s infinite alternate ease-in-out;
-          will-change: transform;
+           transition: background 0.1s linear;
         }
 
         .background-vignette {
@@ -63,31 +75,34 @@ const InteractiveBackground: React.FC = () => {
           pointer-events: none;
         }
 
-        @keyframes fadeInAura {
-          to {
-            opacity: 1;
-          }
-        }
-        
-        @keyframes moveAura {
-          0% {
-            transform: scale(1.4) translate(-10%, -15%) rotate(-5deg);
-          }
-          100% {
-            transform: scale(1.6) translate(10%, 15%) rotate(15deg);
-          }
+        .ripple {
+          position: absolute;
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          pointer-events: none;
+          transform: translate(-50%, -50%);
+          background: radial-gradient(
+            circle,
+            rgba(0, 200, 255, 0.4),
+            transparent 60%
+          );
+          animation: ripple-animation 0.6s ease-out forwards;
+          z-index: -1; /* Place ripples behind content but above background */
         }
 
-        @keyframes drift {
-          0% {
-            transform: scale(1.3) translate(-3%, 3%);
+        @keyframes ripple-animation {
+          from {
+            transform: translate(-50%, -50%) scale(0.2);
+            opacity: 1;
           }
-          100% {
-            transform: scale(1.3) translate(3%, -3%);
+          to {
+            transform: translate(-50%, -50%) scale(1.4);
+            opacity: 0;
           }
         }
       `}</style>
-    </div>
+    </>
   );
 };
 
