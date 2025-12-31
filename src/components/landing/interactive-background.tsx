@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
 
 const InteractiveBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -15,45 +14,55 @@ const InteractiveBackground: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const setCanvasDimensions = () => {
+    let target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let pos = { x: target.x, y: target.y };
+
+    const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      // Reset target to center on resize to avoid jarring jumps
+      target = { x: canvas.width / 2, y: canvas.height / 2 };
+      pos = { x: target.x, y: target.y };
     };
 
-    setCanvasDimensions();
+    resize();
+    window.addEventListener('resize', resize);
 
-    let target = { x: canvas.width / 2, y: canvas.height / 2 };
-    let point = { x: target.x, y: target.y };
-    let trail: { x: number; y: number; life: number }[] = [];
+    const drawPixelGlow = (x: number, y: number) => {
+        const coreRadius = 22;
+        const glowSteps = 6;
+
+        // Core
+        ctx.beginPath();
+        ctx.arc(x, y, coreRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "#c8f3ff";
+        ctx.fill();
+
+        // Pixel glow rings
+        for (let i = 1; i <= glowSteps; i++) {
+            ctx.beginPath();
+            ctx.arc(x, y, coreRadius + i * 10, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0,180,255,${0.15 / i})`;
+            ctx.lineWidth = 6;
+            ctx.stroke();
+        }
+    };
+
 
     const animate = () => {
-      // Smooth inertia
-      point.x += (target.x - point.x) * 0.12;
-      point.y += (target.y - point.y) * 0.12;
+      // FULL CLEAR → no background damage
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      trail.push({ x: point.x, y: point.y, life: 1 });
+      // Smooth drag
+      pos.x += (target.x - pos.x) * 0.12;
+      pos.y += (target.y - pos.y) * 0.12;
 
-      // Clean fade (NO IMPRINTS)
-      ctx.fillStyle = "rgba(11,18,32,0.35)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // Limit trail length (VERY IMPORTANT)
-      if (trail.length > 18) trail.shift();
-
-      ctx.globalCompositeOperation = "lighter";
-
-      for (const p of trail) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 32 * p.life, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(120,220,255,${p.life * 0.18})`;
-        ctx.fill();
-        p.life *= 0.85;
-      }
-
-      ctx.globalCompositeOperation = "source-over";
+      drawPixelGlow(pos.x, pos.y);
 
       animationFrameId.current = requestAnimationFrame(animate);
     };
+
+    animate();
 
     const handleMouseMove = (e: MouseEvent) => {
       target.x = e.clientX;
@@ -68,15 +77,12 @@ const InteractiveBackground: React.FC = () => {
       }
     };
     
-    window.addEventListener('resize', setCanvasDimensions);
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-
-    animate();
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     // Cleanup function
     return () => {
-      window.removeEventListener('resize', setCanvasDimensions);
+      window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchmove', handleTouchMove);
       if (animationFrameId.current) {
