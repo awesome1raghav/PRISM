@@ -17,7 +17,7 @@ const activationConfig = {
       { id: 'escalation', text: 'Escalation System', status: 'Enabled' },
     ],
     buttonText: 'Enter Government Console',
-    redirectPath: '/gov-console',
+    redirectPath: '/gov',
   },
   company: {
     title: 'Compliance System Activated',
@@ -123,4 +123,3 @@ export default function ActivationPage() {
         </div>
     );
 }
-
