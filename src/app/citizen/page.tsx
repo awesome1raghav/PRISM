@@ -17,7 +17,7 @@ import {
   HeartPulse,
 } from 'lucide-react';
 import Link from 'next/link';
-import { LocationContext, LocationDataContext } from '@/context/LocationContext';
+import { LocationContext } from '@/context/LocationContext';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -140,6 +140,12 @@ export default function CitizenPage() {
                                     />
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <div className="text-center text-white p-4 bg-black/50 rounded-lg">
+                                        <h2 className="text-2xl font-bold">Interactive Map Placeholder</h2>
+                                        <p>A fully interactive Google Map would be rendered here.</p>
+                                    </div>
+                                </div>
                             </div>
                             <Button asChild className="mt-4 w-full">
                                 <Link href="/citizen/heatmap">Expand Heatmap</Link>
