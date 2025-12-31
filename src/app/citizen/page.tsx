@@ -139,7 +139,6 @@ export default function CitizenPage() {
                                         data-ai-hint={activeMapImage.imageHint}
                                     />
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
                             </div>
                             <Button asChild className="mt-4 w-full">
                                 <Link href="/citizen/heatmap">Expand Heatmap</Link>

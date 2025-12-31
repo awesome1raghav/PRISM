@@ -16,7 +16,7 @@ const calculationInfo = "Noise pollution is measured in decibels (dB). Our syste
 export default function NoiseQualityPage() {
   return (
     <MetricDetailPage
-      metric="noise"
+      metric="Noise"
       title="Noise Pollution Levels"
       unit="dB"
       icon={<Waves className="h-8 w-8 text-orange-400" />}

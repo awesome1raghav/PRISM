@@ -7,13 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { LocationContext } from '@/context/LocationContext';
 import { cn } from '@/lib/utils';
-import { reports, Report } from '@/app/citizen/types';
+import { reports, Report, ReportCategory } from '@/app/citizen/types';
 import Link from 'next/link';
 import { ArrowRight, FileText } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface MetricDetailPageProps {
-  metric: 'air' | 'water' | 'noise';
+  metric: ReportCategory;
   title: string;
   unit: string;
   icon: JSX.Element;
@@ -31,12 +31,6 @@ const statusColors: Record<string, string> = {
   Low: 'bg-green-500/20 text-green-400 border-green-500/30',
 };
 
-const categoryMap = {
-    air: 'Air',
-    water: 'Water',
-    noise: 'Noise'
-}
-
 export default function MetricDetailPage({
   metric,
   title,
@@ -47,10 +41,12 @@ export default function MetricDetailPage({
 }: MetricDetailPageProps) {
   const { location, locationData } = useContext(LocationContext);
   const data = locationData[location] || locationData['Koramangala, Bengaluru'];
-  const metricData = data[metric];
+  
+  const metricKey = metric.toLowerCase() as 'air' | 'water' | 'noise';
+  const metricData = data[metricKey];
 
   const relevantReports = reports.filter(
-    (report) => report.category.toLowerCase() === metric && report.status !== 'Closed'
+    (report) => report.category === metric && report.status !== 'Closed'
   );
 
   return (
@@ -73,7 +69,7 @@ export default function MetricDetailPage({
                     <CardHeader>
                         <CardTitle>Health Effects</CardTitle>
                         <CardDescription>
-                            Understanding the impact of current {metric} quality levels on your health.
+                            Understanding the impact of current {metricKey} quality levels on your health.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -115,7 +111,7 @@ export default function MetricDetailPage({
                        {relevantReports.length > 0 ? (
                            <div className="space-y-4">
                                 <p className="text-sm text-muted-foreground">
-                                    There are <span className="font-bold text-foreground">{relevantReports.length}</span> active {metric} pollution reports in this area.
+                                    There are <span className="font-bold text-foreground">{relevantReports.length}</span> active {metricKey} pollution reports in this area.
                                 </p>
                                 {relevantReports.map(report => (
                                     <Link href={`/citizen/track/${report.id}`} key={report.id}>
@@ -134,7 +130,7 @@ export default function MetricDetailPage({
                            </div>
                        ) : (
                            <p className="text-muted-foreground text-center py-4">
-                               No active {metric} pollution reports in your area.
+                               No active {metricKey} pollution reports in your area.
                             </p>
                        )}
                     </CardContent>

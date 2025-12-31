@@ -16,7 +16,7 @@ const calculationInfo = "The Water Quality Index (WQI) is a composite score deri
 export default function WaterQualityPage() {
   return (
     <MetricDetailPage
-      metric="water"
+      metric="Water"
       title="Water Quality Index"
       unit="WQI"
       icon={<Droplets className="h-8 w-8 text-blue-400" />}

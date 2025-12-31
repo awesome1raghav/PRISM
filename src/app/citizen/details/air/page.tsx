@@ -16,7 +16,7 @@ const calculationInfo = "The Air Quality Index (AQI) is calculated based on real
 export default function AirQualityPage() {
   return (
     <MetricDetailPage
-      metric="air"
+      metric="Air"
       title="Air Quality Index"
       unit="AQI"
       icon={<Wind className="h-8 w-8 text-sky-400" />}
