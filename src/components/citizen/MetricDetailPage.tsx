@@ -22,14 +22,37 @@ interface MetricDetailPageProps {
 }
 
 const statusColors: Record<string, string> = {
-  Good: 'bg-green-500/20 text-green-400 border-green-500/30',
-  Moderate: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-  Poor: 'bg-red-500/20 text-red-400 border-red-500/30',
-  Safe: 'bg-green-500/20 text-green-400 border-green-500/30',
-  Warning: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-  High: 'bg-red-500/20 text-red-400 border-red-500/30',
-  Low: 'bg-green-500/20 text-green-400 border-green-500/30',
+    Good: 'bg-green-500/20 text-green-400 border-green-500/30',
+    Moderate: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    Poor: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    Severe: 'bg-red-500/20 text-red-400 border-red-500/30',
+    Safe: 'bg-green-500/20 text-green-400 border-green-500/30',
+    Warning: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    High: 'bg-red-500/20 text-red-400 border-red-500/30',
+    Low: 'bg-green-500/20 text-green-400 border-green-500/30',
+    'Very High': 'bg-red-500/20 text-red-400 border-red-500/30',
 };
+
+
+const getStatus = (metric: 'aqi' | 'wqi' | 'noise', value: number) => {
+    if (metric === 'aqi') {
+      if (value <= 50) return 'Good';
+      if (value <= 100) return 'Moderate';
+      if (value <= 150) return 'Poor';
+      return 'Unhealthy';
+    }
+    if (metric === 'wqi') {
+       if (value >= 80) return 'Good';
+       if (value >= 60) return 'Safe';
+       if (value >= 40) return 'Warning';
+       return 'Poor';
+    }
+    // noise
+    if (value <= 60) return 'Low';
+    if (value <= 80) return 'Moderate';
+    if (value <= 100) return 'High';
+    return 'Very High';
+  }
 
 export default function MetricDetailPage({
   metric,
@@ -40,10 +63,28 @@ export default function MetricDetailPage({
   calculationInfo,
 }: MetricDetailPageProps) {
   const { location, locationData } = useContext(LocationContext);
-  const data = locationData[location] || locationData['Koramangala, Bengaluru'];
+  const cityData = locationData[location];
   
-  const metricKey = metric.toLowerCase() as 'air' | 'water' | 'noise';
-  const metricData = data[metricKey];
+  const metricKey = metric.toLowerCase() as 'aqi' | 'wqi' | 'noise';
+
+  if (!cityData || cityData.wards.length === 0) {
+      return (
+           <div className="flex min-h-screen flex-col bg-background text-foreground">
+                <Header />
+                <main className="flex-grow container py-12 flex items-center justify-center">
+                    <p>Loading data...</p>
+                </main>
+           </div>
+      )
+  }
+
+  const avgValue = Math.round(cityData.wards.reduce((sum, ward) => sum + ward.live_data[metricKey], 0) / cityData.wards.length);
+  const status = getStatus(metricKey, avgValue);
+
+  const metricData = {
+      value: avgValue,
+      status: status
+  }
 
   const relevantReports = reports.filter(
     (report) => report.category === metric && report.status !== 'Closed'
@@ -59,7 +100,7 @@ export default function MetricDetailPage({
             </div>
             <div>
                 <h1 className="text-4xl font-bold tracking-tight">{title}</h1>
-                <p className="text-muted-foreground">{data.name}</p>
+                <p className="text-muted-foreground">{cityData.name}</p>
             </div>
         </div>
 
@@ -116,7 +157,7 @@ export default function MetricDetailPage({
              <div className="space-y-6">
                 <Card className="bg-card/40 border-border/30 text-center">
                     <CardHeader>
-                        <CardTitle>Live Reading</CardTitle>
+                        <CardTitle>Live City-Wide Average</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-6xl font-bold">{metricData.value}<span className="text-2xl text-muted-foreground ml-2">{unit}</span></p>
