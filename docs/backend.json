@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "WardPollutionData": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WardPollutionData",
+      "type": "object",
+      "description": "Represents pollution data for a specific ward.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ward pollution data entry."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the ward."
+        },
+        "lat": {
+          "type": "number",
+          "description": "Latitude coordinate of the ward's location."
+        },
+        "lng": {
+          "type": "number",
+          "description": "Longitude coordinate of the ward's location."
+        },
+        "aqi": {
+          "type": "number",
+          "description": "Air Quality Index value for the ward."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "lat",
+        "lng",
+        "aqi"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "locations/bengaluru/wards/{wardId}",
+        "definition": {
+          "entityName": "WardPollutionData",
+          "schema": {
+            "$ref": "#/backend/entities/WardPollutionData"
+          },
+          "description": "Stores pollution data for each ward in Bengaluru. The data includes ward name, coordinates (lat/lng), and air quality index (aqi).",
+          "params": [
+            {
+              "name": "wardId",
+              "description": "Unique identifier for the ward."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to efficiently store and retrieve ward pollution data for the Citizen Dashboard. It prioritizes a flat structure to avoid complex queries and ensure scalability. The structure also ensures clear security rules by segregating data based on location.\n\nAuthorization Independence: Since the data is publicly accessible for visualization on the Citizen Dashboard, no specific authorization mechanisms are necessary beyond standard Firestore protection against unauthorized writes. Data is served to users based on location, which is inherent in the document path. There is no need for `get()` calls in security rules.\n\nQAPs Support: The structure supports efficient `list` operations for retrieving ward pollution data within a specific location (Bengaluru in this case), as the data is stored directly under the `locations/bengaluru/wards` collection group.  Since this is public data, no access control logic is needed."
+  }
+}
