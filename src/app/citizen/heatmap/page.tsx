@@ -79,12 +79,6 @@ export default function HeatmapPage() {
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-background/10 to-transparent" />
           </div>
-           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="text-center text-white p-4 bg-black/50 rounded-lg">
-                <h2 className="text-2xl font-bold">Interactive Map Placeholder</h2>
-                <p>A fully interactive Google Map would be rendered here.</p>
-              </div>
-           </div>
         </div>
       </main>
     </div>

@@ -50,7 +50,7 @@ export default function MetricDetailPage({
   const metricData = data[metric];
 
   const relevantReports = reports.filter(
-    (report) => report.category === categoryMap[metric] && report.status !== 'Closed'
+    (report) => report.category.toLowerCase() === metric && report.status !== 'Closed'
   );
 
   return (

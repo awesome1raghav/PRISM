@@ -56,8 +56,8 @@ const LocationSelector = () => {
 };
 
 const MetricCard = ({ icon, title, value, status, statusColor, href }: { icon: JSX.Element, title: string, value: string, status: string, statusColor: string, href: string }) => (
-    <Link href={href}>
-        <Card className="bg-card/40 border-border/30 hover:bg-card/60 hover:border-primary/40 transition-all group">
+    <Link href={href} className="group">
+        <Card className="bg-card/40 border-border/30 hover:bg-card/60 hover:border-primary/40 transition-all h-full">
             <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -140,12 +140,6 @@ export default function CitizenPage() {
                                     />
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
-                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <div className="text-center text-white p-4 bg-black/50 rounded-lg">
-                                        <h2 className="text-2xl font-bold">Interactive Map Placeholder</h2>
-                                        <p>A fully interactive Google Map would be rendered here.</p>
-                                    </div>
-                                </div>
                             </div>
                             <Button asChild className="mt-4 w-full">
                                 <Link href="/citizen/heatmap">Expand Heatmap</Link>
