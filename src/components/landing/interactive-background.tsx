@@ -16,7 +16,7 @@ const InteractiveBackground: React.FC = () => {
     rows: 0,
     current: new Float32Array(),
     previous: new Float32Array(),
-    damping: 0.95, // Increased damping for faster fade
+    damping: 0.92, // Increased damping for faster fade
     lastDisturb: 0,
     strength: 350,
     threshold: 1.5,
