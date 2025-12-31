@@ -43,7 +43,8 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
     }
   }, [role]);
 
-  const handleSendOtp = () => {
+  const handleSendOtp = (e?: React.FormEvent) => {
+    e?.preventDefault();
     setIsVerifying(true);
     setTimeout(() => {
       setIsVerifying(false);
@@ -51,7 +52,8 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
     }, 1500); // Simulate API call
   };
 
-  const handleVerify = () => {
+  const handleVerify = (e?: React.FormEvent) => {
+    e?.preventDefault();
     setIsVerifying(true);
     setTimeout(() => {
       setIsVerifying(false);
@@ -201,40 +203,43 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
         </DialogHeader>
         <div className="py-4 space-y-6">
           {step === 1 && (
-            <div className="space-y-2">
-              <Label htmlFor={config.inputId}>{config.inputLabel}</Label>
-              <Input id={config.inputId} placeholder={config.inputPlaceholder} />
-            </div>
+            <form onSubmit={handleSendOtp}>
+              <div className="space-y-2">
+                <Label htmlFor={config.inputId}>{config.inputLabel}</Label>
+                <Input id={config.inputId} placeholder={config.inputPlaceholder} />
+              </div>
+              <DialogFooter className="mt-6">
+                <Button type="submit" disabled={isVerifying} className="w-full">
+                  {isVerifying ? 'Sending OTP...' : 'Send OTP'}
+                </Button>
+              </DialogFooter>
+            </form>
           )}
           {step === 2 && (
-            <div className="space-y-2">
-                <Label htmlFor="otp">Enter OTP</Label>
-                <Input 
-                    id="otp" 
-                    placeholder="Enter the 6-digit code" 
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground">An OTP has been sent to your registered mobile number.</p>
-            </div>
+             <form onSubmit={handleVerify}>
+                <div className="space-y-2">
+                    <Label htmlFor="otp">Enter OTP</Label>
+                    <Input 
+                        id="otp" 
+                        placeholder="Enter the 6-digit code" 
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        autoFocus
+                    />
+                    <p className="text-xs text-muted-foreground">An OTP has been sent to your registered mobile number.</p>
+                </div>
+                 <DialogFooter className="mt-6">
+                    <Button type="submit" disabled={!otp || isVerifying} className="w-full">
+                        {isVerifying ? 'Verifying...' : 'Verify & Proceed'}
+                    </Button>
+                 </DialogFooter>
+            </form>
           )}
            <div className="flex items-start gap-3 p-3 rounded-md bg-muted/50 border border-border">
                 <Info className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
                 <p className="text-xs text-muted-foreground">{config.privacyNote}</p>
             </div>
         </div>
-        <DialogFooter>
-          {step === 1 && (
-             <Button onClick={handleSendOtp} disabled={isVerifying} className="w-full">
-                {isVerifying ? 'Sending OTP...' : 'Send OTP'}
-             </Button>
-          )}
-          {step === 2 && (
-            <Button onClick={handleVerify} disabled={!otp || isVerifying} className="w-full">
-                {isVerifying ? 'Verifying...' : 'Verify & Proceed'}
-            </Button>
-          )}
-        </DialogFooter>
       </>
     );
   };
