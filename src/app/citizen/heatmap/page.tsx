@@ -73,7 +73,7 @@ export default function HeatmapPage() {
                 alt={`${activeLayer} Heatmap`}
                 fill
                 style={{objectFit: "cover"}}
-                className="opacity-60"
+                className="opacity-100"
                 data-ai-hint={activeMapImage.imageHint}
               />
             )}
