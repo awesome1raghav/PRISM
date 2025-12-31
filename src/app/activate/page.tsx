@@ -17,7 +17,7 @@ const activationConfig = {
       { id: 'escalation', text: 'Escalation System', status: 'Enabled' },
     ],
     buttonText: 'Enter Government Console',
-    redirectPath: '/dashboard',
+    redirectPath: '/gov-console',
   },
   company: {
     title: 'Compliance System Activated',
@@ -28,7 +28,7 @@ const activationConfig = {
       { id: 'logging', text: 'Transparency Logging', status: 'Enabled' },
     ],
     buttonText: 'Enter Company Console',
-    redirectPath: '/company',
+    redirectPath: '/company-console',
   },
 };
 

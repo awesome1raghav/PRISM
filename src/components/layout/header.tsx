@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,6 @@ import { cn } from '@/lib/utils';
 import { MoveRight } from 'lucide-react';
 
 const navLinks = [
-  { href: '/dashboard', label: 'Dashboard' },
   { href: '/report', label: 'Report Issue' },
 ];
 

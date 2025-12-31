@@ -10,13 +10,12 @@ import VerificationDialog from '@/components/VerificationDialog';
 
 type Role = 'government' | 'company' | 'citizen';
 
-const roles: { id: Role, name: string, description: string, icon: JSX.Element, action: string, href: string }[] = [
+const roles: { id: Role, name: string, description: string, icon: JSX.Element, action: string }[] = [
   {
     id: 'government',
     name: 'Government',
     description: 'Verify data, monitor compliance, and take corrective action.',
     icon: <Landmark className="h-10 w-10 text-primary" />,
-    href: '/dashboard',
     action: 'Enter as Government'
   },
   {
@@ -24,7 +23,6 @@ const roles: { id: Role, name: string, description: string, icon: JSX.Element, a
     name: 'Company',
     description: 'View compliance status, receive alerts, and respond to notices.',
     icon: <Building className="h-10 w-10 text-primary" />,
-    href: '/company',
     action: 'Enter as Company'
   },
   {
@@ -32,7 +30,6 @@ const roles: { id: Role, name: string, description: string, icon: JSX.Element, a
     name: 'Citizen',
     description: 'Monitor pollution in your area, receive health guidance, and report issues.',
     icon: <User className="h-10 w-10 text-primary" />,
-    href: '/citizen',
     action: 'Enter as Citizen'
   },
 ];

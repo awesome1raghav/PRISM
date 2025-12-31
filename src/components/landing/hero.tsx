@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import InteractiveBackground from './interactive-background';
@@ -16,7 +17,7 @@ export default function Hero() {
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-primary/30">
-              <Link href="/dashboard">View Live Dashboard</Link>
+              <Link href="/access">View Live Dashboard</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-foreground border-border/60 hover:bg-white/5 hover:border-border hover:text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:shadow-primary/20">
               <Link href="/report">Report an Issue</Link>
