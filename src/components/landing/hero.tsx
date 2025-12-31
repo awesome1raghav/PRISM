@@ -1,12 +1,10 @@
 
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import InteractiveBackground from './interactive-background';
 
 export default function Hero() {
   return (
     <section className="relative w-full flex items-center justify-center pt-32 pb-48 overflow-hidden">
-      <InteractiveBackground />
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-foreground">
         <div className="container max-w-5xl">
           <h1 className="text-6xl font-semibold tracking-tighter sm:text-7xl md:text-8xl text-foreground drop-shadow-lg [text-shadow:0_0_25px_hsl(var(--primary)/0.8),0_0_10px_hsl(var(--primary)/0.5)]">

@@ -25,7 +25,7 @@ const metrics = [
 
 export default function MetricsStrip() {
   return (
-    <section className="border-b border-border/20 bg-background/50">
+    <section className="border-y border-border/20 bg-background/50 backdrop-blur-sm">
       <div className="container mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-border/20 text-center">
           {metrics.map((metric, index) => (
