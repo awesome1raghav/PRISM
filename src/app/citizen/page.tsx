@@ -11,12 +11,13 @@ import {
   MapPin,
   Siren,
   TrendingUp,
-  User,
   Wind,
   Droplets,
   Waves,
   Info,
   LocateFixed,
+  Thermometer,
+  Cloud,
 } from 'lucide-react';
 import Link from 'next/link';
 import { LocationContext, LocationDataContext } from '@/context/LocationContext';
@@ -156,13 +157,27 @@ export default function CitizenPage() {
             </div>
           </section>
 
+           <Card className="bg-card/40 border-border/30">
+            <CardHeader>
+                <CardTitle>Pollution Heatmap - Your Area</CardTitle>
+            </CardHeader>
+            <CardContent>
+                 <div className="aspect-video bg-muted rounded-md flex items-center justify-center text-muted-foreground">
+                    Map Preview Placeholder
+                </div>
+                <Button asChild className="mt-4 w-full">
+                    <Link href="/citizen/heatmap">See More</Link>
+                </Button>
+            </CardContent>
+           </Card>
+
           <section className="text-center bg-card/40 py-12 rounded-lg border border-border/30">
              <Siren className="h-10 w-10 text-primary mx-auto mb-4" />
              <h2 className="text-3xl font-bold mb-2">See Something? Say Something.</h2>
              <p className="text-muted-foreground mb-6 max-w-xl mx-auto">Your reports help authorities identify and act on environmental issues faster.
              </p>
              <Button asChild size="lg">
-                <Link href="/report">Report an Issue Now</Link>
+                <Link href="/report">Report a New Issue</Link>
             </Button>
           </section>
           
@@ -206,7 +221,7 @@ export default function CitizenPage() {
                     </Card>
                     <Card className="bg-card/40 hover:bg-card/60 transition-colors cursor-pointer border-border/30">
                         <CardContent className="p-4 flex items-center gap-4">
-                            <User className="h-6 w-6 text-primary" />
+                            <Cloud className="h-6 w-6 text-primary" />
                             <div>
                                 <h3 className="font-semibold">Privacy Settings</h3>
                                 <p className="text-sm text-muted-foreground">Manage your data and anonymous reporting.</p>

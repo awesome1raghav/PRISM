@@ -5,7 +5,7 @@ import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Clock, CheckCircle, Hourglass, ArrowRight } from 'lucide-react';
+import { FileText, Clock, CheckCircle, Hourglass, ArrowRight, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { Report, ReportStatus, reports } from '../types';
 import { cn } from '@/lib/utils';
