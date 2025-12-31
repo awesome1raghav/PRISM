@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useContext, useMemo, Suspense } from 'react';
+import { useState, useContext, useMemo, Suspense, useEffect } from 'react';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wind, Droplets, Waves } from 'lucide-react';
@@ -45,9 +46,10 @@ function HeatmapContent() {
   const searchParams = useSearchParams();
   const locationParam = searchParams.get('location') || 'Bengaluru';
   
-  useState(() => {
+  useEffect(() => {
     setLocation(locationParam, null);
-  });
+  }, [locationParam, setLocation]);
+
   const location = locationParam;
   
   const cityData = locationData[location];

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useContext, useState, Suspense } from 'react';
+import { useContext, useState, Suspense, useEffect } from 'react';
 import Header from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -87,9 +87,9 @@ function CitizenDashboardContent() {
   const locationParam = searchParams.get('location') || 'Bengaluru';
   
   // Ensure context is updated if URL changes
-  useState(() => {
+  useEffect(() => {
     setLocation(locationParam, null);
-  });
+  }, [locationParam, setLocation]);
   
   const location = locationParam;
 
