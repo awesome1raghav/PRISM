@@ -6,7 +6,7 @@ import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Wind, Droplets, Waves, Trash2, Clock, CheckCircle, ShieldQuestion, Image, Video, Hourglass, Check, UserCheck } from 'lucide-react';
+import { Wind, Droplets, Waves, Trash2, Clock, CheckCircle, ShieldQuestion, Image, Video, Hourglass, Check, UserCheck, MapPin } from 'lucide-react';
 import { Report, ReportStatus, reports } from '../../types';
 import { cn } from '@/lib/utils';
 import ImagePlaceholder from 'next/image';
@@ -217,3 +217,4 @@ export default function ReportTrackingPage() {
     </div>
   );
 }
+
