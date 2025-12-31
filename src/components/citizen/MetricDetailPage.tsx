@@ -65,6 +65,28 @@ export default function MetricDetailPage({
 
         <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
+                 <Card className="bg-card/40 border-border/30">
+                    <CardHeader>
+                        <CardTitle>Pending Actions</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                       {relevantReports.length > 0 ? (
+                           <div className="space-y-4">
+                                <p className="text-sm text-muted-foreground">
+                                    There are <span className="font-bold text-foreground">{relevantReports.length}</span> active {metricKey} pollution reports in this area.
+                                </p>
+                                <Button asChild variant="outline" className="w-full">
+                                     <Link href="/citizen/reports">View All Reports <ArrowRight className="h-4 w-4 ml-2" /></Link>
+                                </Button>
+                           </div>
+                       ) : (
+                           <p className="text-muted-foreground text-center py-4">
+                               No active {metricKey} pollution reports in your area.
+                            </p>
+                       )}
+                    </CardContent>
+                </Card>
+
                 <Card className="bg-card/40 border-border/30">
                     <CardHeader>
                         <CardTitle>Health Effects</CardTitle>
@@ -103,38 +125,7 @@ export default function MetricDetailPage({
                         </Badge>
                     </CardContent>
                 </Card>
-                 <Card className="bg-card/40 border-border/30">
-                    <CardHeader>
-                        <CardTitle>Pending Reports</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                       {relevantReports.length > 0 ? (
-                           <div className="space-y-4">
-                                <p className="text-sm text-muted-foreground">
-                                    There are <span className="font-bold text-foreground">{relevantReports.length}</span> active {metricKey} pollution reports in this area.
-                                </p>
-                                {relevantReports.map(report => (
-                                    <Link href={`/citizen/track/${report.id}`} key={report.id}>
-                                        <div className="p-3 bg-muted/50 rounded-md hover:bg-muted/80 transition-colors flex justify-between items-center">
-                                            <div className="flex items-center gap-2">
-                                                 <FileText className="h-4 w-4" />
-                                                <span className="text-sm font-medium">{report.id}</span>
-                                            </div>
-                                            <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                                        </div>
-                                    </Link>
-                                ))}
-                                <Button asChild variant="outline" className="w-full mt-2">
-                                     <Link href="/citizen/reports">View All Reports</Link>
-                                </Button>
-                           </div>
-                       ) : (
-                           <p className="text-muted-foreground text-center py-4">
-                               No active {metricKey} pollution reports in your area.
-                            </p>
-                       )}
-                    </CardContent>
-                </Card>
+                 
             </div>
         </div>
       </main>

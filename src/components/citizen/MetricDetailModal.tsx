@@ -6,12 +6,13 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Wind, Droplets, Waves } from 'lucide-react';
-import { type ReportCategory } from '@/app/citizen/types';
+import { Wind, Droplets, Waves, FileText, ArrowRight } from 'lucide-react';
+import { type ReportCategory, reports } from '@/app/citizen/types';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 interface MetricDetailModalProps {
   metric: ReportCategory | null;
@@ -65,6 +66,9 @@ export default function MetricDetailModal({ metric, onClose }: MetricDetailModal
   if (!metric) return null;
 
   const details = metricDetails[metric];
+  const relevantReports = reports.filter(
+    (report) => report.category === metric && report.status !== 'Closed'
+  );
 
   return (
     <Dialog open={!!metric} onOpenChange={(open) => !open && onClose()}>
@@ -78,6 +82,28 @@ export default function MetricDetailModal({ metric, onClose }: MetricDetailModal
           </DialogTitle>
         </DialogHeader>
         <div className="max-h-[70vh] overflow-y-auto pr-4 space-y-6">
+            <Card className="bg-card/40 border-border/30">
+                <CardHeader>
+                    <CardTitle>Pending Actions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {relevantReports.length > 0 ? (
+                        <div className="space-y-4">
+                            <p className="text-sm text-muted-foreground">
+                                There are <span className="font-bold text-foreground">{relevantReports.length}</span> active {metric.toLowerCase()} pollution reports in this area.
+                            </p>
+                            <Button asChild variant="outline" className="w-full">
+                                 <Link href="/citizen/reports">View Reports <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </div>
+                    ) : (
+                        <p className="text-muted-foreground text-center py-4">
+                            No active {metric.toLowerCase()} pollution reports in your area.
+                         </p>
+                    )}
+                </CardContent>
+            </Card>
+
             <Card className="bg-card/40 border-border/30">
                 <CardHeader>
                     <CardTitle>Health Effects</CardTitle>
