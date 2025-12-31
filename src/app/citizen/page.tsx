@@ -14,17 +14,15 @@ import {
   LocateFixed,
   ArrowRight,
   ShieldCheck,
-  HeartPulse,
 } from 'lucide-react';
 import Link from 'next/link';
 import { LocationContext } from '@/context/LocationContext';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import MetricDetailModal from '@/components/citizen/MetricDetailModal';
 import { type ReportCategory } from './types';
+import HeatmapGrid from '@/components/citizen/HeatmapGrid';
 
 
 const LocationSelector = () => {
@@ -84,18 +82,39 @@ export default function CitizenPage() {
   const { location, locationData } = useContext(LocationContext);
   const [selectedMetric, setSelectedMetric] = useState<ReportCategory | null>(null);
 
-  const data = locationData[location] || locationData['Koramangala, Bengaluru'];
-  const activeMapImage = PlaceHolderImages.find(img => img.id === 'heatmap-air');
+  const cityData = locationData[location] || locationData['Bengaluru'];
+  
+  // Calculate city-wide average for display
+  const wards = cityData.wards || [];
+  const avgAqi = wards.reduce((s, w) => s + w.live_data.aqi, 0) / (wards.length || 1);
+  const avgWqi = wards.reduce((s, w) => s + w.live_data.wqi, 0) / (wards.length || 1);
+  const avgNoise = wards.reduce((s, w) => s + w.live_data.noise, 0) / (wards.length || 1);
 
-  const statusColors = {
-      Good: 'bg-green-500/20 text-green-400 border-green-500/30',
-      Moderate: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-      Poor: 'bg-red-500/20 text-red-400 border-red-500/30',
-      Safe: 'bg-green-500/20 text-green-400 border-green-500/30',
-      Warning: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-      Low: 'bg-green-500/20 text-green-400 border-green-500/30',
-      High: 'bg-red-500/20 text-red-400 border-red-500/30',
+  const getStatus = (metric: 'aqi' | 'wqi' | 'noise', value: number) => {
+    if (metric === 'aqi') {
+      if (value <= 50) return { label: 'Good', color: 'bg-green-500/20 text-green-400 border-green-500/30' };
+      if (value <= 100) return { label: 'Moderate', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' };
+      if (value <= 200) return { label: 'Poor', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' };
+      return { label: 'Severe', color: 'bg-red-500/20 text-red-400 border-red-500/30' };
+    }
+    if (metric === 'wqi') {
+       if (value >= 80) return { label: 'Good', color: 'bg-green-500/20 text-green-400 border-green-500/30' };
+       if (value >= 60) return { label: 'Moderate', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' };
+       if (value >= 40) return { label: 'Poor', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' };
+       return { label: 'Severe', color: 'bg-red-500/20 text-red-400 border-red-500/30' };
+    }
+    // noise
+    if (value <= 60) return { label: 'Good', color: 'bg-green-500/20 text-green-400 border-green-500/30' };
+    if (value <= 80) return { label: 'Moderate', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' };
+    if (value <= 100) return { label: 'Poor', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' };
+    return { label: 'Severe', color: 'bg-red-500/20 text-red-400 border-red-500/30' };
   }
+
+  const aqiStatus = getStatus('aqi', avgAqi);
+  const wqiStatus = getStatus('wqi', avgWqi);
+  const noiseStatus = getStatus('noise', avgNoise);
+  
+  const advisories = cityData.advisories;
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -107,7 +126,7 @@ export default function CitizenPage() {
            <section>
             <h2 className="text-2xl font-bold mb-4 text-left">Health Advisory</h2>
              <div className="grid gap-4 md:grid-cols-2">
-                {data.advisories.map((advisory, index) => (
+                {advisories.map((advisory, index) => (
                     <Card key={index} className={cn("bg-card/40 border-l-4",
                         advisory.type === 'alert' ? 'border-l-yellow-500' : 'border-l-blue-500'
                     )}>
@@ -125,7 +144,7 @@ export default function CitizenPage() {
           </section>
 
           <section>
-             <h2 className="text-2xl font-bold mb-4 text-left">Live Environmental Overview: <span className="text-primary">{data.name}</span></h2>
+             <h2 className="text-2xl font-bold mb-4 text-left">Live Environmental Overview: <span className="text-primary">{cityData.name}</span></h2>
              <div className="grid lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
                     <Card className="bg-card/40 border-border/30 h-full">
@@ -133,17 +152,8 @@ export default function CitizenPage() {
                             <CardTitle>Pollution Heatmap</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="aspect-[16/10] bg-muted rounded-md relative overflow-hidden">
-                                {activeMapImage && (
-                                    <Image
-                                        src={activeMapImage.imageUrl}
-                                        alt="Pollution Heatmap"
-                                        fill
-                                        style={{ objectFit: "cover" }}
-                                        className="opacity-70"
-                                        data-ai-hint={activeMapImage.imageHint}
-                                    />
-                                )}
+                            <div className="aspect-[16/10] bg-muted/30 rounded-md relative overflow-hidden p-4">
+                                <HeatmapGrid wards={cityData.wards} activeMetric="aqi" isPreview={true} />
                             </div>
                             <Button asChild className="mt-4 w-full">
                                 <Link href="/citizen/heatmap">Expand Heatmap</Link>
@@ -155,25 +165,25 @@ export default function CitizenPage() {
                     <MetricCard 
                         icon={<Wind className="h-6 w-6 text-sky-400"/>} 
                         title="Air Quality" 
-                        value={`${data.air.value} AQI`} 
-                        status={data.air.status}
-                        statusColor={statusColors[data.air.status as keyof typeof statusColors]}
+                        value={`${Math.round(avgAqi)} AQI`} 
+                        status={aqiStatus.label}
+                        statusColor={aqiStatus.color}
                         onClick={() => setSelectedMetric('Air')}
                     />
                      <MetricCard 
                         icon={<Droplets className="h-6 w-6 text-blue-400"/>} 
                         title="Water Quality" 
-                        value={`${data.water.value} WQI`}
-                        status={data.water.status}
-                        statusColor={statusColors[data.water.status as keyof typeof statusColors]}
+                        value={`${Math.round(avgWqi)} WQI`}
+                        status={wqiStatus.label}
+                        statusColor={wqiStatus.color}
                         onClick={() => setSelectedMetric('Water')}
                     />
                      <MetricCard 
                         icon={<Waves className="h-6 w-6 text-orange-400"/>} 
                         title="Noise Levels" 
-                        value={`${data.noise.value} dB`}
-                        status={data.noise.status}
-                        statusColor={statusColors[data.noise.status as keyof typeof statusColors]}
+                        value={`${Math.round(avgNoise)} dB`}
+                        status={noiseStatus.label}
+                        statusColor={noiseStatus.color}
                         onClick={() => setSelectedMetric('Noise')}
                     />
                 </div>
