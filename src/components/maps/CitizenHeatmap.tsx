@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useMemo } from 'react';
+import { useMemoFirebase } from '@/firebase/provider';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import { collection, query } from 'firebase/firestore';
 import { useCollection, useFirestore } from '@/firebase';
@@ -31,7 +31,7 @@ const getAqiStatus = (aqi: number) => {
 const CitizenHeatmap = () => {
   const firestore = useFirestore();
 
-  const wardsQuery = useMemo(() => {
+  const wardsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
     return query(collection(firestore, 'locations/bengaluru/wards'));
   }, [firestore]);
