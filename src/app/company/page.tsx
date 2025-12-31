@@ -2,7 +2,7 @@
 
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building, Factory, BarChart3, FileText, Bot, ArrowRight } from 'lucide-react';
+import { Factory, BarChart3, FileText, Bot, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 const companyFeatures = [
