@@ -1,13 +1,13 @@
 
 'use client';
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 const InteractiveBackground: React.FC = () => {
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const animationFrameId = React.useRef<number>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameId = useRef<number>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -20,68 +20,81 @@ const InteractiveBackground: React.FC = () => {
     };
     resize();
     window.addEventListener('resize', resize);
-    
+
     let pos = { x: canvas.width / 2, y: canvas.height / 2 };
+    let vel = { x: 0, y: 0 };
     let target = { x: pos.x, y: pos.y };
-    let velocity = 0;
-    let glow = 0;
 
-    const drawWaterGlow = (x: number, y: number, strength: number) => {
-        const radius = 30 + strength * 0.8;
+    let energy = 0;
 
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
-        grad.addColorStop(0, `rgba(170,240,255,${0.35})`);
-        grad.addColorStop(0.4, `rgba(80,180,255,${0.2})`);
-        grad.addColorStop(1, `rgba(0,0,0,0)`);
+    const drawLiquid = (x: number, y: number, vx: number, vy: number, power: number) => {
+      const radius = 26 + power * 0.9;
+      const stretch = Math.min(power * 1.2, 40);
+      const angle = Math.atan2(vy, vx);
 
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fill();
-    }
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+
+      const grad = ctx.createRadialGradient(0, 0, 0, stretch, 0, radius + stretch);
+      grad.addColorStop(0, `rgba(200,250,255,0.85)`);
+      grad.addColorStop(0.4, `rgba(120,220,255,0.45)`);
+      grad.addColorStop(1, `rgba(0,0,0,0)`);
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.ellipse(
+        stretch * 0.6,
+        0,
+        radius + stretch,
+        radius * 0.9,
+        0,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+
+      ctx.restore();
+    };
 
     const animate = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // inertia
-        const dx = target.x - pos.x;
-        const dy = target.y - pos.y;
-        pos.x += dx * 0.18;
-        pos.y += dy * 0.18;
+      vel.x += (target.x - pos.x) * 0.25;
+      vel.y += (target.y - pos.y) * 0.25;
 
-        // speed → energy
-        velocity = Math.sqrt(dx * dx + dy * dy);
-        glow += (velocity - glow) * 0.15;
+      vel.x *= 0.72;
+      vel.y *= 0.72;
 
-        // auto fade when stopped
-        glow *= 0.9;
+      pos.x += vel.x;
+      pos.y += vel.y;
 
-        if (glow > 0.5) drawWaterGlow(pos.x, pos.y, glow);
+      const speed = Math.hypot(vel.x, vel.y);
+      energy += (speed * 1.4 - energy) * 0.18;
+      energy *= 0.94;
 
-        animationFrameId.current = requestAnimationFrame(animate);
-    }
+      if (energy > 0.5) {
+        drawLiquid(pos.x, pos.y, vel.x, vel.y, energy);
+      }
+
+      animationFrameId.current = requestAnimationFrame(animate);
+    };
     animate();
 
-    const handlePointerMove = (x: number, y: number) => {
-        target.x = x;
-        target.y = y;
-    }
-
     const handleMouseMove = (e: MouseEvent) => {
-        handlePointerMove(e.clientX, e.clientY);
+      target.x = e.clientX;
+      target.y = e.clientY;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-        if (e.touches.length > 0) {
-            const touch = e.touches[0];
-            handlePointerMove(touch.clientX, touch.clientY);
-        }
+      const touch = e.touches[0];
+      target.x = touch.clientX;
+      target.y = touch.clientY;
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    
-    // Cleanup function
+
     return () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
@@ -93,12 +106,17 @@ const InteractiveBackground: React.FC = () => {
   }, []);
 
   return (
-     <div 
-        className="fixed inset-0 z-0 overflow-hidden isolate"
-        style={{ background: 'radial-gradient(circle at center, #0f1c2d, #070b14)' }}
-     >
-        <canvas ref={canvasRef} className="block pointer-events-none" />
-     </div>
+    <div
+      className="fixed inset-0 z-0 overflow-hidden"
+      style={{
+        background: 'radial-gradient(circle at center, #0f1c2d, #070b14)',
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        className="block pointer-events-none"
+      />
+    </div>
   );
 };
 
