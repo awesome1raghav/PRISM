@@ -170,6 +170,7 @@ export default function CitizenPage() {
             <section>
                 <h2 className="text-2xl font-bold mb-4">My Dashboard</h2>
                 <div className="space-y-4">
+                  <Link href="/citizen/reports">
                     <Card className="bg-card/40 hover:bg-card/60 transition-colors cursor-pointer border-border/30">
                         <CardContent className="p-4 flex items-center gap-4">
                             <MapPin className="h-6 w-6 text-primary" />
@@ -179,6 +180,7 @@ export default function CitizenPage() {
                             </div>
                         </CardContent>
                     </Card>
+                  </Link>
                      <Card className="bg-card/40 hover:bg-card/60 transition-colors cursor-pointer border-border/30">
                         <CardContent className="p-4 flex items-center gap-4">
                             <TrendingUp className="h-6 w-6 text-primary" />
