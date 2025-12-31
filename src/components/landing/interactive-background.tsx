@@ -11,12 +11,12 @@ const InteractiveBackground: React.FC = () => {
   const simState = useRef({
     w: 0,
     h: 0,
-    scale: 4, // Increased scale for better performance
+    scale: 4,
     cols: 0,
     rows: 0,
     current: new Float32Array(),
     previous: new Float32Array(),
-    damping: 0.985,
+    damping: 0.95, // Increased damping for faster fade
     lastDisturb: 0,
     strength: 350,
     threshold: 1.5,
@@ -30,16 +30,18 @@ const InteractiveBackground: React.FC = () => {
     if (!ctx) return;
 
     const resize = () => {
-      simState.w = canvas.width = window.innerWidth;
-      simState.h = canvas.height = window.innerHeight;
+      const newW = window.innerWidth;
+      const newH = window.innerHeight;
       
-      const newCols = Math.floor(simState.w / simState.scale);
-      const newRows = Math.floor(simState.h / simState.scale);
+      const newCols = Math.floor(newW / simState.scale);
+      const newRows = Math.floor(newH / simState.scale);
 
       if (newCols !== simState.cols || newRows !== simState.rows) {
+        simState.w = canvas.width = newW;
+        simState.h = canvas.height = newH;
         simState.cols = newCols;
         simState.rows = newRows;
-        const size = simState.cols * simState.rows;
+        const size = newCols * newRows;
         simState.current = new Float32Array(size);
         simState.previous = new Float32Array(size);
       }
