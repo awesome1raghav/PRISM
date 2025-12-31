@@ -6,11 +6,13 @@ import Logo from '@/components/logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { MoveRight } from 'lucide-react';
+import { MoveRight, Bell, User } from 'lucide-react';
 
 const navLinks = [
   { href: '/report', label: 'Report Issue' },
 ];
+
+const loggedInPaths = ['/citizen', '/gov', '/company', '/activate'];
 
 export default function Header() {
   const pathname = usePathname();
@@ -23,7 +25,9 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
+  const isLoggedInView = loggedInPaths.some(path => pathname.startsWith(path));
+
   return (
     <header
       className={cn(
@@ -59,11 +63,24 @@ export default function Header() {
           </ul>
         </nav>
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
-           <Button asChild className="group">
+          {isLoggedInView ? (
+            <>
+              <Button variant="ghost" size="icon">
+                <Bell className="h-5 w-5" />
+                <span className="sr-only">Notifications</span>
+              </Button>
+              <Button variant="ghost" size="icon">
+                <User className="h-5 w-5" />
+                <span className="sr-only">Profile</span>
+              </Button>
+            </>
+          ) : (
+            <Button asChild className="group">
               <Link href="/access">
                 Access PRISM <MoveRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
-          </Button>
+            </Button>
+          )}
         </div>
       </div>
     </header>
