@@ -1,85 +1,86 @@
 
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 const InteractiveBackground: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameId = useRef<number>();
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const animationFrameId = React.useRef<number>();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    let pos = { x: target.x, y: target.y };
-
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      // Reset target to center on resize to avoid jarring jumps
-      target = { x: canvas.width / 2, y: canvas.height / 2 };
-      pos = { x: target.x, y: target.y };
     };
-
     resize();
     window.addEventListener('resize', resize);
+    
+    let pos = { x: canvas.width / 2, y: canvas.height / 2 };
+    let target = { x: pos.x, y: pos.y };
+    let velocity = 0;
+    let glow = 0;
 
-    const drawPixelGlow = (x: number, y: number) => {
-        const coreRadius = 22;
-        const glowSteps = 6;
+    const drawWaterGlow = (x: number, y: number, strength: number) => {
+        const radius = 30 + strength * 0.8;
 
-        // Core
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        grad.addColorStop(0, `rgba(170,240,255,${0.35})`);
+        grad.addColorStop(0.4, `rgba(80,180,255,${0.2})`);
+        grad.addColorStop(1, `rgba(0,0,0,0)`);
+
+        ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(x, y, coreRadius, 0, Math.PI * 2);
-        ctx.fillStyle = "#c8f3ff";
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
         ctx.fill();
-
-        // Pixel glow rings
-        for (let i = 1; i <= glowSteps; i++) {
-            ctx.beginPath();
-            ctx.arc(x, y, coreRadius + i * 10, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(0,180,255,${0.15 / i})`;
-            ctx.lineWidth = 6;
-            ctx.stroke();
-        }
-    };
-
+    }
 
     const animate = () => {
-      // FULL CLEAR → no background damage
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Smooth drag
-      pos.x += (target.x - pos.x) * 0.12;
-      pos.y += (target.y - pos.y) * 0.12;
+        // inertia
+        const dx = target.x - pos.x;
+        const dy = target.y - pos.y;
+        pos.x += dx * 0.18;
+        pos.y += dy * 0.18;
 
-      drawPixelGlow(pos.x, pos.y);
+        // speed → energy
+        velocity = Math.sqrt(dx * dx + dy * dy);
+        glow += (velocity - glow) * 0.15;
 
-      animationFrameId.current = requestAnimationFrame(animate);
-    };
+        // auto fade when stopped
+        glow *= 0.9;
 
+        if (glow > 0.5) drawWaterGlow(pos.x, pos.y, glow);
+
+        animationFrameId.current = requestAnimationFrame(animate);
+    }
     animate();
 
+    const handlePointerMove = (x: number, y: number) => {
+        target.x = x;
+        target.y = y;
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
-      target.x = e.clientX;
-      target.y = e.clientY;
+        handlePointerMove(e.clientX, e.clientY);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const touch = e.touches[0];
-        target.x = touch.clientX;
-        target.y = touch.clientY;
-      }
+        if (e.touches.length > 0) {
+            const touch = e.touches[0];
+            handlePointerMove(touch.clientX, touch.clientY);
+        }
     };
-    
+
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
-
+    
     // Cleanup function
     return () => {
       window.removeEventListener('resize', resize);
@@ -96,7 +97,7 @@ const InteractiveBackground: React.FC = () => {
         className="fixed inset-0 z-0 overflow-hidden isolate"
         style={{ background: 'radial-gradient(circle at center, #0f1c2d, #070b14)' }}
      >
-        <canvas ref={canvasRef} className="block" />
+        <canvas ref={canvasRef} className="block pointer-events-none" />
      </div>
   );
 };
