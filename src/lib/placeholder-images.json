@@ -5,6 +5,24 @@
       "description": "Futuristic world map with glowing data nodes, symbolizing real-time data analysis.",
       "imageUrl": "https://images.unsplash.com/photo-1742415105376-43d3a5fd03fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3b3JsZCUyMG1hcCUyMGRhdGF8ZW58MHx8fHwxNzY2OTk5MTU4fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "world map data"
+    },
+    {
+      "id": "heatmap-air",
+      "description": "A city map with a red and orange heatmap overlay indicating air pollution levels.",
+      "imageUrl": "https://images.unsplash.com/photo-1582819446950-0453b64835a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYXAlMjBoZWF0bWFwJTIwYWlyJTIwcG9sbHV0aW9ufGVufDB8fHx8MTc3MjU4MjU4N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "map data"
+    },
+    {
+      "id": "heatmap-water",
+      "description": "A city map focused on rivers and lakes with a blue and green heatmap overlay indicating water quality.",
+      "imageUrl": "https://images.unsplash.com/photo-1614278453298-2721183c21a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYXAlMjBoZWF0bWFwJTIwd2F0ZXIlMjBxdWFsaXR5fGVufDB8fHx8MTc3MjU4MjYxNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "map data"
+    },
+    {
+      "id": "heatmap-noise",
+      "description": "A city map with a yellow and purple heatmap overlay indicating noise pollution levels, especially around busy roads.",
+      "imageUrl": "https://images.unsplash.com/photo-1582819446950-0453b64835a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYXAlMjBoZWF0bWFwJTIwYWlyJTIwcG9sbHV0aW9ufGVufDB8fHx8MTc3MjU4MjU4N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "map data"
     }
   ]
 }

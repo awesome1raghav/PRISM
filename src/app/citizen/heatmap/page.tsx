@@ -8,18 +8,21 @@ import { Wind, Droplets, Waves } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 type PollutionLayerId = 'aqi' | 'wqi' | 'nqi';
 
 const pollutionLayers = [
-  { id: 'aqi' as PollutionLayerId, name: 'AQI (Air)', value: '78', status: 'Moderate', icon: <Wind className="h-5 w-5" />, mapUrl: 'https://picsum.photos/seed/heatmap-air/1200/800' },
-  { id: 'wqi' as PollutionLayerId, name: 'WQI (Water)', value: '92', status: 'Good', icon: <Droplets className="h-5 w-5" />, mapUrl: 'https://picsum.photos/seed/heatmap-water/1200/800' },
-  { id: 'nqi' as PollutionLayerId, name: 'NQI (Noise)', value: '68 dB', status: 'Moderate', icon: <Waves className="h-5 w-5" />, mapUrl: 'https://picsum.photos/seed/heatmap-noise/1200/800' },
+  { id: 'aqi' as PollutionLayerId, name: 'AQI (Air)', value: '78', status: 'Moderate', icon: <Wind className="h-5 w-5" />, mapId: 'heatmap-air' },
+  { id: 'wqi' as PollutionLayerId, name: 'WQI (Water)', value: '92', status: 'Good', icon: <Droplets className="h-5 w-5" />, mapId: 'heatmap-water' },
+  { id: 'nqi' as PollutionLayerId, name: 'NQI (Noise)', value: '68 dB', status: 'Moderate', icon: <Waves className="h-5 w-5" />, mapId: 'heatmap-noise' },
 ];
 
 export default function HeatmapPage() {
   const [activeLayer, setActiveLayer] = useState<PollutionLayerId>('aqi');
-  const activeMapUrl = pollutionLayers.find(p => p.id === activeLayer)?.mapUrl || '';
+  
+  const activeMapId = pollutionLayers.find(p => p.id === activeLayer)?.mapId || 'heatmap-air';
+  const activeMapImage = PlaceHolderImages.find(img => img.id === activeMapId);
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -27,14 +30,14 @@ export default function HeatmapPage() {
       <main className="flex-grow flex flex-col">
         <div className="relative flex-grow">
           <div className="absolute inset-0 bg-muted">
-            {activeMapUrl && (
+            {activeMapImage && (
               <Image
-                src={activeMapUrl}
+                src={activeMapImage.imageUrl}
                 alt={`${activeLayer} Heatmap`}
-                layout="fill"
+                fill
                 objectFit="cover"
                 className="opacity-60"
-                data-ai-hint="map data"
+                data-ai-hint={activeMapImage.imageHint}
               />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
