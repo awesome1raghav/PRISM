@@ -80,8 +80,8 @@ const VerificationDialog = ({ role, onClose }: VerificationDialogProps) => {
         <div className="text-center p-8">
             <CheckCircle className="h-16 w-16 text-primary mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-2">Verification Successful</h2>
-            <p className="text-muted-foreground mb-6">You now have access to the {role} dashboard.</p>
-            <Button onClick={() => router.push('/citizen')} className="w-full">Proceed to Dashboard</Button>
+            <p className="text-muted-foreground mb-6">You now have access to the citizen dashboard.</p>
+            <Button onClick={handleRedirect} className="w-full">Proceed to Dashboard</Button>
         </div>
       )
     }

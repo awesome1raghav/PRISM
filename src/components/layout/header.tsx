@@ -9,7 +9,6 @@ import { MoveRight } from 'lucide-react';
 
 const navLinks = [
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/citizen', label: 'For Citizens' },
   { href: '/report', label: 'Report Issue' },
 ];
 
