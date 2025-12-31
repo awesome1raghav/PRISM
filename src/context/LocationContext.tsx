@@ -3,6 +3,7 @@
 
 import { useToast } from '@/hooks/use-toast';
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export type MetricType = 'aqi' | 'wqi' | 'noise';
 export type RiskLevel = "good" | "moderate" | "poor" | "severe";
@@ -85,10 +86,10 @@ const initialLocationData: LocationDataContext = {
 
 interface LocationContextType {
   location: string;
-  setLocation: (location: string) => void;
+  setLocation: (location: string, router: AppRouterInstance | null) => void;
   locationData: LocationDataContext;
   isLocating: boolean;
-  handleLocateMe: () => void;
+  handleLocateMe: (router: AppRouterInstance) => void;
 }
 
 export const LocationContext = createContext<LocationContextType>({
@@ -133,40 +134,46 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
     }));
   }, []);
 
-  const setLocation = (newLocation: string) => {
-    // Check if the input is one of the keys or one of the names
+  const setLocation = (newLocation: string, router: AppRouterInstance | null) => {
     const foundKey = Object.keys(locationData).find(key => 
         key.toLowerCase() === newLocation.toLowerCase() || 
         locationData[key].name.toLowerCase() === newLocation.toLowerCase()
     );
 
+    const targetLocation = foundKey || 'Bengaluru';
+    
     if (foundKey) {
-        setLocationState(foundKey);
-         toast({
+        setLocationState(targetLocation);
+        if (router) {
+            router.push(`?location=${targetLocation}`);
+        }
+        toast({
             title: "Location Updated",
-            description: `Showing data for ${locationData[foundKey].name}.`,
-          });
-    } else {
-         toast({
+            description: `Showing data for ${locationData[targetLocation].name}.`,
+        });
+    } else if (newLocation && newLocation.toLowerCase() !== 'bengaluru') {
+        toast({
             variant: "destructive",
             title: "Location Not Found",
             description: "We don't have data for this location yet. Showing default.",
-          });
-          setLocationState('Bengaluru');
+        });
+        setLocationState('Bengaluru');
+        if (router) {
+            router.push(`?location=Bengaluru`);
+        }
     }
   };
 
-  const handleLocateMe = () => {
+  const handleLocateMe = (router: AppRouterInstance) => {
     setIsLocating(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         () => {
-          // For this prototype, we'll just cycle through available locations
           const locations = Object.keys(locationData);
           const currentIndex = locations.indexOf(location);
           const nextIndex = (currentIndex + 1) % locations.length;
-          const newLocation = locations[nextIndex];
-          setLocation(newLocation);
+          const newLocationKey = locations[nextIndex];
+          setLocation(newLocationKey, router);
           setIsLocating(false);
         },
         (error) => {

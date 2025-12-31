@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useMemo, Suspense } from 'react';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wind, Droplets, Waves } from 'lucide-react';
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { LocationContext } from '@/context/LocationContext';
 import HeatmapGrid from '@/components/citizen/HeatmapGrid';
 import { type MetricType, type Ward, type PollutionData } from '@/context/LocationContext';
+import { useSearchParams } from 'next/navigation';
 
 const getMetricSummary = (wards: Ward[], metric: MetricType) => {
     if (!wards || wards.length === 0) return { value: 'N/A', status: 'Unknown' };
@@ -38,9 +39,16 @@ const getMetricSummary = (wards: Ward[], metric: MetricType) => {
     return { value: valueString, status };
 }
 
-export default function HeatmapPage() {
+function HeatmapContent() {
   const [activeLayer, setActiveLayer] = useState<MetricType>('aqi');
-  const { location, locationData } = useContext(LocationContext);
+  const { locationData, setLocation } = useContext(LocationContext);
+  const searchParams = useSearchParams();
+  const locationParam = searchParams.get('location') || 'Bengaluru';
+  
+  useState(() => {
+    setLocation(locationParam, null);
+  });
+  const location = locationParam;
   
   const cityData = locationData[location];
 
@@ -105,4 +113,13 @@ export default function HeatmapPage() {
       </main>
     </div>
   );
+}
+
+
+export default function HeatmapPage() {
+    return (
+        <Suspense fallback={<div>Loading heatmap...</div>}>
+            <HeatmapContent />
+        </Suspense>
+    )
 }

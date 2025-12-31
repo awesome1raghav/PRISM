@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useContext } from 'react';
+import { useContext, Suspense } from 'react';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import { reports, Report, ReportCategory } from '@/app/citizen/types';
 import Link from 'next/link';
 import { ArrowRight, FileText } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useSearchParams } from 'next/navigation';
 
 interface MetricDetailPageProps {
   metric: ReportCategory;
@@ -26,6 +27,7 @@ const statusColors: Record<string, string> = {
     Moderate: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
     Poor: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
     Severe: 'bg-red-500/20 text-red-400 border-red-500/30',
+    Unhealthy: 'bg-red-500/20 text-red-400 border-red-500/30',
     Safe: 'bg-green-500/20 text-green-400 border-green-500/30',
     Warning: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
     High: 'bg-red-500/20 text-red-400 border-red-500/30',
@@ -54,7 +56,7 @@ const getStatus = (metric: 'aqi' | 'wqi' | 'noise', value: number) => {
     return 'Very High';
   }
 
-export default function MetricDetailPage({
+function MetricDetailContent({
   metric,
   title,
   unit,
@@ -62,7 +64,9 @@ export default function MetricDetailPage({
   healthEffects,
   calculationInfo,
 }: MetricDetailPageProps) {
-  const { location, locationData } = useContext(LocationContext);
+  const { locationData } = useContext(LocationContext);
+  const searchParams = useSearchParams();
+  const location = searchParams.get('location') || 'Bengaluru';
   const cityData = locationData[location];
   
   const metricKey = metric.toLowerCase() as 'aqi' | 'wqi' | 'noise';
@@ -72,7 +76,7 @@ export default function MetricDetailPage({
            <div className="flex min-h-screen flex-col bg-background text-foreground">
                 <Header />
                 <main className="flex-grow container py-12 flex items-center justify-center">
-                    <p>Loading data...</p>
+                    <p>Loading data for {location}...</p>
                 </main>
            </div>
       )
@@ -172,4 +176,13 @@ export default function MetricDetailPage({
       </main>
     </div>
   );
+}
+
+
+export default function MetricDetailPage(props: MetricDetailPageProps) {
+  return (
+    <Suspense fallback={<div>Loading details...</div>}>
+      <MetricDetailContent {...props} />
+    </Suspense>
+  )
 }
