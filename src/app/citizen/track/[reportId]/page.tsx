@@ -6,7 +6,7 @@ import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { FileText, MapPin, Wind, Droplets, Waves, Trash2, Clock, CheckCircle, ShieldQuestion, Image, Video, Hourglass, ArrowRight, Check } from 'lucide-react';
+import { FileText, MapPin, Wind, Droplets, Waves, Trash2, Clock, CheckCircle, ShieldQuestion, Image, Video, Hourglass, ArrowRight, Check, UserCheck } from 'lucide-react';
 import { Report, ReportStatus, reports } from '../../types';
 import { cn } from '@/lib/utils';
 import ImagePlaceholder from 'next/image';
@@ -181,6 +181,15 @@ export default function ReportTrackingPage() {
                                 <p className="text-muted-foreground">Time Submitted</p>
                             </div>
                         </div>
+                         {report.assignee && (
+                            <div className="flex items-center gap-3">
+                                <UserCheck className="h-5 w-5 text-primary" />
+                                <div>
+                                    <p className="font-semibold">{report.assignee}</p>
+                                    <p className="text-muted-foreground">Assigned Officer</p>
+                                </div>
+                            </div>
+                        )}
                         {report.responseTime && (
                             <div className="flex items-center gap-3">
                                 <Hourglass className="h-5 w-5 text-primary" />

@@ -11,6 +11,7 @@ export interface Report {
   parameters?: string;
   responseTime?: string;
   authorityNotes?: string;
+  assignee?: string;
   media?: {
     type: 'photo' | 'video';
     url: string;
@@ -35,6 +36,7 @@ export const reports: Report[] = [
     parameters: 'High Turbidity (12 NTU)',
     responseTime: '4 hours',
     authorityNotes: 'Inspection scheduled for tomorrow morning. Initial samples collected show high levels of industrial effluent.',
+    assignee: 'R. Sharma',
     media: [
         { type: 'photo', url: 'https://picsum.photos/seed/report1/400/400', source: 'Citizen' },
         { type: 'video', url: 'https://picsum.photos/seed/report2/400/400', source: 'Citizen' },
@@ -50,6 +52,7 @@ export const reports: Report[] = [
     parameters: 'PM2.5: 158 µg/m³',
     responseTime: '12 hours',
     authorityNotes: 'Notice issued to adjacent factory for violating emission norms. Awaiting compliance report.',
+    assignee: 'S. Patel',
     media: [
         { type: 'photo', url: 'https://picsum.photos/seed/report4/400/400', source: 'Citizen' },
     ]
@@ -63,6 +66,7 @@ export const reports: Report[] = [
     parameters: 'Noise Level: 92 dB',
     responseTime: '2 days',
     authorityNotes: 'Event organizers were penalized for violating noise regulations after 10 PM. Issue resolved.',
+    assignee: 'A. Gupta',
     media: [],
     resolution: {
         action: 'Penalty issued to event organizer',
@@ -78,5 +82,6 @@ export const reports: Report[] = [
     status: 'Submitted',
     location: 'Koramangala 4th Block',
     parameters: 'Illegal dumping of construction debris',
+    assignee: 'Unassigned',
   },
 ];
