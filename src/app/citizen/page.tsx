@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Header from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +23,9 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import MetricDetailModal from '@/components/citizen/MetricDetailModal';
+import { type ReportCategory } from './types';
+
 
 const LocationSelector = () => {
   const { location, setLocation, isLocating, handleLocateMe } = useContext(LocationContext);
@@ -55,8 +58,8 @@ const LocationSelector = () => {
   );
 };
 
-const MetricCard = ({ icon, title, value, status, statusColor, href }: { icon: JSX.Element, title: string, value: string, status: string, statusColor: string, href: string }) => (
-    <Link href={href} className="group">
+const MetricCard = ({ icon, title, value, status, statusColor, onClick }: { icon: JSX.Element, title: string, value: string, status: string, statusColor: string, onClick: () => void }) => (
+    <div onClick={onClick} className="group cursor-pointer">
         <Card className="bg-card/40 border-border/30 hover:bg-card/60 hover:border-primary/40 transition-all h-full">
             <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -74,11 +77,13 @@ const MetricCard = ({ icon, title, value, status, statusColor, href }: { icon: J
                 </div>
             </CardContent>
         </Card>
-    </Link>
+    </div>
 )
 
 export default function CitizenPage() {
   const { location, locationData } = useContext(LocationContext);
+  const [selectedMetric, setSelectedMetric] = useState<ReportCategory | null>(null);
+
   const data = locationData[location] || locationData['Koramangala, Bengaluru'];
   const activeMapImage = PlaceHolderImages.find(img => img.id === 'heatmap-air');
 
@@ -153,7 +158,7 @@ export default function CitizenPage() {
                         value={`${data.air.value} AQI`} 
                         status={data.air.status}
                         statusColor={statusColors[data.air.status as keyof typeof statusColors]}
-                        href="/citizen/details/air"
+                        onClick={() => setSelectedMetric('Air')}
                     />
                      <MetricCard 
                         icon={<Droplets className="h-6 w-6 text-blue-400"/>} 
@@ -161,7 +166,7 @@ export default function CitizenPage() {
                         value={`${data.water.value} WQI`}
                         status={data.water.status}
                         statusColor={statusColors[data.water.status as keyof typeof statusColors]}
-                        href="/citizen/details/water"
+                        onClick={() => setSelectedMetric('Water')}
                     />
                      <MetricCard 
                         icon={<Waves className="h-6 w-6 text-orange-400"/>} 
@@ -169,7 +174,7 @@ export default function CitizenPage() {
                         value={`${data.noise.value} dB`}
                         status={data.noise.status}
                         statusColor={statusColors[data.noise.status as keyof typeof statusColors]}
-                        href="/citizen/details/noise"
+                        onClick={() => setSelectedMetric('Noise')}
                     />
                 </div>
              </div>
@@ -202,6 +207,10 @@ export default function CitizenPage() {
           </section>
         </div>
       </main>
+      <MetricDetailModal 
+        metric={selectedMetric}
+        onClose={() => setSelectedMetric(null)}
+      />
     </div>
   );
 }
