@@ -75,6 +75,24 @@ export default function CitizenPage() {
         <div className="grid gap-12">
           <LocationSelector />
           
+           <section>
+            <h2 className="text-2xl font-bold mb-6 text-center">Health Advisory</h2>
+             <div className="grid gap-4 md:grid-cols-2 max-w-4xl mx-auto">
+                {data.advisories.map((advisory, index) => (
+                    <Card key={index} className="bg-card/40 border-border/30">
+                        <CardContent className="p-6 flex items-center gap-4">
+                            {advisory.type === 'alert' && <AlertTriangle className="h-8 w-8 text-yellow-500 shrink-0" />}
+                            {advisory.type === 'info' && <CheckCircle className="h-8 w-8 text-muted-foreground shrink-0" />}
+                            <div>
+                                <h3 className="font-semibold">{advisory.title}</h3>
+                                <p className="text-sm text-muted-foreground">{advisory.description}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+          </section>
+
           <section>
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold tracking-tight mb-2">
@@ -135,24 +153,6 @@ export default function CitizenPage() {
                   <p className="text-sm text-muted-foreground">{data.noise.advice}</p>
                 </CardContent>
               </Card>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-bold mb-6 text-center">Health Advisory</h2>
-             <div className="grid gap-4 md:grid-cols-2 max-w-4xl mx-auto">
-                {data.advisories.map((advisory, index) => (
-                    <Card key={index} className="bg-card/40 border-border/30">
-                        <CardContent className="p-6 flex items-center gap-4">
-                            {advisory.type === 'alert' && <AlertTriangle className="h-8 w-8 text-yellow-500 shrink-0" />}
-                            {advisory.type === 'info' && <CheckCircle className="h-8 w-8 text-muted-foreground shrink-0" />}
-                            <div>
-                                <h3 className="font-semibold">{advisory.title}</h3>
-                                <p className="text-sm text-muted-foreground">{advisory.description}</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
             </div>
           </section>
 

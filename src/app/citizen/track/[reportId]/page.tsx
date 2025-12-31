@@ -14,7 +14,7 @@ import ImagePlaceholder from 'next/image';
 
 const statusTimeline: ReportStatus[] = ['Submitted', 'Verified', 'Action Taken', 'Closed'];
 
-const categoryIcons = {
+const categoryIcons: { [key: string]: JSX.Element } = {
     Air: <Wind className="h-5 w-5" />,
     Water: <Droplets className="h-5 w-5" />,
     Noise: <Waves className="h-5 w-5" />,
