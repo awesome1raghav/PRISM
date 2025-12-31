@@ -28,7 +28,7 @@ const activationConfig = {
       { id: 'logging', text: 'Transparency Logging', status: 'Enabled' },
     ],
     buttonText: 'Enter Company Console',
-    redirectPath: '/company-console',
+    redirectPath: '/company',
   },
 };
 
