@@ -2,7 +2,7 @@
 'use client';
 
 import { useToast } from '@/hooks/use-toast';
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
 export type MetricType = 'aqi' | 'wqi' | 'noise';
 export type RiskLevel = "good" | "moderate" | "poor" | "severe";
@@ -62,21 +62,11 @@ const generateWardData = (id: string, name: string, aqiRange: [number, number], 
     };
 };
 
-const locationData: LocationDataContext = {
+const initialLocationData: LocationDataContext = {
     'Bengaluru': {
         id: 'bengaluru',
         name: 'Bengaluru',
-        wards: [
-            generateWardData('koramangala', 'Koramangala', [30, 60], [75, 95], [55, 70]),
-            generateWardData('jayanagar', 'Jayanagar', [45, 80], [70, 90], [60, 75]),
-            generateWardData('indiranagar', 'Indiranagar', [55, 90], [65, 85], [65, 85]),
-            generateWardData('whitefield', 'Whitefield', [80, 150], [50, 75], [70, 90]),
-            generateWardData('hebbal', 'Hebbal', [60, 110], [60, 80], [65, 78]),
-            generateWardData('marathahalli', 'Marathahalli', [90, 180], [45, 70], [75, 95]),
-            generateWardData('electronic-city', 'Electronic City', [70, 130], [55, 78], [70, 88]),
-            generateWardData('bellandur', 'Bellandur', [150, 250], [20, 45], [70, 85]),
-            generateWardData('varthur', 'Varthur', [120, 220], [30, 55], [68, 82]),
-        ],
+        wards: [],
         advisories: [
             { type: 'alert', title: 'High Pollution Alert in Bellandur', description: 'AQI has reached severe levels. Residents are advised to stay indoors.' },
             { type: 'info', title: 'No Critical Alerts City-Wide', description: 'Overall city conditions are moderate. Monitor your specific ward for details.' }
@@ -85,13 +75,7 @@ const locationData: LocationDataContext = {
     'New York': {
         id: 'new-york',
         name: 'New York',
-        wards: [
-            generateWardData('manhattan', 'Manhattan', [70, 120], [80, 95], [70, 90]),
-            generateWardData('brooklyn', 'Brooklyn', [60, 100], [75, 90], [65, 85]),
-            generateWardData('queens', 'Queens', [50, 90], [85, 98], [60, 80]),
-            generateWardData('bronx', 'The Bronx', [80, 140], [70, 85], [68, 88]),
-            generateWardData('staten-island', 'Staten Island', [30, 60], [90, 99], [50, 65]),
-        ],
+        wards: [],
         advisories: [
             { type: 'alert', title: 'Air Quality Alert', description: 'High levels of ozone detected in The Bronx. Stay indoors if you have respiratory issues.' },
         ]
@@ -110,15 +94,44 @@ interface LocationContextType {
 export const LocationContext = createContext<LocationContextType>({
   location: 'Bengaluru',
   setLocation: () => {},
-  locationData,
+  locationData: initialLocationData,
   isLocating: false,
   handleLocateMe: () => {},
 });
 
 export const LocationProvider = ({ children }: { children: ReactNode }) => {
   const [location, setLocationState] = useState('Bengaluru');
+  const [locationData, setLocationData] = useState<LocationDataContext>(initialLocationData);
   const [isLocating, setIsLocating] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Generate data on the client side to prevent hydration mismatch
+    const bengaluruWards = [
+      generateWardData('koramangala', 'Koramangala', [30, 60], [75, 95], [55, 70]),
+      generateWardData('jayanagar', 'Jayanagar', [45, 80], [70, 90], [60, 75]),
+      generateWardData('indiranagar', 'Indiranagar', [55, 90], [65, 85], [65, 85]),
+      generateWardData('whitefield', 'Whitefield', [80, 150], [50, 75], [70, 90]),
+      generateWardData('hebbal', 'Hebbal', [60, 110], [60, 80], [65, 78]),
+      generateWardData('marathahalli', 'Marathahalli', [90, 180], [45, 70], [75, 95]),
+      generateWardData('electronic-city', 'Electronic City', [70, 130], [55, 78], [70, 88]),
+      generateWardData('bellandur', 'Bellandur', [150, 250], [20, 45], [70, 85]),
+      generateWardData('varthur', 'Varthur', [120, 220], [30, 55], [68, 82]),
+    ];
+    const newYorkWards = [
+      generateWardData('manhattan', 'Manhattan', [70, 120], [80, 95], [70, 90]),
+      generateWardData('brooklyn', 'Brooklyn', [60, 100], [75, 90], [65, 85]),
+      generateWardData('queens', 'Queens', [50, 90], [85, 98], [60, 80]),
+      generateWardData('bronx', 'The Bronx', [80, 140], [70, 85], [68, 88]),
+      generateWardData('staten-island', 'Staten Island', [30, 60], [90, 99], [50, 65]),
+    ];
+    
+    setLocationData(prevData => ({
+        ...prevData,
+        'Bengaluru': { ...prevData['Bengaluru'], wards: bengaluruWards },
+        'New York': { ...prevData['New York'], wards: newYorkWards },
+    }));
+  }, []);
 
   const setLocation = (newLocation: string) => {
     // Check if the input is one of the keys or one of the names
