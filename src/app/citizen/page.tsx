@@ -162,6 +162,8 @@ function CitizenDashboardContent() {
   const [wardsData, setWardsData] = useState<WardData[]>([]);
   const [isLoadingWards, setIsLoadingWards] = useState(true);
   const firestore = useFirestore();
+  const [avgAqi, setAvgAqi] = useState<number | null>(null);
+
   
   useEffect(() => {
     const locationParam = searchParams.get('location');
@@ -188,6 +190,12 @@ function CitizenDashboardContent() {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const wards = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as WardData));
       setWardsData(wards);
+      if (wards.length > 0) {
+        const totalAqi = wards.reduce((sum, ward) => sum + ward.aqi, 0);
+        setAvgAqi(totalAqi / wards.length);
+      } else {
+        setAvgAqi(null);
+      }
       setIsLoadingWards(false);
     }, (err) => {
       console.error("Firestore snapshot error:", err);
@@ -197,7 +205,6 @@ function CitizenDashboardContent() {
     return () => unsubscribe();
   }, [firestore, cityData.id]);
   
-  const avgAqi = 78; // Mock value
   const avgWqi = 85; // Mock
   const avgNoise = 68; // Mock
 
@@ -273,10 +280,11 @@ function CitizenDashboardContent() {
                 <MetricCard 
                     icon={<Wind className="h-6 w-6 text-sky-400"/>} 
                     title="Air Quality" 
-                    value={avgAqi !== null ? `${Math.round(avgAqi)} AQI` : null} 
+                    value={avgAqi !== null ? `${Math.round(avgAqi)} AQI` : '—'} 
                     status={aqiStatus.label}
                     statusColor={aqiStatus.color}
                     onClick={() => setSelectedMetric('Air')}
+                    isLoading={isLoadingWards}
                 />
                  <MetricCard 
                     icon={<Droplets className="h-6 w-6 text-blue-400"/>} 
@@ -352,5 +360,3 @@ export default function CitizenPage() {
     </div>
   );
 }
-
-    
