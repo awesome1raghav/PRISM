@@ -9,6 +9,23 @@ export interface Violation {
   time: string;
   confidence: Confidence;
   source: ViolationSource;
+  summary?: string;
+  impact?: {
+    vulnerableGroups: string[];
+    riskLevel: 'LOW' | 'MEDIUM' | 'HIGH';
+    populationImpacted: string;
+    sensitiveZones: string[];
+  };
+  recommendations?: {
+      action: string;
+      priority: 'Immediate' | 'Short-term' | 'Monitoring';
+  }[];
+  responsibleDepartments?: string[];
+  escalationLogic?: {
+      deadline: string;
+      rule: string;
+  };
+  explanation?: string;
 }
 
 export type IncidentPriority = 'Normal' | 'High-risk' | 'Public health emergency';
