@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useFirestore } from '@/firebase';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
-import { collection, onSnapshot, query, DocumentData } from 'firebase/firestore';
+import { collection, onSnapshot, query } from 'firebase/firestore';
 
 interface WardData {
   id: string;
@@ -28,6 +28,18 @@ const getAqiStatus = (aqi: number) => {
   return 'Severe';
 };
 
+// This component is responsible for programmatically updating the map view
+// when the cityId prop changes.
+const MapUpdater = ({ cityId }: { cityId: string }) => {
+  const map = useMap();
+  useEffect(() => {
+    const newCenter: [number, number] = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
+    map.flyTo(newCenter, 11);
+  }, [cityId, map]);
+  return null;
+};
+
+
 // This component contains the dynamic data fetching and marker rendering.
 // It is a child of MapContainer, so its re-renders won't re-initialize the map.
 const MapMarkers = ({ cityId }: { cityId: string }) => {
@@ -35,8 +47,7 @@ const MapMarkers = ({ cityId }: { cityId: string }) => {
   const [wards, setWards] = useState<WardData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const map = useMap();
-
+  
   useEffect(() => {
     if (!firestore || !cityId) return;
 
@@ -61,14 +72,9 @@ const MapMarkers = ({ cityId }: { cityId: string }) => {
         setIsLoading(false);
       }
     );
-    
-    // Fly to new location when cityId changes
-    const newCenter: [number, number] = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
-    map.flyTo(newCenter, 11);
-
 
     return () => unsubscribe();
-  }, [firestore, cityId, map]);
+  }, [firestore, cityId]);
 
   return (
     <>
@@ -127,7 +133,7 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* The component that handles data fetching is now a child of the map */}
+      <MapUpdater cityId={cityId} />
       <MapMarkers cityId={cityId} />
     </MapContainer>
   );
