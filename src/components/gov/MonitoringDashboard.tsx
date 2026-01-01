@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Gauge, Droplets, Waves, Map, Building, Home, AlertTriangle } from 'lucide-react';
+import { Gauge, Droplets, Waves, Map, Building, Home, AlertTriangle, Wind } from 'lucide-react';
 import { type MetricType } from '@/context/LocationContext';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+
 
 const CitizenHeatmap = dynamic(() => import('../maps/CitizenHeatmap'), {
   ssr: false,
@@ -61,10 +63,21 @@ const wards = [
 ];
 
 const activeAlerts = [
-    { text: 'AQI spike detected in Ward 18 (15 mins ago)', severity: 'High' },
-    { text: 'Noise limit exceeded near MG Road', severity: 'Medium' },
-    { text: 'High turbidity reported in Bellandur Lake', severity: 'High' },
+    { type: 'Air', title: 'AQI Spike', location: 'Ward 18, Whitefield', time: '15m ago', value: '158 AQI', severity: 'High' },
+    { type: 'Noise', title: 'Noise Limit Exceeded', location: 'MG Road', time: '45m ago', value: '92 dB', severity: 'Medium' },
+    { type: 'Water', title: 'High Turbidity', location: 'Bellandur Lake', time: '2h ago', value: '12 NTU', severity: 'High' },
 ];
+
+const alertConfig = {
+    Air: { icon: Wind, color: 'sky' },
+    Water: { icon: Droplets, color: 'blue' },
+    Noise: { icon: Waves, color: 'orange' },
+};
+
+const severityStyles = {
+    High: 'border-red-500/60 bg-red-500/10 text-red-400',
+    Medium: 'border-yellow-500/60 bg-yellow-500/10 text-yellow-400',
+}
 
 const trendData = [
   { day: 'Mon', aqi: 75, wqi: 90, noise: 65 },
@@ -156,19 +169,34 @@ export default function MonitoringDashboard() {
 
   return (
     <div className="grid gap-8">
-       <Card className="bg-card/40 border-border/30 border-yellow-500/50">
+       <Card className="bg-card/40 border-border/30">
         <CardHeader>
             <CardTitle className="flex items-center gap-2 text-yellow-400">
                 <AlertTriangle />
                 Active Alerts
             </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
-            {activeAlerts.map((alert, index) => (
-                <div key={index} className="text-sm p-3 bg-muted/50 rounded-lg border border-border/50">
-                   <span className={alert.severity === 'High' ? 'text-red-400 font-semibold' : 'text-foreground'}>{alert.text}</span>
-                </div>
-            ))}
+        <CardContent className="space-y-4">
+            {activeAlerts.map((alert, index) => {
+                const config = alertConfig[alert.type as keyof typeof alertConfig];
+                const Icon = config.icon;
+                const severityStyle = severityStyles[alert.severity as keyof typeof severityStyles];
+
+                return (
+                    <div key={index} className={cn("flex items-center gap-4 rounded-lg border p-4", severityStyle)}>
+                        {alert.severity === 'High' && <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>}
+                        <div className={`p-2 bg-${config.color}-500/10 rounded-lg`}><Icon className={`h-6 w-6 text-${config.color}-400`} /></div>
+                        <div className="flex-grow">
+                            <p className="font-bold">{alert.title}</p>
+                            <p className="text-sm text-muted-foreground">{alert.location}</p>
+                        </div>
+                        <div className="text-right">
+                            <p className="font-semibold">{alert.value}</p>
+                            <p className="text-xs text-muted-foreground">{alert.time}</p>
+                        </div>
+                    </div>
+                )
+            })}
         </CardContent>
       </Card>
 
