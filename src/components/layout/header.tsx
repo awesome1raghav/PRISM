@@ -37,7 +37,9 @@ export default function Header() {
     >
       <div className="container flex h-24 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Logo className="text-primary" />
+          <div className="h-8 w-8">
+            <Logo className="text-primary" />
+          </div>
           <span className="font-bold sm:inline-block text-foreground">PRISM</span>
         </Link>
         <nav className="flex-1">
