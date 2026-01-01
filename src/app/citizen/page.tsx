@@ -125,10 +125,11 @@ function CitizenDashboardContent() {
   const { location, setLocation, locationData } = useContext(LocationContext);
   const [selectedMetric, setSelectedMetric] = useState<ReportCategory | null>(null);
   const searchParams = useSearchParams();
-  const locationParam = searchParams.get('location');
+  const router = useRouter();
   
   // Initialize context location from URL on first load
   useEffect(() => {
+    const locationParam = searchParams.get('location');
     const initialLocation = locationParam || 'Bengaluru';
     const foundKey = Object.keys(locationData).find(key => 
         key.toLowerCase() === initialLocation.toLowerCase() || 
@@ -138,7 +139,8 @@ function CitizenDashboardContent() {
     if (location !== foundKey) {
         setLocation(foundKey);
     }
-  }, [locationParam, setLocation, locationData, location]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
   
   const cityData = locationData[location] || locationData['Bengaluru'];
   

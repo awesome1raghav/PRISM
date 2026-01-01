@@ -28,16 +28,23 @@ const getAqiStatus = (aqi: number) => {
   return 'Severe';
 };
 
-function MapContent({ cityId, center, zoom }: { cityId: string, center: LatLngExpression, zoom: number }) {
+function MapContent({ cityId }: { cityId: string }) {
   const map = useMap();
   const firestore = useFirestore();
   const [wards, setWards] = useState<WardData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const cityCenters: { [key: string]: LatLngExpression } = {
+    'bengaluru': [12.9716, 77.5946],
+    'new-york': [40.7128, -74.0060],
+  };
+  const mapCenter = cityCenters[cityId] || cityCenters['bengaluru'];
+  const zoom = 11;
+  
   useEffect(() => {
-    map.flyTo(center, zoom);
-  }, [center, zoom, map]);
+    map.flyTo(mapCenter, zoom);
+  }, [mapCenter, zoom, map]);
 
   useEffect(() => {
     if (!firestore || !cityId) return;
@@ -109,7 +116,11 @@ function MapContent({ cityId, center, zoom }: { cityId: string, center: LatLngEx
 };
 
 const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
-  const mapCenter: LatLngExpression = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
+  const cityCenters: { [key: string]: LatLngExpression } = {
+    'bengaluru': [12.9716, 77.5946],
+    'new-york': [40.7128, -74.0060],
+  };
+  const mapCenter = cityCenters[cityId] || cityCenters['bengaluru'];
   const zoom = 11;
 
   return (
@@ -124,7 +135,7 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapContent cityId={cityId} center={mapCenter} zoom={zoom} />
+      <MapContent cityId={cityId} />
     </MapContainer>
   );
 };
