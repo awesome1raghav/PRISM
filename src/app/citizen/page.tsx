@@ -14,6 +14,7 @@ import {
   LocateFixed,
   ArrowRight,
   ShieldCheck,
+  Expand,
 } from 'lucide-react';
 import Link from 'next/link';
 import { LocationContext } from '@/context/LocationContext';
@@ -26,6 +27,10 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import FullScreenMap from '@/components/maps/FullScreenMap';
+import { useFirestore } from '@/firebase';
+import { collection, onSnapshot, query, Query } from 'firebase/firestore';
+import type { WardData } from '@/components/maps/types';
 
 const CitizenHeatmap = dynamic(
   () => import('@/components/maps/CitizenHeatmap'),
@@ -54,7 +59,6 @@ const LocationSelector = () => {
 
     const targetLocation = foundKey || 'Bengaluru';
     
-    // Only update and show toast if location actually changes
     if (targetLocation !== location) {
         setLocation(targetLocation);
         router.push(`/citizen?location=${targetLocation}`, { scroll: false });
@@ -133,9 +137,11 @@ function CitizenDashboardContent() {
   const { location, setLocation, locationData } = useContext(LocationContext);
   const [selectedMetric, setSelectedMetric] = useState<ReportCategory | null>(null);
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const [isMapFullScreen, setMapFullScreen] = useState(false);
+  const [wardsData, setWardsData] = useState<WardData[]>([]);
+  const [isLoadingWards, setIsLoadingWards] = useState(true);
+  const firestore = useFirestore();
   
-  // Initialize context location from URL on first load
   useEffect(() => {
     const locationParam = searchParams.get('location');
     const initialLocation = locationParam || 'Bengaluru';
@@ -148,15 +154,31 @@ function CitizenDashboardContent() {
         setLocation(foundKey);
     }
      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on mount
-  
+  }, []); 
+
   const cityData = locationData[location] || locationData['Bengaluru'];
+
+  useEffect(() => {
+    if (!firestore || !cityData.id) return;
+    setIsLoadingWards(true);
+    const wardsCollectionPath = `locations/${cityData.id}/wards`;
+    const q = query(collection(firestore, wardsCollectionPath));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const wards = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as WardData));
+      setWardsData(wards);
+      setIsLoadingWards(false);
+    }, (err) => {
+      console.error("Firestore snapshot error:", err);
+      setIsLoadingWards(false);
+    });
+
+    return () => unsubscribe();
+  }, [firestore, cityData.id]);
   
-  // Calculate city-wide average for display
-  const wards = cityData.wards || [];
-  const avgAqi = wards.reduce((s, w) => s + w.live_data.aqi, 0) / (wards.length || 1);
-  const avgWqi = wards.reduce((s, w) => s + w.live_data.wqi, 0) / (wards.length || 1);
-  const avgNoise = wards.reduce((s, w) => s + w.live_data.noise, 0) / (wards.length || 1);
+  const avgAqi = wardsData.reduce((s, w) => s + w.aqi, 0) / (wardsData.length || 1);
+  const avgWqi = 85; // Mock
+  const avgNoise = 68; // Mock
 
   const getStatus = (metric: 'aqi' | 'wqi' | 'noise', value: number) => {
     if (metric === 'aqi') {
@@ -213,11 +235,15 @@ function CitizenDashboardContent() {
          <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                 <Card className="bg-card/40 border-border/30 h-full">
-                    <CardHeader>
+                    <CardHeader className="flex flex-row items-center justify-between">
                         <CardTitle>Pollution Heatmap</CardTitle>
+                        <Button variant="ghost" size="icon" onClick={() => setMapFullScreen(true)}>
+                            <Expand className="h-5 w-5" />
+                            <span className="sr-only">Enter full screen</span>
+                        </Button>
                     </CardHeader>
                     <CardContent>
-                        <CitizenHeatmap cityId={cityData.id} />
+                        <CitizenHeatmap cityId={cityData.id} wardsData={wardsData} isLoading={isLoadingWards} />
                     </CardContent>
                 </Card>
             </div>
@@ -279,6 +305,14 @@ function CitizenDashboardContent() {
         metric={selectedMetric}
         onClose={() => setSelectedMetric(null)}
       />
+       {isMapFullScreen && (
+        <FullScreenMap
+          cityId={cityData.id}
+          wardsData={wardsData}
+          isLoading={isLoadingWards}
+          onClose={() => setMapFullScreen(false)}
+        />
+      )}
     </div>
   )
 }
@@ -296,5 +330,3 @@ export default function CitizenPage() {
     </div>
   );
 }
-
-    
