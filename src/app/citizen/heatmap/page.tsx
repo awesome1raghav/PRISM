@@ -11,9 +11,10 @@ import { LocationContext } from '@/context/LocationContext';
 import HeatmapGrid from '@/components/citizen/HeatmapGrid';
 import { type MetricType, type Ward, type PollutionData } from '@/context/LocationContext';
 import { useSearchParams } from 'next/navigation';
+import MapMetricOverlay from '@/components/citizen/MapMetricOverlay';
 
 const getMetricSummary = (wards: Ward[], metric: MetricType) => {
-    if (!wards || wards.length === 0) return { value: 'N/A', status: 'Unknown' };
+    if (!wards || wards.length === 0) return { value: 'N/A', status: 'Unknown', numericValue: 0 };
     
     const totalValue = wards.reduce((sum, ward) => sum + ward.live_data[metric], 0);
     const avgValue = totalValue / wards.length;
@@ -37,7 +38,7 @@ const getMetricSummary = (wards: Ward[], metric: MetricType) => {
 
     const valueString = metric === 'noise' ? `${Math.round(avgValue)} dB` : `${Math.round(avgValue)}`;
 
-    return { value: valueString, status };
+    return { value: valueString, status, numericValue: avgValue };
 }
 
 function HeatmapContent() {
@@ -110,6 +111,11 @@ function HeatmapContent() {
             </Card>
         </div>
         <div className="relative flex-grow p-4 md:p-6">
+            <MapMetricOverlay
+                summaries={{ aqi: aqiSummary, wqi: wqiSummary, noise: noiseSummary }}
+                activeMetric={activeLayer}
+                setActiveMetric={setActiveLayer}
+            />
             <HeatmapGrid wards={cityData?.wards || []} activeMetric={activeLayer} />
         </div>
       </main>
