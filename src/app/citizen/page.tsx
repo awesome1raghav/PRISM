@@ -26,10 +26,17 @@ import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 
-const CitizenHeatmap = dynamic(() => import('@/components/maps/CitizenHeatmap'), {
-  ssr: false,
-  loading: () => <Skeleton className="h-[420px] w-full" />,
-});
+const CitizenHeatmap = dynamic(
+  () => import('@/components/maps/CitizenHeatmap'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[420px] w-full rounded-xl bg-muted flex items-center justify-center">
+        Loading map…
+      </div>
+    ),
+  }
+);
 
 const LocationSelector = () => {
   const { location, setLocation, locationData } = useContext(LocationContext);
