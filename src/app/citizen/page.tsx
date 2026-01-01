@@ -27,7 +27,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import FullScreenMap from '@/components/maps/FullScreenMap';
 import { useFirestore } from '@/firebase';
 import { collection, onSnapshot, query, Query } from 'firebase/firestore';
 import type { WardData } from '@/components/maps/types';
@@ -43,6 +42,19 @@ const CitizenHeatmap = dynamic(
     ),
   }
 );
+
+const FullScreenMap = dynamic(
+  () => import('@/components/maps/FullScreenMap'),
+  {
+    ssr: false,
+    loading: () => (
+        <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center">
+            <p>Loading Full Screen Map...</p>
+        </div>
+    )
+  }
+);
+
 
 const LocationSelector = () => {
   const { location, setLocation, locationData } = useContext(LocationContext);
