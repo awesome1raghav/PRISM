@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import {
@@ -15,6 +16,7 @@ import { Bot, ChevronRight } from 'lucide-react';
 import { type Violation, type Confidence, type ViolationSource } from '@/app/gov/types';
 import { cn } from '@/lib/utils';
 import AIReport from './AIReport';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 
 const violations: Violation[] = [
@@ -57,8 +59,49 @@ const confidenceStyles: Record<Confidence, string> = {
   High: "bg-red-500/20 text-red-400 border-red-500/30",
 };
 
+const ViolationList = ({
+  violations,
+  onSelect,
+  selectedId,
+}: {
+  violations: Violation[];
+  onSelect: (violation: Violation) => void;
+  selectedId: string | null;
+}) => (
+    <div className="divide-y divide-border/30">
+        {violations.length > 0 ? violations.map((violation) => (
+        <div
+            key={violation.id}
+            onClick={() => onSelect(violation)}
+            className={cn(
+                "flex items-center justify-between p-3 cursor-pointer transition-colors",
+                selectedId === violation.id ? 'bg-primary/10' : 'hover:bg-muted/50'
+            )}
+        >
+            <div>
+                <p className="font-semibold">{violation.type}</p>
+                <p className="text-sm text-muted-foreground">{violation.location}</p>
+                <p className="text-xs text-muted-foreground">{violation.time}</p>
+            </div>
+            <div className="flex items-center gap-2">
+                <Badge variant="outline" className={cn(confidenceStyles[violation.confidence])}>
+                    {violation.confidence}
+                </Badge>
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            </div>
+        </div>
+        )) : (
+            <p className="text-muted-foreground text-center p-4">No violations for this confidence level.</p>
+        )}
+    </div>
+);
+
+
 export default function ViolationDetection() {
   const [selectedViolation, setSelectedViolation] = useState<Violation | null>(violations[0]);
+  const highConfidence = violations.filter(v => v.confidence === 'High');
+  const mediumConfidence = violations.filter(v => v.confidence === 'Medium');
+  const lowConfidence = violations.filter(v => v.confidence === 'Low');
 
   return (
     <div className="grid lg:grid-cols-3 gap-8 items-start">
@@ -74,30 +117,22 @@ export default function ViolationDetection() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <div className="divide-y divide-border/30">
-                        {violations.map((violation) => (
-                        <div
-                            key={violation.id}
-                            onClick={() => setSelectedViolation(violation)}
-                            className={cn(
-                                "flex items-center justify-between p-3 cursor-pointer transition-colors",
-                                selectedViolation?.id === violation.id ? 'bg-primary/10' : 'hover:bg-muted/50'
-                            )}
-                        >
-                            <div>
-                                <p className="font-semibold">{violation.type}</p>
-                                <p className="text-sm text-muted-foreground">{violation.location}</p>
-                                <p className="text-xs text-muted-foreground">{violation.time}</p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Badge variant="outline" className={cn(confidenceStyles[violation.confidence])}>
-                                    {violation.confidence}
-                                </Badge>
-                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                            </div>
-                        </div>
-                        ))}
-                    </div>
+                    <Tabs defaultValue="high">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="high">High ({highConfidence.length})</TabsTrigger>
+                            <TabsTrigger value="medium">Medium ({mediumConfidence.length})</TabsTrigger>
+                            <TabsTrigger value="low">Low ({lowConfidence.length})</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="high">
+                            <ViolationList violations={highConfidence} onSelect={setSelectedViolation} selectedId={selectedViolation?.id || null} />
+                        </TabsContent>
+                        <TabsContent value="medium">
+                             <ViolationList violations={mediumConfidence} onSelect={setSelectedViolation} selectedId={selectedViolation?.id || null} />
+                        </TabsContent>
+                        <TabsContent value="low">
+                            <ViolationList violations={lowConfidence} onSelect={setSelectedViolation} selectedId={selectedViolation?.id || null} />
+                        </TabsContent>
+                    </Tabs>
                 </CardContent>
             </Card>
         </div>
