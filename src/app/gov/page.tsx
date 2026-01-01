@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MonitoringDashboard from '@/components/gov/MonitoringDashboard';
 import ViolationDetection from '@/components/gov/ViolationDetection';
 import IncidentManagement from '@/components/gov/IncidentManagement';
-import { GanttChart, ListChecks, ShieldAlert } from 'lucide-react';
+import { LayoutGrid, ListChecks, ShieldAlert } from 'lucide-react';
 
 export default function GovernmentPage() {
   return (
@@ -25,7 +25,7 @@ export default function GovernmentPage() {
         <Tabs defaultValue="monitoring">
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="monitoring">
-              <GanttChart className="mr-2 h-4 w-4" />
+              <LayoutGrid className="mr-2 h-4 w-4" />
               Unified Monitoring
             </TabsTrigger>
             <TabsTrigger value="violations">
