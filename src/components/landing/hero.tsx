@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -10,7 +9,7 @@ export default function Hero() {
           <h1 className="text-6xl font-semibold tracking-tighter sm:text-7xl md:text-8xl text-foreground drop-shadow-lg [text-shadow:0_0_25px_hsl(var(--primary)/0.8),0_0_10px_hsl(var(--primary)/0.5)]">
             PRISM
           </h1>
-          <p className="mt-6 text-lg text-muted-foreground/80 sm:text-xl max-w-3xl mx-auto text-balance [text-shadow:0_0_10px_hsl(var(--background)/0.9)]">
+          <p className="mt-6 text-lg tracking-wide text-muted-foreground/90 sm:text-xl max-w-3xl mx-auto text-balance [text-shadow:0_0_10px_hsl(var(--background)/0.9)]">
             Pollution Real-Time Intelligent Surveillance Model
           </p>
           <div className="mt-12 flex flex-wrap justify-center gap-4">

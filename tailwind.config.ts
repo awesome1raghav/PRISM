@@ -21,6 +21,12 @@ export default {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      fontWeight: {
+        normal: '450',
+        medium: '550',
+        semibold: '650',
+        bold: '750',
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

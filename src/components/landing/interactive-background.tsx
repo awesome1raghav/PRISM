@@ -86,7 +86,7 @@ const InteractiveBackground: React.FC = () => {
         const v = simState.current[i];
 
         if (Math.abs(v) > simState.threshold) {
-          const intensity = Math.min(Math.abs(v) / 200, 1);
+          const intensity = Math.min(Math.abs(v) / 150, 1);
           
           // Gradient: Teal -> Green -> Amber
           let r, g, b;
@@ -101,7 +101,7 @@ const InteractiveBackground: React.FC = () => {
             r = 217; g = 160; b = 61; // Amber
           }
 
-          const alpha = Math.min(intensity, 0.4);
+          const alpha = Math.min(intensity, 0.5);
 
           for (let py = 0; py < simState.scale; py++) {
             for (let px = 0; px < simState.scale; px++) {
