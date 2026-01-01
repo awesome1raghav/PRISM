@@ -123,7 +123,6 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
 
   return (
     <MapContainer
-      key={cityId} // Use key to re-mount the component when cityId changes
       center={mapCenter}
       zoom={11}
       scrollWheelZoom={false}
@@ -134,6 +133,7 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <MapUpdater center={mapCenter} zoom={11} />
       <MapMarkers cityId={cityId} />
     </MapContainer>
   );
