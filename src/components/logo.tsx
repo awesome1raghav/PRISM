@@ -20,7 +20,7 @@ export default function Logo({
   } : {};
   
   return (
-    <div className={cn('h-8 w-8 relative flex items-center justify-center', className)}>
+    <div className={cn('h-full w-full relative flex items-center justify-center', className)}>
       <svg 
         viewBox="0 0 100 100" 
         xmlns="http://www.w3.org/2000/svg"
