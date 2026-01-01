@@ -4,7 +4,8 @@
 import { useState, useEffect } from 'react';
 import { useFirestore } from '@/firebase';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
-import { collection, onSnapshot, query } from 'firebase/firestore';
+import { collection, onSnapshot, query, DocumentData } from 'firebase/firestore';
+import type { LatLngExpression } from 'leaflet';
 
 interface WardData {
   id: string;
@@ -30,12 +31,11 @@ const getAqiStatus = (aqi: number) => {
 
 // This component is responsible for programmatically updating the map view
 // when the cityId prop changes.
-const MapUpdater = ({ cityId }: { cityId: string }) => {
+const MapUpdater = ({ center, zoom }: { center: LatLngExpression, zoom: number }) => {
   const map = useMap();
   useEffect(() => {
-    const newCenter: [number, number] = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
-    map.flyTo(newCenter, 11);
-  }, [cityId, map]);
+    map.flyTo(center, zoom);
+  }, [center, zoom, map]);
   return null;
 };
 
@@ -119,10 +119,11 @@ const MapMarkers = ({ cityId }: { cityId: string }) => {
 
 // This is the main component. It renders the MapContainer ONCE.
 const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
-  const mapCenter: [number, number] = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
+  const mapCenter: LatLngExpression = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
 
   return (
     <MapContainer
+      key={cityId} // Use key to re-mount the component when cityId changes
       center={mapCenter}
       zoom={11}
       scrollWheelZoom={false}
@@ -133,7 +134,6 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapUpdater cityId={cityId} />
       <MapMarkers cityId={cityId} />
     </MapContainer>
   );

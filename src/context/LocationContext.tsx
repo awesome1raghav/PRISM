@@ -1,9 +1,7 @@
 
 'use client';
 
-import { useToast } from '@/hooks/use-toast';
 import React, { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
-import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export type MetricType = 'aqi' | 'wqi' | 'noise';
 export type RiskLevel = "good" | "moderate" | "poor" | "severe";
@@ -86,25 +84,19 @@ const initialLocationData: LocationDataContext = {
 
 interface LocationContextType {
   location: string;
-  setLocation: (location: string, showToast: boolean) => void;
+  setLocation: (location: string) => void;
   locationData: LocationDataContext;
-  isLocating: boolean;
-  handleLocateMe: (router: AppRouterInstance) => void;
 }
 
 export const LocationContext = createContext<LocationContextType>({
   location: 'Bengaluru',
   setLocation: () => {},
   locationData: initialLocationData,
-  isLocating: false,
-  handleLocateMe: () => {},
 });
 
 export const LocationProvider = ({ children }: { children: ReactNode }) => {
-  const [location, setLocationState] = useState('Bengaluru');
+  const [location, setLocation] = useState('Bengaluru');
   const [locationData, setLocationData] = useState<LocationDataContext>(initialLocationData);
-  const [isLocating, setIsLocating] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Generate data on the client side to prevent hydration mismatch. This runs only once.
@@ -134,46 +126,7 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
     }));
   }, []);
 
-  const setLocation = useCallback((newLocation: string, showToast: boolean) => {
-    const foundKey = Object.keys(locationData).find(key => 
-        key.toLowerCase() === newLocation.toLowerCase() || 
-        locationData[key].id.toLowerCase() === newLocation.toLowerCase()
-    );
-
-    const targetLocation = foundKey || 'Bengaluru';
-    
-    setLocationState(prevLocation => {
-        if (prevLocation.toLowerCase() !== targetLocation.toLowerCase()) {
-            if (showToast) {
-                toast({
-                    title: "Location Updated",
-                    description: `Showing data for ${locationData[targetLocation].name}.`,
-                });
-            }
-            return targetLocation;
-        }
-        return prevLocation;
-    });
-
-  }, [locationData, toast]);
-
-  const handleLocateMe = (router: AppRouterInstance) => {
-    setIsLocating(true);
-    // Simulate finding a location and cycling through available ones
-    setTimeout(() => {
-        const locations = Object.keys(locationData);
-        const currentIndex = locations.findIndex(l => l.toLowerCase() === location.toLowerCase());
-        const nextIndex = (currentIndex + 1) % locations.length;
-        const newLocationKey = locations[nextIndex];
-        
-        setLocation(newLocationKey, true); // Show toast on manual location change
-        router.push(`/citizen?location=${newLocationKey}`, { scroll: false });
-
-        setIsLocating(false);
-    }, 800);
-  };
-
-  const value = { location, setLocation, locationData, isLocating, handleLocateMe };
+  const value = { location, setLocation, locationData };
 
   return (
     <LocationContext.Provider value={value}>

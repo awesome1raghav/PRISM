@@ -25,6 +25,7 @@ import { type ReportCategory } from './types';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
 
 const CitizenHeatmap = dynamic(() => import('@/components/maps/CitizenHeatmap'), {
   ssr: false,
@@ -32,15 +33,44 @@ const CitizenHeatmap = dynamic(() => import('@/components/maps/CitizenHeatmap'),
 });
 
 const LocationSelector = () => {
-  const { location, setLocation, isLocating, handleLocateMe } = useContext(LocationContext);
+  const { location, setLocation, locationData } = useContext(LocationContext);
   const router = useRouter();
   const [inputValue, setInputValue] = useState(location);
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLocation(inputValue, true); // Pass true to show toast
-    router.push(`/citizen?location=${inputValue}`, { scroll: false });
+    const foundKey = Object.keys(locationData).find(key => 
+        key.toLowerCase() === inputValue.toLowerCase() || 
+        locationData[key].id.toLowerCase() === inputValue.toLowerCase()
+    );
+
+    const targetLocation = foundKey || 'Bengaluru';
+
+    setLocation(targetLocation);
+    router.push(`/citizen?location=${targetLocation}`, { scroll: false });
+    
+    toast({
+        title: "Location Updated",
+        description: `Showing data for ${locationData[targetLocation].name}.`,
+    });
   }
+
+  const handleLocateMe = () => {
+     // Simulate finding a location and cycling through available ones
+    const locations = Object.keys(locationData);
+    const currentIndex = locations.findIndex(l => l.toLowerCase() === location.toLowerCase());
+    const nextIndex = (currentIndex + 1) % locations.length;
+    const newLocationKey = locations[nextIndex];
+    
+    setLocation(newLocationKey);
+    router.push(`/citizen?location=${newLocationKey}`, { scroll: false });
+
+    toast({
+        title: "Location Updated",
+        description: `Showing data for ${locationData[newLocationKey].name}.`,
+    });
+  };
   
   useEffect(() => {
     setInputValue(location);
@@ -58,8 +88,8 @@ const LocationSelector = () => {
             />
             <div className="flex gap-2">
                 <Button type="submit">Set Location</Button>
-                <Button variant="outline" type="button" onClick={() => handleLocateMe(router)} disabled={isLocating}>
-                <LocateFixed className={cn('h-4 w-4', isLocating && 'animate-spin')} />
+                <Button variant="outline" type="button" onClick={handleLocateMe}>
+                <LocateFixed className={cn('h-4 w-4')} />
                 <span className="ml-2 hidden sm:inline">Use My Location</span>
                 </Button>
             </div>
@@ -91,20 +121,22 @@ const MetricCard = ({ icon, title, value, status, statusColor, onClick }: { icon
 )
 
 function CitizenDashboardContent() {
-  const { locationData, setLocation } = useContext(LocationContext);
+  const { location, setLocation, locationData } = useContext(LocationContext);
   const [selectedMetric, setSelectedMetric] = useState<ReportCategory | null>(null);
   const searchParams = useSearchParams();
   const locationParam = searchParams.get('location');
   
   // Initialize context location from URL on first load
   useEffect(() => {
-    if (locationParam) {
-      setLocation(locationParam, false); // false to not show toast on load
-    }
-  }, [locationParam, setLocation]);
-  
-  const location = locationParam || 'Bengaluru';
+    const initialLocation = locationParam || 'Bengaluru';
+    const foundKey = Object.keys(locationData).find(key => 
+        key.toLowerCase() === initialLocation.toLowerCase() || 
+        locationData[key].id.toLowerCase() === initialLocation.toLowerCase()
+    ) || 'Bengaluru';
 
+    setLocation(foundKey);
+  }, [locationParam, setLocation, locationData]);
+  
   const cityData = locationData[location] || locationData['Bengaluru'];
   
   // Calculate city-wide average for display
