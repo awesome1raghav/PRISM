@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Gauge, Droplets, Waves, Trash2, Map, Building, Home } from 'lucide-react';
+import { Gauge, Droplets, Waves, Map, Building, Home, AlertTriangle } from 'lucide-react';
 import HeatmapGrid from '@/components/citizen/HeatmapGrid';
 import { type MetricType, type Ward, type PollutionData } from '@/context/LocationContext';
 
@@ -12,19 +12,16 @@ const data = {
     air: { value: 78, status: 'Moderate' },
     water: { value: 92, status: 'Good' },
     noise: { value: 68, status: 'Moderate' },
-    waste: { value: '82%', status: 'High' },
   },
   district: {
     air: { value: 65, status: 'Moderate' },
     water: { value: 88, status: 'Good' },
-    noise: { value: 62, status: 'Low' },
-    waste: { value: '75%', status: 'Moderate' },
+    noise: { value: 62, 'status': 'Low' },
   },
   ward: {
     air: { value: 45, status: 'Good' },
     water: { value: 95, status: 'Good' },
-    noise: { value: 55, status: 'Low' },
-    waste: { value: '60%', status: 'Low' },
+    noise: { value: 55, 'status': 'Low' },
   }
 }
 
@@ -49,11 +46,17 @@ const wards: Ward[] = [
     generateWardData('marathahalli', 'Marathahalli', 150, 55, 85),
 ];
 
+const activeAlerts = [
+    { text: 'AQI spike detected in Ward 18 (15 mins ago)', severity: 'High' },
+    { text: 'Noise limit exceeded near MG Road', severity: 'Medium' },
+    { text: 'High turbidity reported in Bellandur Lake', severity: 'High' },
+];
+
 
 const StatusCard = ({ icon, title, value, status }: { icon: React.ReactNode, title: string, value: string | number, status: string }) => {
-  const statusColor = status === 'Good' ? 'text-green-400' : status === 'Moderate' ? 'text-yellow-400' : 'text-red-500';
+  const statusColor = status === 'Good' || status === 'Low' ? 'text-green-400' : status === 'Moderate' ? 'text-yellow-400' : 'text-red-500';
   return (
-    <Card className="bg-card/40 border-border/30">
+    <Card className="bg-card/80 border-border/30">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
         <div className="text-muted-foreground">{icon}</div>
@@ -66,34 +69,67 @@ const StatusCard = ({ icon, title, value, status }: { icon: React.ReactNode, tit
   );
 };
 
-const View = ({ viewData }: { viewData: typeof data.city }) => (
-  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-    <StatusCard icon={<Gauge className="h-4 w-4"/>} title="Air Quality Index" value={viewData.air.value} status={viewData.air.status} />
-    <StatusCard icon={<Droplets className="h-4 w-4"/>} title="Water Quality Score" value={viewData.water.value} status={viewData.water.status} />
-    <StatusCard icon={<Waves className="h-4 w-4"/>} title="Avg. Noise Level (dB)" value={viewData.noise.value} status={viewData.noise.status} />
-    <StatusCard icon={<Trash2 className="h-4 w-4"/>} title="Waste Mgt. Efficiency" value={viewData.waste.value} status={viewData.waste.status} />
-  </div>
-);
+const View = ({ viewData, metric }: { viewData: typeof data.city, metric: MetricType }) => {
+    const metricMap = {
+        aqi: { icon: <Gauge className="h-4 w-4"/>, title: "Air Quality Index", data: viewData.air },
+        wqi: { icon: <Droplets className="h-4 w-4"/>, title: "Water Quality Score", data: viewData.water },
+        noise: { icon: <Waves className="h-4 w-4"/>, title: "Avg. Noise Level (dB)", data: viewData.noise },
+    }
+    const currentMetric = metricMap[metric];
+
+  return (
+    <StatusCard 
+        icon={currentMetric.icon} 
+        title={currentMetric.title}
+        value={currentMetric.data.value}
+        status={currentMetric.data.status} 
+    />
+  );
+};
 
 export default function MonitoringDashboard() {
   const [activeMetric, setActiveMetric] = useState<MetricType>('aqi');
+  
   return (
     <div className="grid gap-8">
+       <Card className="bg-card/40 border-border/30 border-yellow-500/50">
+        <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-yellow-400">
+                <AlertTriangle />
+                Active Alerts
+            </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+            {activeAlerts.map((alert, index) => (
+                <div key={index} className="text-sm p-3 bg-muted/50 rounded-lg border border-border/50">
+                   <span className={alert.severity === 'High' ? 'text-red-400 font-semibold' : 'text-foreground'}>{alert.text}</span>
+                </div>
+            ))}
+        </CardContent>
+      </Card>
+
       <Card className="bg-card/40 border-border/30">
         <CardHeader>
             <CardTitle>Live Regional Monitoring</CardTitle>
         </CardHeader>
         <CardContent>
             <Tabs defaultValue="city">
-                <TabsList className="grid w-full grid-cols-3 max-w-lg mx-auto">
+                <TabsList className="grid w-full grid-cols-3 max-w-lg">
                     <TabsTrigger value="city"><Map className="mr-2 h-4 w-4"/>City View</TabsTrigger>
                     <TabsTrigger value="district"><Building className="mr-2 h-4 w-4"/>District View</TabsTrigger>
                     <TabsTrigger value="ward"><Home className="mr-2 h-4 w-4"/>Ward View</TabsTrigger>
                 </TabsList>
                 <div className="mt-6">
-                    <TabsContent value="city"><View viewData={data.city} /></TabsContent>
-                    <TabsContent value="district"><View viewData={data.district} /></TabsContent>
-                    <TabsContent value="ward"><View viewData={data.ward} /></TabsContent>
+                    <Tabs defaultValue={activeMetric} onValueChange={(value) => setActiveMetric(value as MetricType)} className="mb-4">
+                        <TabsList>
+                            <TabsTrigger value="aqi">Air</TabsTrigger>
+                            <TabsTrigger value="wqi">Water</TabsTrigger>
+                            <TabsTrigger value="noise">Noise</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+                    <TabsContent value="city"><View viewData={data.city} metric={activeMetric} /></TabsContent>
+                    <TabsContent value="district"><View viewData={data.district} metric={activeMetric} /></TabsContent>
+                    <TabsContent value="ward"><View viewData={data.ward} metric={activeMetric} /></TabsContent>
                 </div>
             </Tabs>
         </CardContent>
@@ -102,13 +138,6 @@ export default function MonitoringDashboard() {
       <Card className="bg-card/40 border-border/30">
         <CardHeader>
           <CardTitle>Pollution Heatmap</CardTitle>
-           <Tabs value={activeMetric} onValueChange={(value) => setActiveMetric(value as MetricType)}>
-              <TabsList>
-                <TabsTrigger value="aqi">Air</TabsTrigger>
-                <TabsTrigger value="wqi">Water</TabsTrigger>
-                <TabsTrigger value="noise">Noise</TabsTrigger>
-              </TabsList>
-            </Tabs>
         </CardHeader>
         <CardContent className="h-[400px] w-full">
             <HeatmapGrid wards={wards} activeMetric={activeMetric} />
@@ -117,3 +146,5 @@ export default function MonitoringDashboard() {
     </div>
   );
 }
+
+    
