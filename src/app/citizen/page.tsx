@@ -123,7 +123,7 @@ const LocationSelector = () => {
   );
 };
 
-const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoading }: { icon: JSX.Element, title: string, value: string, status: string, statusColor: string, onClick: () => void, isLoading?: boolean }) => (
+const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoading }: { icon: JSX.Element, title: string, value: string | null, status: string, statusColor: string, onClick: () => void, isLoading?: boolean }) => (
     <div onClick={onClick} className="group cursor-pointer">
         <Card className="bg-card/40 border-border/30 hover:bg-card/60 hover:border-primary/40 transition-all h-full">
             <CardContent className="p-4">
@@ -142,7 +142,7 @@ const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoadin
                       </>
                   ) : (
                     <>
-                      <p className="text-2xl font-bold">{value}</p>
+                      <p className="text-2xl font-bold">{value ?? '—'}</p>
                       <Badge variant="outline" className={cn("mt-1 border", statusColor)}>
                           {status}
                       </Badge>
@@ -161,7 +161,7 @@ function CitizenDashboardContent() {
   const [isMapFullScreen, setMapFullScreen] = useState(false);
   const [wardsData, setWardsData] = useState<WardData[]>([]);
   const [isLoadingWards, setIsLoadingWards] = useState(true);
-  const [avgAqi, setAvgAqi] = useState(0);
+  const [avgAqi, setAvgAqi] = useState<number | null>(null);
   const firestore = useFirestore();
   
   useEffect(() => {
@@ -193,11 +193,12 @@ function CitizenDashboardContent() {
         const totalAqi = wards.reduce((s, w) => s + w.aqi, 0);
         setAvgAqi(totalAqi / wards.length);
       } else {
-        setAvgAqi(0);
+        setAvgAqi(null);
       }
       setIsLoadingWards(false);
     }, (err) => {
       console.error("Firestore snapshot error:", err);
+      setAvgAqi(null);
       setIsLoadingWards(false);
     });
 
@@ -207,7 +208,8 @@ function CitizenDashboardContent() {
   const avgWqi = 85; // Mock
   const avgNoise = 68; // Mock
 
-  const getStatus = (metric: 'aqi' | 'wqi' | 'noise', value: number) => {
+  const getStatus = (metric: 'aqi' | 'wqi' | 'noise', value: number | null) => {
+    if (value === null) return { label: 'Updating...', color: 'bg-muted/50 text-muted-foreground border-muted/60'};
     if (metric === 'aqi') {
       if (value <= 50) return { label: 'Good', color: 'bg-green-500/20 text-green-400 border-green-500/30' };
       if (value <= 100) return { label: 'Moderate', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' };
@@ -278,7 +280,7 @@ function CitizenDashboardContent() {
                 <MetricCard 
                     icon={<Wind className="h-6 w-6 text-sky-400"/>} 
                     title="Air Quality" 
-                    value={`${Math.round(avgAqi)} AQI`} 
+                    value={avgAqi !== null ? `${Math.round(avgAqi)} AQI` : null} 
                     status={aqiStatus.label}
                     statusColor={aqiStatus.color}
                     onClick={() => setSelectedMetric('Air')}
@@ -358,6 +360,8 @@ export default function CitizenPage() {
     </div>
   );
 }
+
+    
 
     
 
