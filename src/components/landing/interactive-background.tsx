@@ -1,13 +1,12 @@
-
 'use client';
 
 import React, { useRef, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 
 const InteractiveBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number>();
   
-  // Using refs to store simulation state to prevent re-renders on update
   const simState = useRef({
     w: 0,
     h: 0,
@@ -16,17 +15,20 @@ const InteractiveBackground: React.FC = () => {
     rows: 0,
     current: new Float32Array(),
     previous: new Float32Array(),
-    damping: 0.92, // Increased damping for faster fade
+    damping: 0.92,
     lastDisturb: 0,
     strength: 350,
     threshold: 1.5,
   }).current;
 
+  // For this component, we will force the light theme colors to match the logo aesthetic
+  const isDark = false; 
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
     const resize = () => {
@@ -40,7 +42,6 @@ const InteractiveBackground: React.FC = () => {
         simState.w = canvas.width = newW;
         simState.h = canvas.height = newH;
         simState.cols = newCols;
-        simState.rows = newRows;
         const size = newCols * newRows;
         simState.current = new Float32Array(size);
         simState.previous = new Float32Array(size);
@@ -73,20 +74,51 @@ const InteractiveBackground: React.FC = () => {
       [simState.current, simState.previous] = [simState.previous, simState.current];
     };
 
+    // New render function with logo-inspired colors
     const render = () => {
       ctx.clearRect(0, 0, simState.w, simState.h);
-      for (let y = 0; y < simState.rows; y++) {
-        for (let x = 0; x < simState.cols; x++) {
-          const i = x + y * simState.cols;
-          const v = simState.previous[i];
+      const imageData = ctx.createImageData(simState.w, simState.h);
+      const data = imageData.data;
+
+      for (let i = 0; i < simState.current.length; i++) {
+        const x = i % simState.cols;
+        const y = Math.floor(i / simState.cols);
+        const v = simState.current[i];
+
+        if (Math.abs(v) > simState.threshold) {
+          const intensity = Math.min(Math.abs(v) / 200, 1);
           
-          if (Math.abs(v) > simState.threshold) {
-            const alpha = Math.min(Math.abs(v) / 600, 0.25);
-            ctx.fillStyle = `rgba(120,220,255,${alpha})`;
-            ctx.fillRect(x * simState.scale, y * simState.scale, simState.scale, simState.scale);
+          // Gradient: Teal -> Green -> Amber
+          let r, g, b;
+          if (intensity > 0.66) {
+            // Teal part
+            r = 77; g = 158; b = 153; // Teal
+          } else if (intensity > 0.33) {
+            // Green part
+            r = 101; g = 153; b = 82; // Green
+          } else {
+            // Amber part
+            r = 217; g = 160; b = 61; // Amber
+          }
+
+          const alpha = Math.min(intensity, 0.4);
+
+          for (let py = 0; py < simState.scale; py++) {
+            for (let px = 0; px < simState.scale; px++) {
+              const pixelX = x * simState.scale + px;
+              const pixelY = y * simState.scale + py;
+              if (pixelX < simState.w && pixelY < simState.h) {
+                const pixelIndex = (pixelY * simState.w + pixelX) * 4;
+                data[pixelIndex] = r;
+                data[pixelIndex + 1] = g;
+                data[pixelIndex + 2] = b;
+                data[pixelIndex + 3] = alpha * 255;
+              }
+            }
           }
         }
       }
+      ctx.putImageData(imageData, 0, 0);
     };
 
     const animate = () => {
@@ -98,7 +130,7 @@ const InteractiveBackground: React.FC = () => {
 
     const handleInteraction = (x: number, y: number) => {
         const now = performance.now();
-        if (now - simState.lastDisturb > 16) { // ~60fps throttle
+        if (now - simState.lastDisturb > 16) { 
             disturb(x, y);
             simState.lastDisturb = now;
         }
@@ -109,7 +141,7 @@ const InteractiveBackground: React.FC = () => {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault(); // Prevent scrolling
+      e.preventDefault(); 
       const touch = e.touches[0];
       handleInteraction(touch.clientX, touch.clientY);
     };
@@ -117,7 +149,6 @@ const InteractiveBackground: React.FC = () => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
-    // Initial disturbance to make it interesting on load
     setTimeout(() => {
         disturb(simState.w / 2, simState.h / 2, 1000);
     }, 500);
@@ -130,13 +161,13 @@ const InteractiveBackground: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [simState]);
+  }, [simState, isDark]);
 
   return (
     <div
-      className="fixed inset-0 z-0 overflow-hidden"
+      className="fixed inset-0 z-0 overflow-hidden noise-background"
       style={{
-        background: 'radial-gradient(circle at center, #0f1c2d, #070b14)',
+        backgroundColor: isDark ? 'hsl(215 19% 25%)' : 'hsl(48 33% 94%)',
       }}
     >
       <canvas

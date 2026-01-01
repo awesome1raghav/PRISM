@@ -221,8 +221,8 @@ const features = [
 ];
 
 const trendStyles = {
-  improving: 'text-green-400',
-  worsening: 'text-red-400',
+  improving: 'text-green-500',
+  worsening: 'text-red-500',
   stable: 'text-muted-foreground',
 };
 
@@ -259,11 +259,11 @@ export default function KeyFeatures() {
                   <CardContent className="flex-grow flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-2 font-semibold text-lg">
-                          <Badge className={cn("flex items-center gap-1.5", 
-                            feature.status === 'Good' && "bg-status-green/90 text-white shadow-lg shadow-status-green/40",
-                            feature.status === 'Moderate' && "bg-status-yellow/90 text-black shadow-lg shadow-status-yellow/40",
-                            feature.status === 'Warning' && "bg-status-red/90 text-white shadow-lg shadow-status-red/40",
-                            feature.status === 'High Risk' && "bg-status-red-dark/90 text-white shadow-lg shadow-status-red-dark/40"
+                          <Badge className={cn("flex items-center gap-1.5 shadow-lg", 
+                            feature.status === 'Good' && "bg-status-green text-white shadow-status-green/40",
+                            feature.status === 'Moderate' && "bg-status-yellow text-black shadow-status-yellow/40",
+                            feature.status === 'Warning' && "bg-status-yellow text-black shadow-status-yellow/40",
+                            feature.status === 'High Risk' && "bg-status-red text-white shadow-status-red/40"
                           )}>
                              {feature.status === 'High Risk' && <AlertTriangle className="h-3 w-3" />}
                             {feature.status}
