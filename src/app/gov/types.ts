@@ -1,4 +1,5 @@
 
+
 export type Confidence = 'Low' | 'Medium' | 'High';
 export type ViolationSource = 'Industry' | 'Traffic' | 'Event' | 'Unknown';
 
@@ -28,9 +29,10 @@ export interface Violation {
   explanation?: string;
 }
 
-export type IncidentPriority = 'Normal' | 'High-risk' | 'Public health emergency';
+export type IncidentPriority = 'High' | 'Medium' | 'Low';
 export type IncidentStatus = 'New' | 'Under investigation' | 'Action taken' | 'Closed';
 export type IncidentCategory = 'Air' | 'Water' | 'Noise' | 'Waste';
+export type IncidentSource = 'Citizen' | 'Sensor' | 'Both';
 
 export interface Incident {
   id: string;
@@ -40,4 +42,21 @@ export interface Incident {
   priority: IncidentPriority;
   status: IncidentStatus;
   assignee: string;
+  source: IncidentSource;
+  evidence: {
+    photos: string[];
+    description: string;
+    sensorLinked: boolean;
+  };
+  aiInsights: {
+    violationId: string | null;
+    probableSource: string;
+    confidence: number;
+  } | null;
+  resolution: {
+    actionTaken: string;
+    outcome: string;
+    followUpRequired: boolean;
+  } | null;
+  internalNotes: string;
 }
