@@ -32,7 +32,7 @@ const CitizenHeatmap = dynamic(
     ssr: false,
     loading: () => (
       <div className="h-[420px] w-full rounded-xl bg-muted flex items-center justify-center">
-        Loading map…
+        <p>Loading map...</p>
       </div>
     ),
   }
