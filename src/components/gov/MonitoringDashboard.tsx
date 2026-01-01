@@ -75,8 +75,8 @@ const alertConfig = {
 };
 
 const severityStyles = {
-    High: 'border-red-500/60 bg-red-500/10 text-red-400',
-    Medium: 'border-yellow-500/60 bg-yellow-500/10 text-yellow-400',
+    High: 'border-l-red-500/80 bg-red-500/10 text-red-400 shadow-red-500/10',
+    Medium: 'border-l-yellow-500/80 bg-yellow-500/10 text-yellow-400 shadow-yellow-500/10',
 }
 
 const trendData = [
@@ -171,27 +171,34 @@ export default function MonitoringDashboard() {
     <div className="grid gap-8">
        <Card className="bg-card/40 border-border/30">
         <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-yellow-400">
+            <CardTitle className="flex items-center gap-2 text-primary">
                 <AlertTriangle />
                 Active Alerts
             </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3">
             {activeAlerts.map((alert, index) => {
                 const config = alertConfig[alert.type as keyof typeof alertConfig];
                 const Icon = config.icon;
                 const severityStyle = severityStyles[alert.severity as keyof typeof severityStyles];
 
                 return (
-                    <div key={index} className={cn("flex items-center gap-4 rounded-lg border p-4", severityStyle)}>
-                        {alert.severity === 'High' && <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>}
-                        <div className={`p-2 bg-${config.color}-500/10 rounded-lg`}><Icon className={`h-6 w-6 text-${config.color}-400`} /></div>
+                    <div key={index} className={cn("relative flex items-center gap-4 rounded-lg border-l-4 p-4 shadow-md transition-all hover:shadow-lg", severityStyle)}>
+                        <div className={`p-2 bg-${config.color}-500/10 rounded-full`}><Icon className={`h-6 w-6 text-${config.color}-400`} /></div>
                         <div className="flex-grow">
-                            <p className="font-bold">{alert.title}</p>
+                             <div className="flex items-center gap-2">
+                                {alert.severity === 'High' && (
+                                     <span className="relative flex h-2 w-2">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                    </span>
+                                )}
+                                <p className="font-bold text-foreground">{alert.title}</p>
+                            </div>
                             <p className="text-sm text-muted-foreground">{alert.location}</p>
                         </div>
                         <div className="text-right">
-                            <p className="font-semibold">{alert.value}</p>
+                            <p className="font-semibold text-foreground">{alert.value}</p>
                             <p className="text-xs text-muted-foreground">{alert.time}</p>
                         </div>
                     </div>
