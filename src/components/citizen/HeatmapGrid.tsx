@@ -14,7 +14,6 @@ import { useRouter } from 'next/navigation';
 interface HeatmapGridProps {
   wards: Ward[];
   activeMetric: MetricType;
-  isPreview?: boolean;
 }
 
 const getTileStyle = (value: number, metric: MetricType) => {
@@ -54,29 +53,18 @@ const getTileStyle = (value: number, metric: MetricType) => {
 };
 
 
-const HeatmapGrid = ({ wards, activeMetric, isPreview = false }: HeatmapGridProps) => {
+const HeatmapGrid = ({ wards, activeMetric }: HeatmapGridProps) => {
     const router = useRouter();
 
     if (!wards || wards.length === 0) {
         return <div className="flex items-center justify-center h-full text-muted-foreground">No sensor data available for this area.</div>;
     }
 
-    const handleTileClick = (metric: MetricType) => {
-        if (isPreview) return;
-        
-        let path = `/citizen/details/air`;
-        if (metric === 'wqi') path = `/citizen/details/water`;
-        if (metric === 'noise') path = `/citizen/details/noise`;
-        router.push(path);
-    };
-
   return (
     <TooltipProvider delayDuration={150}>
       <div className={cn(
           "grid h-full w-full gap-1 transition-all duration-300",
-          isPreview 
-            ? "grid-cols-3 grid-rows-2"
-            : "grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
+          "grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
         )}>
         {wards.map((ward) => {
           const value = ward.live_data[activeMetric];
@@ -87,7 +75,6 @@ const HeatmapGrid = ({ wards, activeMetric, isPreview = false }: HeatmapGridProp
             <Tooltip key={ward.id}>
               <TooltipTrigger asChild>
                 <div
-                  onClick={() => handleTileClick(activeMetric)}
                   className="relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border/20 bg-muted/20 p-2 text-center text-xs font-medium text-foreground transition-all duration-300 hover:border-primary/50 hover:bg-muted/50"
                 >
                     <div className="absolute inset-0 transition-all duration-500" style={tileStyle}></div>

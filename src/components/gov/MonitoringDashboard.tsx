@@ -100,7 +100,7 @@ export default function MonitoringDashboard() {
 
       <Card className="bg-card/40 border-border/30">
         <CardHeader>
-          <CardTitle>7-Day Environmental Trends</CardTitle>
+          <CardTitle>Pollution Heatmap</CardTitle>
            <Tabs value={activeMetric} onValueChange={(value) => setActiveMetric(value as MetricType)}>
               <TabsList>
                 <TabsTrigger value="aqi">Air</TabsTrigger>
@@ -109,8 +109,8 @@ export default function MonitoringDashboard() {
               </TabsList>
             </Tabs>
         </CardHeader>
-        <CardContent className="h-[300px] w-full">
-            <HeatmapGrid wards={wards} activeMetric={activeMetric} isPreview />
+        <CardContent className="h-[400px] w-full">
+            <HeatmapGrid wards={wards} activeMetric={activeMetric} />
         </CardContent>
       </Card>
     </div>
