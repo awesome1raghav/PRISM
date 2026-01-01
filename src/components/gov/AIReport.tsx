@@ -73,46 +73,26 @@ export default function AIReport({ violation }: { violation: Violation }) {
             </Card>
 
             <InfoCard icon={<Activity className="h-5 w-5" />} title="AI Situation Summary">
-                {isEditing ? (
-                    <Textarea defaultValue={violation.summary} className="text-sm" rows={4} />
-                ) : (
-                    <p className="text-sm text-foreground/90">{violation.summary}</p>
-                )}
+                <p className="text-sm text-foreground/90">{violation.summary}</p>
             </InfoCard>
 
             <InfoCard icon={<Shield className="h-5 w-5" />} title="Risk & Impact Assessment">
                  <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                        <Label className="font-semibold text-muted-foreground">Overall Risk</Label>
-                         {isEditing ? (
-                            <Input defaultValue={violation.impact?.riskLevel} />
-                        ) : (
-                            <Badge variant="outline" className={impactStyles[violation.impact?.riskLevel || 'LOW']}>{violation.impact?.riskLevel}</Badge>
-                        )}
+                        <p className="font-semibold text-muted-foreground">Overall Risk</p>
+                        <Badge variant="outline" className={impactStyles[violation.impact?.riskLevel || 'LOW']}>{violation.impact?.riskLevel}</Badge>
                     </div>
                      <div>
-                        <Label className="font-semibold text-muted-foreground">Est. Population</Label>
-                        {isEditing ? (
-                             <Input defaultValue={violation.impact?.populationImpacted} />
-                        ) : (
-                            <p>{violation.impact?.populationImpacted}</p>
-                        )}
+                        <p className="font-semibold text-muted-foreground">Est. Population</p>
+                        <p>{violation.impact?.populationImpacted}</p>
                     </div>
                     <div>
-                        <Label className="font-semibold text-muted-foreground">Vulnerable Groups</Label>
-                        {isEditing ? (
-                             <Input defaultValue={violation.impact?.vulnerableGroups.join(', ')} />
-                        ) : (
-                            <p className="capitalize">{violation.impact?.vulnerableGroups.join(', ')}</p>
-                        )}
+                        <p className="font-semibold text-muted-foreground">Vulnerable Groups</p>
+                        <p className="capitalize">{violation.impact?.vulnerableGroups.join(', ')}</p>
                     </div>
                      <div>
-                        <Label className="font-semibold text-muted-foreground">Sensitive Zones</Label>
-                         {isEditing ? (
-                             <Input defaultValue={violation.impact?.sensitiveZones.join(', ')} />
-                        ) : (
-                            <p>{violation.impact?.sensitiveZones.join(', ')}</p>
-                        )}
+                        <p className="font-semibold text-muted-foreground">Sensitive Zones</p>
+                        <p>{violation.impact?.sensitiveZones.join(', ')}</p>
                     </div>
                 </div>
             </InfoCard>
@@ -145,26 +125,15 @@ export default function AIReport({ violation }: { violation: Violation }) {
                     )}
                 </InfoCard>
                 <InfoCard icon={<Clock className="h-5 w-5" />} title="Deadline & Escalation">
-                    {isEditing ? (
-                        <div className="space-y-2">
-                            <Input defaultValue={violation.escalationLogic?.deadline} />
-                            <Textarea defaultValue={violation.escalationLogic?.rule} />
-                        </div>
-                    ) : (
-                        <div className="space-y-2 text-sm">
-                            <p><span className="font-semibold text-muted-foreground">Deadline: </span>{violation.escalationLogic?.deadline}</p>
-                            <p><span className="font-semibold text-muted-foreground">Rule: </span>{violation.escalationLogic?.rule}</p>
-                        </div>
-                    )}
+                    <div className="space-y-2 text-sm">
+                        <p><span className="font-semibold text-muted-foreground">Deadline: </span>{violation.escalationLogic?.deadline}</p>
+                        <p><span className="font-semibold text-muted-foreground">Rule: </span>{violation.escalationLogic?.rule}</p>
+                    </div>
                 </InfoCard>
             </div>
             
             <InfoCard icon={<Info className="h-5 w-5" />} title="Why This Recommendation? (AI Explanation)">
-                 {isEditing ? (
-                    <Textarea defaultValue={violation.explanation} className="text-sm font-mono text-xs" rows={5} />
-                 ) : (
-                    <p className="text-sm text-foreground/90 font-mono text-xs">{violation.explanation}</p>
-                 )}
+                <p className="text-sm text-foreground/90 font-mono text-xs">{violation.explanation}</p>
             </InfoCard>
 
              <Card className="bg-card/40 border-primary/30">
