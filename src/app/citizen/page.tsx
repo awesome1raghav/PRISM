@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useContext, useState, Suspense, useEffect } from 'react';
@@ -37,6 +36,7 @@ const LocationSelector = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState(location);
   const { toast } = useToast();
+  const [toastShown, setToastShown] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,10 +50,13 @@ const LocationSelector = () => {
     setLocation(targetLocation);
     router.push(`/citizen?location=${targetLocation}`, { scroll: false });
     
-    toast({
-        title: "Location Updated",
-        description: `Showing data for ${locationData[targetLocation].name}.`,
-    });
+    if (!toastShown) {
+        toast({
+            title: "Location Updated",
+            description: `Showing data for ${locationData[targetLocation].name}.`,
+        });
+        setToastShown(true);
+    }
   }
 
   const handleLocateMe = () => {
@@ -66,10 +69,13 @@ const LocationSelector = () => {
     setLocation(newLocationKey);
     router.push(`/citizen?location=${newLocationKey}`, { scroll: false });
 
-    toast({
-        title: "Location Updated",
-        description: `Showing data for ${locationData[newLocationKey].name}.`,
-    });
+    if (!toastShown) {
+        toast({
+            title: "Location Updated",
+            description: `Showing data for ${locationData[newLocationKey].name}.`,
+        });
+        setToastShown(true);
+    }
   };
   
   useEffect(() => {
@@ -131,11 +137,13 @@ function CitizenDashboardContent() {
     const initialLocation = locationParam || 'Bengaluru';
     const foundKey = Object.keys(locationData).find(key => 
         key.toLowerCase() === initialLocation.toLowerCase() || 
-        locationData[key].id.toLowerCase() === initialLocation.toLowerCase()
+        (locationData[key] && locationData[key].id.toLowerCase() === initialLocation.toLowerCase())
     ) || 'Bengaluru';
-
-    setLocation(foundKey);
-  }, [locationParam, setLocation, locationData]);
+    
+    if (location !== foundKey) {
+        setLocation(foundKey);
+    }
+  }, [locationParam, setLocation, locationData, location]);
   
   const cityData = locationData[location] || locationData['Bengaluru'];
   
@@ -285,3 +293,5 @@ export default function CitizenPage() {
     </div>
   );
 }
+
+    

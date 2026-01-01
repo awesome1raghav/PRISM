@@ -135,3 +135,5 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
 };
 
 export default CitizenHeatmap;
+
+    
