@@ -1,12 +1,13 @@
+
 'use client';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Gauge, Droplets, Waves, Map, Building, Home, AlertTriangle } from 'lucide-react';
-import HeatmapGrid from '@/components/citizen/HeatmapGrid';
-import { type MetricType, type Ward, type PollutionData } from '@/context/LocationContext';
+import { type MetricType, type Ward } from '@/context/LocationContext';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import CitizenHeatmap from '../maps/CitizenHeatmap';
 
 const data = {
   city: {
@@ -26,9 +27,11 @@ const data = {
   }
 }
 
-const generateWardData = (id: string, name: string, aqi: number, wqi: number, noise: number): Ward => ({
+const generateWardData = (id: string, name: string, aqi: number, wqi: number, noise: number, lat: number, lng: number): Ward & {lat: number, lng: number} => ({
   id,
   name,
+  lat,
+  lng,
   live_data: {
     aqi,
     wqi,
@@ -38,13 +41,13 @@ const generateWardData = (id: string, name: string, aqi: number, wqi: number, no
   },
 });
 
-const wards: Ward[] = [
-    generateWardData('koramangala', 'Koramangala', 55, 80, 65),
-    generateWardData('jayanagar', 'Jayanagar', 75, 75, 70),
-    generateWardData('indiranagar', 'Indiranagar', 85, 70, 80),
-    generateWardData('whitefield', 'Whitefield', 120, 60, 75),
-    generateWardData('hebbal', 'Hebbal', 90, 70, 68),
-    generateWardData('marathahalli', 'Marathahalli', 150, 55, 85),
+const wards = [
+    generateWardData('koramangala', 'Koramangala', 55, 80, 65, 12.9352, 77.6245),
+    generateWardData('jayanagar', 'Jayanagar', 75, 75, 70, 12.9308, 77.5838),
+    generateWardData('indiranagar', 'Indiranagar', 85, 70, 80, 12.9784, 77.6408),
+    generateWardData('whitefield', 'Whitefield', 120, 60, 75, 12.9698, 77.7499),
+    generateWardData('hebbal', 'Hebbal', 90, 70, 68, 13.0357, 77.5972),
+    generateWardData('marathahalli', 'Marathahalli', 150, 55, 85, 12.9569, 77.7011),
 ];
 
 const activeAlerts = [
@@ -133,6 +136,14 @@ const EnvironmentalTrendChart = ({ data, metric }: { data: any[], metric: Metric
 export default function MonitoringDashboard() {
   const [activeMetric, setActiveMetric] = useState<MetricType>('aqi');
   
+  const wardDataForMap = wards.map(ward => ({
+    id: ward.id,
+    name: ward.name,
+    lat: ward.lat,
+    lng: ward.lng,
+    aqi: ward.live_data.aqi,
+  }));
+
   return (
     <div className="grid gap-8">
        <Card className="bg-card/40 border-border/30 border-yellow-500/50">
@@ -182,8 +193,8 @@ export default function MonitoringDashboard() {
         <CardHeader>
           <CardTitle>Pollution Heatmap</CardTitle>
         </CardHeader>
-        <CardContent className="h-[400px] w-full">
-            <HeatmapGrid wards={wards} activeMetric={activeMetric} />
+        <CardContent>
+            <CitizenHeatmap cityId="bengaluru" wardsData={wardDataForMap} isLoading={false} />
         </CardContent>
       </Card>
 
