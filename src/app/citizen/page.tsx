@@ -36,8 +36,7 @@ const LocationSelector = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState(location);
   const { toast } = useToast();
-  const [toastShown, setToastShown] = useState(false);
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const foundKey = Object.keys(locationData).find(key => 
@@ -46,35 +45,31 @@ const LocationSelector = () => {
     );
 
     const targetLocation = foundKey || 'Bengaluru';
-
-    setLocation(targetLocation);
-    router.push(`/citizen?location=${targetLocation}`, { scroll: false });
     
-    if (!toastShown) {
+    // Only update and show toast if location actually changes
+    if (targetLocation !== location) {
+        setLocation(targetLocation);
+        router.push(`/citizen?location=${targetLocation}`, { scroll: false });
         toast({
             title: "Location Updated",
             description: `Showing data for ${locationData[targetLocation].name}.`,
         });
-        setToastShown(true);
     }
   }
 
   const handleLocateMe = () => {
-     // Simulate finding a location and cycling through available ones
     const locations = Object.keys(locationData);
     const currentIndex = locations.findIndex(l => l.toLowerCase() === location.toLowerCase());
     const nextIndex = (currentIndex + 1) % locations.length;
     const newLocationKey = locations[nextIndex];
     
-    setLocation(newLocationKey);
-    router.push(`/citizen?location=${newLocationKey}`, { scroll: false });
-
-    if (!toastShown) {
+    if (newLocationKey !== location) {
+        setLocation(newLocationKey);
+        router.push(`/citizen?location=${newLocationKey}`, { scroll: false });
         toast({
             title: "Location Updated",
             description: `Showing data for ${locationData[newLocationKey].name}.`,
         });
-        setToastShown(true);
     }
   };
   
@@ -293,5 +288,3 @@ export default function CitizenPage() {
     </div>
   );
 }
-
-    

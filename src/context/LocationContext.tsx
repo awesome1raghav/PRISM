@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
@@ -65,7 +64,17 @@ const initialLocationData: LocationDataContext = {
     'Bengaluru': {
         id: 'bengaluru',
         name: 'Bengaluru',
-        wards: [],
+        wards: [
+            generateWardData('koramangala', 'Koramangala', [30, 60], [75, 95], [55, 70]),
+            generateWardData('jayanagar', 'Jayanagar', [45, 80], [70, 90], [60, 75]),
+            generateWardData('indiranagar', 'Indiranagar', [55, 90], [65, 85], [65, 85]),
+            generateWardData('whitefield', 'Whitefield', [80, 150], [50, 75], [70, 90]),
+            generateWardData('hebbal', 'Hebbal', [60, 110], [60, 80], [65, 78]),
+            generateWardData('marathahalli', 'Marathahalli', [90, 180], [45, 70], [75, 95]),
+            generateWardData('electronic-city', 'Electronic City', [70, 130], [55, 78], [70, 88]),
+            generateWardData('bellandur', 'Bellandur', [150, 250], [20, 45], [70, 85]),
+            generateWardData('varthur', 'Varthur', [120, 220], [30, 55], [68, 82]),
+        ],
         advisories: [
             { type: 'alert', title: 'High Pollution Alert in Bellandur', description: 'AQI has reached severe levels. Residents are advised to stay indoors.' },
             { type: 'info', title: 'No Critical Alerts City-Wide', description: 'Overall city conditions are moderate. Monitor your specific ward for details.' }
@@ -74,17 +83,22 @@ const initialLocationData: LocationDataContext = {
     'New York': {
         id: 'new-york',
         name: 'New York',
-        wards: [],
+        wards: [
+            generateWardData('manhattan', 'Manhattan', [70, 120], [80, 95], [70, 90]),
+            generateWardData('brooklyn', 'Brooklyn', [60, 100], [75, 90], [65, 85]),
+            generateWardData('queens', 'Queens', [50, 90], [85, 98], [60, 80]),
+            generateWardData('bronx', 'The Bronx', [80, 140], [70, 85], [68, 88]),
+            generateWardData('staten-island', 'Staten Island', [30, 60], [90, 99], [50, 65]),
+        ],
         advisories: [
             { type: 'alert', title: 'Air Quality Alert', description: 'High levels of ozone detected in The Bronx. Stay indoors if you have respiratory issues.' },
         ]
     }
 };
 
-
 interface LocationContextType {
   location: string;
-  setLocation: (location: string) => void;
+  setLocation: (location: string, redirect?: boolean) => void;
   locationData: LocationDataContext;
 }
 
@@ -95,35 +109,11 @@ export const LocationContext = createContext<LocationContextType>({
 });
 
 export const LocationProvider = ({ children }: { children: ReactNode }) => {
-  const [location, setLocation] = useState('Bengaluru');
-  const [locationData, setLocationData] = useState<LocationDataContext>(initialLocationData);
+  const [location, setLocationState] = useState('Bengaluru');
+  const [locationData] = useState<LocationDataContext>(initialLocationData);
 
-  useEffect(() => {
-    // Generate data on the client side to prevent hydration mismatch. This runs only once.
-    const bengaluruWards = [
-      generateWardData('koramangala', 'Koramangala', [30, 60], [75, 95], [55, 70]),
-      generateWardData('jayanagar', 'Jayanagar', [45, 80], [70, 90], [60, 75]),
-      generateWardData('indiranagar', 'Indiranagar', [55, 90], [65, 85], [65, 85]),
-      generateWardData('whitefield', 'Whitefield', [80, 150], [50, 75], [70, 90]),
-      generateWardData('hebbal', 'Hebbal', [60, 110], [60, 80], [65, 78]),
-      generateWardData('marathahalli', 'Marathahalli', [90, 180], [45, 70], [75, 95]),
-      generateWardData('electronic-city', 'Electronic City', [70, 130], [55, 78], [70, 88]),
-      generateWardData('bellandur', 'Bellandur', [150, 250], [20, 45], [70, 85]),
-      generateWardData('varthur', 'Varthur', [120, 220], [30, 55], [68, 82]),
-    ];
-    const newYorkWards = [
-      generateWardData('manhattan', 'Manhattan', [70, 120], [80, 95], [70, 90]),
-      generateWardData('brooklyn', 'Brooklyn', [60, 100], [75, 90], [65, 85]),
-      generateWardData('queens', 'Queens', [50, 90], [85, 98], [60, 80]),
-      generateWardData('bronx', 'The Bronx', [80, 140], [70, 85], [68, 88]),
-      generateWardData('staten-island', 'Staten Island', [30, 60], [90, 99], [50, 65]),
-    ];
-    
-    setLocationData(prevData => ({
-        ...prevData,
-        'Bengaluru': { ...prevData['Bengaluru'], wards: bengaluruWards },
-        'New York': { ...prevData['New York'], wards: newYorkWards },
-    }));
+  const setLocation = useCallback((newLocation: string) => {
+    setLocationState(newLocation);
   }, []);
 
   const value = { location, setLocation, locationData };

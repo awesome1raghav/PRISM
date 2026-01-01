@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -29,8 +28,6 @@ const getAqiStatus = (aqi: number) => {
   return 'Severe';
 };
 
-// This component contains the dynamic data fetching and marker rendering.
-// It is a child of MapContainer, so its re-renders won't re-initialize the map.
 function MapContent({ cityId, center, zoom }: { cityId: string, center: LatLngExpression, zoom: number }) {
   const map = useMap();
   const firestore = useFirestore();
@@ -47,7 +44,7 @@ function MapContent({ cityId, center, zoom }: { cityId: string, center: LatLngEx
 
     setIsLoading(true);
     setError(null);
-    setWards([]); // Clear previous wards
+    setWards([]);
     
     const wardsCollectionPath = `locations/${cityId}/wards`;
     const q = query(collection(firestore, wardsCollectionPath));
@@ -111,8 +108,6 @@ function MapContent({ cityId, center, zoom }: { cityId: string, center: LatLngEx
   );
 };
 
-
-// This is the main component. It renders the MapContainer ONCE.
 const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
   const mapCenter: LatLngExpression = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
   const zoom = 11;
@@ -135,5 +130,3 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
 };
 
 export default CitizenHeatmap;
-
-    
