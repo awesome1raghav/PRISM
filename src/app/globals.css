@@ -6,32 +6,32 @@
 
 @layer base {
   :root {
-    --background: 48 33% 94%; /* Muted Beige/Gold */
-    --foreground: 215 19% 35%; /* Dark Slate Blue */
+    --background: 220 20% 95%;
+    --foreground: 220 15% 25%;
     
-    --card: 48 25% 98%;
-    --card-foreground: 215 19% 35%;
+    --card: 220 20% 100%;
+    --card-foreground: 220 15% 25%;
 
-    --popover: 48 33% 94%;
-    --popover-foreground: 215 19% 35%;
+    --popover: 220 20% 100%;
+    --popover-foreground: 220 15% 25%;
     
     --primary: 180 35% 45%; /* Deep Teal */
-    --primary-foreground: 48 33% 94%;
+    --primary-foreground: 180 35% 95%;
     
-    --secondary: 195 25% 85%;
+    --secondary: 215 25% 85%;
     --secondary-foreground: 215 19% 30%;
     
-    --muted: 195 25% 90%;
+    --muted: 215 25% 92%;
     --muted-foreground: 215 20% 55%;
     
     --accent: 30 70% 60%; /* Warm Amber/Orange */
-    --accent-foreground: 48 33% 98%;
+    --accent-foreground: 30 70% 98%;
     
     --destructive: 0 60% 50%; /* Subtle Red */
-    --destructive-foreground: 48 33% 98%;
+    --destructive-foreground: 0 60% 98%;
     
-    --border: 180 15% 80%;
-    --input: 180 15% 90%;
+    --border: 210 15% 88%;
+    --input: 210 15% 94%;
     --ring: 180 35% 45%;
     
     --chart-1: 180 35% 45%; /* Deep Teal */
@@ -40,8 +40,8 @@
     --chart-4: 200 40% 50%; /* Blue */
     --chart-5: 0 60% 50%; /* Red */
 
-    --status-green: 90 40% 45%;
-    --status-yellow: 35 75% 55%;
+    --status-green: 120 40% 45%;
+    --status-yellow: 40 75% 55%;
     --status-red: 0 70% 55%;
     --status-red-dark: 0 70% 45%;
     
@@ -49,42 +49,42 @@
   }
   
   .dark {
-    --background: 215 19% 25%;
-    --foreground: 48 33% 94%;
+    --background: 215 28% 18%;
+    --foreground: 210 40% 98%;
     
-    --card: 215 19% 30%;
-    --card-foreground: 48 33% 94%;
+    --card: 215 28% 22%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 215 19% 25%;
-    --popover-foreground: 48 33% 94%;
+    --popover: 215 28% 18%;
+    --popover-foreground: 210 40% 98%;
     
-    --primary: 180 35% 55%; /* Lighter Teal for dark mode */
-    --primary-foreground: 215 19% 20%;
+    --primary: 180 40% 55%; /* Lighter Teal for dark mode */
+    --primary-foreground: 180 40% 15%;
     
-    --secondary: 215 20% 40%;
-    --secondary-foreground: 48 33% 94%;
+    --secondary: 215 20% 35%;
+    --secondary-foreground: 210 40% 98%;
     
-    --muted: 215 20% 35%;
+    --muted: 215 20% 28%;
     --muted-foreground: 215 20% 65%;
     
-    --accent: 30 70% 65%; /* Lighter Amber for dark mode */
-    --accent-foreground: 215 19% 20%;
+    --accent: 35 80% 65%; /* Lighter Amber for dark mode */
+    --accent-foreground: 35 80% 15%;
     
     --destructive: 0 60% 60%;
-    --destructive-foreground: 48 33% 98%;
+    --destructive-foreground: 0 85% 98%;
     
-    --border: 215 15% 40%;
-    --input: 215 15% 45%;
-    --ring: 180 35% 55%;
+    --border: 215 20% 30%;
+    --input: 215 20% 35%;
+    --ring: 180 40% 55%;
     
-    --chart-1: 180 35% 55%;
-    --chart-2: 90 35% 60%;
-    --chart-3: 30 70% 65%;
-    --chart-4: 200 40% 60%;
+    --chart-1: 180 40% 55%;
+    --chart-2: 90 40% 60%;
+    --chart-3: 35 80% 65%;
+    --chart-4: 200 50% 60%;
     --chart-5: 0 60% 60%;
     
-    --status-green: 90 40% 55%;
-    --status-yellow: 35 75% 60%;
+    --status-green: 120 40% 55%;
+    --status-yellow: 40 75% 60%;
     --status-red: 0 70% 60%;
     --status-red-dark: 0 70% 50%;
   }
