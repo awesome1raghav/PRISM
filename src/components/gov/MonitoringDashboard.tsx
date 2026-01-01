@@ -4,10 +4,17 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Gauge, Droplets, Waves, Map, Building, Home, AlertTriangle } from 'lucide-react';
-import { type MetricType, type Ward } from '@/context/LocationContext';
+import { type MetricType } from '@/context/LocationContext';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import CitizenHeatmap from '../maps/CitizenHeatmap';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const CitizenHeatmap = dynamic(() => import('../maps/CitizenHeatmap'), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[420px] w-full rounded-xl" />,
+});
+
 
 const data = {
   city: {
@@ -27,11 +34,14 @@ const data = {
   }
 }
 
-const generateWardData = (id: string, name: string, aqi: number, wqi: number, noise: number, lat: number, lng: number): Ward & {lat: number, lng: number} => ({
+const generateWardData = (id: string, name: string, aqi: number, wqi: number, noise: number, lat: number, lng: number) => ({
   id,
   name,
   lat,
   lng,
+  aqi,
+  wqi,
+  noise,
   live_data: {
     aqi,
     wqi,
