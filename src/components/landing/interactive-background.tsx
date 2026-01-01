@@ -1,12 +1,12 @@
+
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { useTheme } from 'next-themes';
 
 const InteractiveBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number>();
-  
+
   const simState = useRef({
     w: 0,
     h: 0,
@@ -21,9 +21,6 @@ const InteractiveBackground: React.FC = () => {
     threshold: 1.5,
   }).current;
 
-  // For this component, we will force the light theme colors to match the logo aesthetic
-  const isDark = false; 
-
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -32,20 +29,12 @@ const InteractiveBackground: React.FC = () => {
     if (!ctx) return;
 
     const resize = () => {
-      const newW = window.innerWidth;
-      const newH = window.innerHeight;
-      
-      const newCols = Math.floor(newW / simState.scale);
-      const newRows = Math.floor(newH / simState.scale);
-
-      if (newCols !== simState.cols || newRows !== simState.rows) {
-        simState.w = canvas.width = newW;
-        simState.h = canvas.height = newH;
-        simState.cols = newCols;
-        const size = newCols * newRows;
-        simState.current = new Float32Array(size);
-        simState.previous = new Float32Array(size);
-      }
+      simState.w = canvas.width = window.innerWidth;
+      simState.h = canvas.height = window.innerHeight;
+      simState.cols = Math.floor(simState.w / simState.scale);
+      const size = simState.cols * (simState.rows = Math.floor(simState.h / simState.scale));
+      simState.current = new Float32Array(size);
+      simState.previous = new Float32Array(size);
     };
     resize();
     window.addEventListener('resize', resize);
@@ -73,8 +62,7 @@ const InteractiveBackground: React.FC = () => {
       }
       [simState.current, simState.previous] = [simState.previous, simState.current];
     };
-
-    // New render function with logo-inspired colors
+    
     const render = () => {
       ctx.clearRect(0, 0, simState.w, simState.h);
       const imageData = ctx.createImageData(simState.w, simState.h);
@@ -86,22 +74,16 @@ const InteractiveBackground: React.FC = () => {
         const v = simState.current[i];
 
         if (Math.abs(v) > simState.threshold) {
-          const intensity = Math.min(Math.abs(v) / 150, 1);
+          const intensity = Math.min(Math.abs(v) / 100, 1);
           
-          // Gradient: Teal -> Green -> Amber
           let r, g, b;
-          if (intensity > 0.66) {
-            // Teal part
-            r = 77; g = 158; b = 153; // Teal
-          } else if (intensity > 0.33) {
-            // Green part
-            r = 101; g = 153; b = 82; // Green
-          } else {
-            // Amber part
-            r = 217; g = 160; b = 61; // Amber
+          if (intensity > 0.5) { // Teal
+            r = 0; g = 128; b = 128;
+          } else { // Green
+            r = 56; g = 163; b = 165;
           }
 
-          const alpha = Math.min(intensity, 0.5);
+          const alpha = Math.min(intensity, 0.4);
 
           for (let py = 0; py < simState.scale; py++) {
             for (let px = 0; px < simState.scale; px++) {
@@ -120,6 +102,7 @@ const InteractiveBackground: React.FC = () => {
       }
       ctx.putImageData(imageData, 0, 0);
     };
+
 
     const animate = () => {
       step();
@@ -161,14 +144,11 @@ const InteractiveBackground: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [simState, isDark]);
+  }, [simState]);
 
   return (
     <div
       className="fixed inset-0 z-0 overflow-hidden"
-      style={{
-        backgroundColor: isDark ? 'hsl(215 19% 25%)' : 'hsl(48 33% 94%)',
-      }}
     >
       <canvas
         id="water"
