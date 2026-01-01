@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/tooltip';
 import { type Ward, type MetricType, type RiskLevel } from '@/context/LocationContext';
 import { cn } from '@/lib/utils';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface HeatmapGridProps {
   wards: Ward[];
@@ -56,19 +56,17 @@ const getTileStyle = (value: number, metric: MetricType) => {
 
 const HeatmapGrid = ({ wards, activeMetric, isPreview = false }: HeatmapGridProps) => {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const location = searchParams.get('location') || 'Bengaluru';
 
     if (!wards || wards.length === 0) {
         return <div className="flex items-center justify-center h-full text-muted-foreground">No sensor data available for this area.</div>;
     }
 
     const handleTileClick = (metric: MetricType) => {
-        if (isPreview) return; // Don't navigate from a preview context
+        if (isPreview) return;
         
-        let path = `/citizen/details/air?location=${location}`;
-        if (metric === 'wqi') path = `/citizen/details/water?location=${location}`;
-        if (metric === 'noise') path = `/citizen/details/noise?location=${location}`;
+        let path = `/citizen/details/air`;
+        if (metric === 'wqi') path = `/citizen/details/water`;
+        if (metric === 'noise') path = `/citizen/details/noise`;
         router.push(path);
     };
 
