@@ -123,7 +123,7 @@ const LocationSelector = () => {
   );
 };
 
-const MetricCard = ({ icon, title, value, status, statusColor, onClick }: { icon: JSX.Element, title: string, value: string, status: string, statusColor: string, onClick: () => void }) => (
+const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoading }: { icon: JSX.Element, title: string, value: string, status: string, statusColor: string, onClick: () => void, isLoading?: boolean }) => (
     <div onClick={onClick} className="group cursor-pointer">
         <Card className="bg-card/40 border-border/30 hover:bg-card/60 hover:border-primary/40 transition-all h-full">
             <CardContent className="p-4">
@@ -135,10 +135,19 @@ const MetricCard = ({ icon, title, value, status, statusColor, onClick }: { icon
                     <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
                 </div>
                 <div className="text-right mt-2">
-                    <p className="text-2xl font-bold">{value}</p>
-                    <Badge variant="outline" className={cn("mt-1 border", statusColor)}>
-                        {status}
-                    </Badge>
+                  {isLoading ? (
+                      <>
+                        <Skeleton className="h-8 w-24 ml-auto" />
+                        <Skeleton className="h-5 w-16 ml-auto mt-2" />
+                      </>
+                  ) : (
+                    <>
+                      <p className="text-2xl font-bold">{value}</p>
+                      <Badge variant="outline" className={cn("mt-1 border", statusColor)}>
+                          {status}
+                      </Badge>
+                    </>
+                  )}
                 </div>
             </CardContent>
         </Card>
@@ -152,6 +161,7 @@ function CitizenDashboardContent() {
   const [isMapFullScreen, setMapFullScreen] = useState(false);
   const [wardsData, setWardsData] = useState<WardData[]>([]);
   const [isLoadingWards, setIsLoadingWards] = useState(true);
+  const [avgAqi, setAvgAqi] = useState(0);
   const firestore = useFirestore();
   
   useEffect(() => {
@@ -179,6 +189,12 @@ function CitizenDashboardContent() {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const wards = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as WardData));
       setWardsData(wards);
+      if (wards.length > 0) {
+        const totalAqi = wards.reduce((s, w) => s + w.aqi, 0);
+        setAvgAqi(totalAqi / wards.length);
+      } else {
+        setAvgAqi(0);
+      }
       setIsLoadingWards(false);
     }, (err) => {
       console.error("Firestore snapshot error:", err);
@@ -188,7 +204,6 @@ function CitizenDashboardContent() {
     return () => unsubscribe();
   }, [firestore, cityData.id]);
   
-  const avgAqi = wardsData.reduce((s, w) => s + w.aqi, 0) / (wardsData.length || 1);
   const avgWqi = 85; // Mock
   const avgNoise = 68; // Mock
 
@@ -267,6 +282,7 @@ function CitizenDashboardContent() {
                     status={aqiStatus.label}
                     statusColor={aqiStatus.color}
                     onClick={() => setSelectedMetric('Air')}
+                    isLoading={isLoadingWards}
                 />
                  <MetricCard 
                     icon={<Droplets className="h-6 w-6 text-blue-400"/>} 
