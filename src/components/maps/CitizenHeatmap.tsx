@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useFirestore } from '@/firebase';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
-import { collection, onSnapshot, query, DocumentData } from 'firebase/firestore';
+import { collection, onSnapshot, query } from 'firebase/firestore';
 import type { LatLngExpression } from 'leaflet';
 
 interface WardData {
@@ -29,30 +29,25 @@ const getAqiStatus = (aqi: number) => {
   return 'Severe';
 };
 
-// This component is responsible for programmatically updating the map view
-// when the cityId prop changes.
-const MapUpdater = ({ center, zoom }: { center: LatLngExpression, zoom: number }) => {
-  const map = useMap();
-  useEffect(() => {
-    map.flyTo(center, zoom);
-  }, [center, zoom, map]);
-  return null;
-};
-
-
 // This component contains the dynamic data fetching and marker rendering.
 // It is a child of MapContainer, so its re-renders won't re-initialize the map.
-const MapMarkers = ({ cityId }: { cityId: string }) => {
+function MapContent({ cityId, center, zoom }: { cityId: string, center: LatLngExpression, zoom: number }) {
+  const map = useMap();
   const firestore = useFirestore();
   const [wards, setWards] = useState<WardData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
+  useEffect(() => {
+    map.flyTo(center, zoom);
+  }, [center, zoom, map]);
+
   useEffect(() => {
     if (!firestore || !cityId) return;
 
     setIsLoading(true);
     setError(null);
+    setWards([]); // Clear previous wards
     
     const wardsCollectionPath = `locations/${cityId}/wards`;
     const q = query(collection(firestore, wardsCollectionPath));
@@ -120,11 +115,12 @@ const MapMarkers = ({ cityId }: { cityId: string }) => {
 // This is the main component. It renders the MapContainer ONCE.
 const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
   const mapCenter: LatLngExpression = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
+  const zoom = 11;
 
   return (
     <MapContainer
       center={mapCenter}
-      zoom={11}
+      zoom={zoom}
       scrollWheelZoom={false}
       style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
       className="bg-muted"
@@ -133,8 +129,7 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapUpdater center={mapCenter} zoom={11} />
-      <MapMarkers cityId={cityId} />
+      <MapContent cityId={cityId} center={mapCenter} zoom={zoom} />
     </MapContainer>
   );
 };
