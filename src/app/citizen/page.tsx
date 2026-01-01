@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useContext, useState, Suspense, useEffect } from 'react';
@@ -216,9 +217,7 @@ function CitizenDashboardContent() {
                         <CardTitle>Pollution Heatmap</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-[420px] bg-muted/30 rounded-md relative overflow-hidden">
-                           <CitizenHeatmap cityId={cityData.id} />
-                        </div>
+                        <CitizenHeatmap cityId={cityData.id} />
                     </CardContent>
                 </Card>
             </div>
@@ -297,3 +296,5 @@ export default function CitizenPage() {
     </div>
   );
 }
+
+    

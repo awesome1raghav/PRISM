@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -34,7 +35,7 @@ const cityCenters: { [key: string]: LatLngExpression } = {
 };
 const defaultCenter = cityCenters['bengaluru'];
 
-function MapContent({ cityId }: { cityId: string }) {
+function MapMarkers({ cityId }: { cityId: string }) {
   const map = useMap();
   const firestore = useFirestore();
   const [wards, setWards] = useState<WardData[]>([]);
@@ -120,20 +121,24 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
   const zoom = 11;
 
   return (
-    <MapContainer
-      center={mapCenter}
-      zoom={zoom}
-      scrollWheelZoom={false}
-      style={{ height: '420px', width: '100%' }}
-      className="rounded-xl"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <MapContent cityId={cityId} />
-    </MapContainer>
+    <div className="h-[420px] w-full rounded-xl bg-muted">
+      <MapContainer
+        center={mapCenter}
+        zoom={zoom}
+        scrollWheelZoom={false}
+        style={{ height: '100%', width: '100%' }}
+        className="rounded-xl"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <MapMarkers cityId={cityId} />
+      </MapContainer>
+    </div>
   );
 };
 
 export default CitizenHeatmap;
+
+    
