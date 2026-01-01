@@ -1,10 +1,10 @@
-
 'use client';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Gauge, Droplets, Waves, Trash2, Map, Building, Home } from 'lucide-react';
-import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import HeatmapGrid from '@/components/citizen/HeatmapGrid';
+import { type MetricType, type Ward, type PollutionData } from '@/context/LocationContext';
 
 const data = {
   city: {
@@ -27,21 +27,26 @@ const data = {
   }
 }
 
-const chartData = [
-  { date: 'Mon', aqi: 85, water: 90, noise: 65 },
-  { date: 'Tue', aqi: 72, water: 91, noise: 68 },
-  { date: 'Wed', aqi: 68, water: 94, noise: 66 },
-  { date: 'Thu', aqi: 78, water: 92, noise: 70 },
-  { date: 'Fri', aqi: 90, water: 88, noise: 72 },
-  { date: 'Sat', aqi: 95, water: 85, noise: 75 },
-  { date: 'Sun', aqi: 88, water: 87, noise: 71 },
-];
+const generateWardData = (id: string, name: string, aqi: number, wqi: number, noise: number): Ward => ({
+  id,
+  name,
+  live_data: {
+    aqi,
+    wqi,
+    noise,
+    updatedAt: '2 min ago',
+    riskLevel: 'moderate',
+  },
+});
 
-const chartConfig = {
-  aqi: { label: 'AQI', color: 'hsl(var(--chart-2))' },
-  water: { label: 'Water Quality', color: 'hsl(var(--chart-1))' },
-  noise: { label: 'Noise (dB)', color: 'hsl(var(--chart-3))' },
-};
+const wards: Ward[] = [
+    generateWardData('koramangala', 'Koramangala', 55, 80, 65),
+    generateWardData('jayanagar', 'Jayanagar', 75, 75, 70),
+    generateWardData('indiranagar', 'Indiranagar', 85, 70, 80),
+    generateWardData('whitefield', 'Whitefield', 120, 60, 75),
+    generateWardData('hebbal', 'Hebbal', 90, 70, 68),
+    generateWardData('marathahalli', 'Marathahalli', 150, 55, 85),
+];
 
 
 const StatusCard = ({ icon, title, value, status }: { icon: React.ReactNode, title: string, value: string | number, status: string }) => {
@@ -70,6 +75,7 @@ const View = ({ viewData }: { viewData: typeof data.city }) => (
 );
 
 export default function MonitoringDashboard() {
+  const [activeMetric, setActiveMetric] = useState<MetricType>('aqi');
   return (
     <div className="grid gap-8">
       <Card className="bg-card/40 border-border/30">
@@ -95,28 +101,16 @@ export default function MonitoringDashboard() {
       <Card className="bg-card/40 border-border/30">
         <CardHeader>
           <CardTitle>7-Day Environmental Trends</CardTitle>
+           <Tabs value={activeMetric} onValueChange={(value) => setActiveMetric(value as MetricType)}>
+              <TabsList>
+                <TabsTrigger value="aqi">Air</TabsTrigger>
+                <TabsTrigger value="wqi">Water</TabsTrigger>
+                <TabsTrigger value="noise">Noise</TabsTrigger>
+              </TabsList>
+            </Tabs>
         </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <AreaChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 0 }}>
-              <CartesianGrid vertical={false} strokeDasharray="3 3" />
-              <XAxis dataKey="date" tickLine={false} axisLine={false} />
-              <YAxis tickLine={false} axisLine={false} />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-              <defs>
-                  <linearGradient id="colorAqi" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorWater" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
-                  </linearGradient>
-              </defs>
-              <Area type="monotone" dataKey="aqi" stroke="hsl(var(--chart-2))" strokeWidth={2} fill="url(#colorAqi)" />
-              <Area type="monotone" dataKey="water" stroke="hsl(var(--chart-1))" strokeWidth={2} fill="url(#colorWater)" />
-            </AreaChart>
-          </ChartContainer>
+        <CardContent className="h-[300px] w-full">
+            <HeatmapGrid wards={wards} activeMetric={activeMetric} isPreview />
         </CardContent>
       </Card>
     </div>

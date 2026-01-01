@@ -64,7 +64,7 @@ const HeatmapGrid = ({ wards, activeMetric, isPreview = false }: HeatmapGridProp
     }
 
     const handleTileClick = (metric: MetricType) => {
-        if (isPreview) return; // Don't navigate from the dashboard preview
+        if (isPreview) return; // Don't navigate from a preview context
         
         let path = `/citizen/details/air?location=${location}`;
         if (metric === 'wqi') path = `/citizen/details/water?location=${location}`;
@@ -77,7 +77,7 @@ const HeatmapGrid = ({ wards, activeMetric, isPreview = false }: HeatmapGridProp
       <div className={cn(
           "grid h-full w-full gap-1 transition-all duration-300",
           isPreview 
-            ? "grid-cols-3 grid-rows-3"
+            ? "grid-cols-3 grid-rows-2"
             : "grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6"
         )}>
         {wards.map((ward) => {
