@@ -142,7 +142,7 @@ const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoadin
                       </>
                   ) : (
                     <>
-                      <p className="text-2xl font-bold">{value ?? '—'}</p>
+                      <p className="text-2xl font-bold">{value}</p>
                       <Badge variant="outline" className={cn("mt-1 border", statusColor)}>
                           {status}
                       </Badge>
@@ -360,9 +360,3 @@ export default function CitizenPage() {
     </div>
   );
 }
-
-    
-
-    
-
-    
