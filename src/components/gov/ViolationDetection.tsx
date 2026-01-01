@@ -80,8 +80,11 @@ const ViolationList = ({
         >
             <div>
                 <p className="font-semibold">{violation.type}</p>
-                <p className="text-sm text-muted-foreground">{violation.location}</p>
-                <p className="text-xs text-muted-foreground">{violation.time}</p>
+                <div className="text-sm text-muted-foreground space-y-1 mt-1">
+                  <p>{violation.location}</p>
+                  <p className="text-xs">{violation.time}</p>
+                  <Badge variant="outline" className="text-xs">Source: {violation.source}</Badge>
+                </div>
             </div>
             <div className="flex items-center gap-2">
                 <Badge variant="outline" className={cn(confidenceStyles[violation.confidence])}>
