@@ -165,7 +165,7 @@ const InteractiveBackground: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 z-0 overflow-hidden noise-background"
+      className="fixed inset-0 z-0 overflow-hidden"
       style={{
         backgroundColor: isDark ? 'hsl(215 19% 25%)' : 'hsl(48 33% 94%)',
       }}
@@ -175,6 +175,7 @@ const InteractiveBackground: React.FC = () => {
         ref={canvasRef}
         className="block fixed inset-0 pointer-events-none"
       />
+       <div className="noise-background absolute inset-0"></div>
     </div>
   );
 };
