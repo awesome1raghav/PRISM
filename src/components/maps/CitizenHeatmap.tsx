@@ -35,7 +35,7 @@ const cityCenters: { [key: string]: LatLngExpression } = {
 };
 const defaultCenter = cityCenters['bengaluru'];
 
-function MapMarkers({ cityId }: { cityId: string }) {
+function MapContent({ cityId }: { cityId: string }) {
   const map = useMap();
   const firestore = useFirestore();
   const [wards, setWards] = useState<WardData[]>([]);
@@ -118,13 +118,12 @@ function MapMarkers({ cityId }: { cityId: string }) {
 
 const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
   const mapCenter = cityCenters[cityId] || defaultCenter;
-  const zoom = 11;
 
   return (
     <div className="h-[420px] w-full rounded-xl bg-muted">
       <MapContainer
         center={mapCenter}
-        zoom={zoom}
+        zoom={11}
         scrollWheelZoom={false}
         style={{ height: '100%', width: '100%' }}
         className="rounded-xl"
@@ -133,7 +132,7 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <MapMarkers cityId={cityId} />
+        <MapContent cityId={cityId} />
       </MapContainer>
     </div>
   );
