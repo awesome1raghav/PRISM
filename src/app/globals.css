@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 220 20% 95%;
+    --background: 220 20% 95%; /* Was: 48 33% 94% */
     --foreground: 220 15% 25%;
     
     --card: 220 20% 100%;
@@ -15,8 +15,8 @@
     --popover: 220 20% 100%;
     --popover-foreground: 220 15% 25%;
     
-    --primary: 180 35% 45%; /* Deep Teal */
-    --primary-foreground: 180 35% 95%;
+    --primary: 195 53% 44%; /* Deep Teal from logo */
+    --primary-foreground: 195 53% 95%;
     
     --secondary: 215 25% 85%;
     --secondary-foreground: 215 19% 30%;
@@ -24,24 +24,24 @@
     --muted: 215 25% 92%;
     --muted-foreground: 215 20% 55%;
     
-    --accent: 30 70% 60%; /* Warm Amber/Orange */
-    --accent-foreground: 30 70% 98%;
+    --accent: 15 84% 62%; /* Orange/Red from logo */
+    --accent-foreground: 15 84% 98%;
     
     --destructive: 0 60% 50%; /* Subtle Red */
     --destructive-foreground: 0 60% 98%;
     
     --border: 210 15% 88%;
     --input: 210 15% 94%;
-    --ring: 180 35% 45%;
+    --ring: 195 53% 44%;
     
-    --chart-1: 180 35% 45%; /* Deep Teal */
-    --chart-2: 90 35% 55%; /* Earthy Green */
-    --chart-3: 30 70% 60%; /* Warm Amber */
+    --chart-1: 195 53% 44%; /* Deep Teal */
+    --chart-2: 122 39% 49%; /* Earthy Green from logo */
+    --chart-3: 15 84% 62%; /* Orange/Red from logo */
     --chart-4: 200 40% 50%; /* Blue */
     --chart-5: 0 60% 50%; /* Red */
 
-    --status-green: 120 40% 45%;
-    --status-yellow: 40 75% 55%;
+    --status-green: 122 39% 49%;
+    --status-yellow: 45 86% 51%; /* Gold from logo */
     --status-red: 0 70% 55%;
     --status-red-dark: 0 70% 45%;
     
@@ -58,8 +58,8 @@
     --popover: 215 28% 18%;
     --popover-foreground: 210 40% 98%;
     
-    --primary: 180 40% 55%; /* Lighter Teal for dark mode */
-    --primary-foreground: 180 40% 15%;
+    --primary: 195 47% 55%; /* Lighter Teal */
+    --primary-foreground: 195 47% 15%;
     
     --secondary: 215 20% 35%;
     --secondary-foreground: 210 40% 98%;
@@ -67,24 +67,24 @@
     --muted: 215 20% 28%;
     --muted-foreground: 215 20% 65%;
     
-    --accent: 35 80% 65%; /* Lighter Amber for dark mode */
-    --accent-foreground: 35 80% 15%;
+    --accent: 18 90% 68%; /* Lighter Orange/Red */
+    --accent-foreground: 18 90% 15%;
     
     --destructive: 0 60% 60%;
     --destructive-foreground: 0 85% 98%;
     
     --border: 215 20% 30%;
     --input: 215 20% 35%;
-    --ring: 180 40% 55%;
+    --ring: 195 47% 55%;
     
-    --chart-1: 180 40% 55%;
-    --chart-2: 90 40% 60%;
-    --chart-3: 35 80% 65%;
+    --chart-1: 195 47% 55%;
+    --chart-2: 122 40% 60%;
+    --chart-3: 18 90% 68%;
     --chart-4: 200 50% 60%;
     --chart-5: 0 60% 60%;
     
-    --status-green: 120 40% 55%;
-    --status-yellow: 40 75% 60%;
+    --status-green: 122 40% 55%;
+    --status-yellow: 45 80% 55%;
     --status-red: 0 70% 60%;
     --status-red-dark: 0 70% 50%;
   }
