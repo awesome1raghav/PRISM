@@ -129,4 +129,9 @@
     pointer-events: none;
     z-index: 1;
   }
+
+  /* Set z-index for leaflet map container */
+  .leaflet-container-z-index {
+    z-index: 10;
+  }
 }

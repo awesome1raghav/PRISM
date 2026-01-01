@@ -92,8 +92,8 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose }: FullScreenMapP
   }, [wardsData]);
 
   return (
-    <div className="fixed inset-0 z-[200] bg-background">
-      <div ref={mapContainerRef} className="h-full w-full" />
+    <div className="fixed inset-0 z-[200]">
+      <div ref={mapContainerRef} className="h-full w-full leaflet-container-z-index" />
       <Button
         variant="secondary"
         size="icon"

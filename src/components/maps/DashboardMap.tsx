@@ -89,7 +89,7 @@ const DashboardMap = ({ center, zoom, wards }: DashboardMapProps) => {
     }
   }, [wards]);
 
-  return <div ref={mapContainerRef} className="h-[420px] w-full rounded-xl" />;
+  return <div ref={mapContainerRef} className="h-[420px] w-full rounded-xl leaflet-container-z-index" />;
 };
 
 export default DashboardMap;
