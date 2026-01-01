@@ -92,7 +92,7 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose }: FullScreenMapP
   }, [wardsData]);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-background">
+    <div className="fixed inset-0 z-[200] bg-background">
       <div ref={mapContainerRef} className="h-full w-full" />
       <Button
         variant="secondary"
