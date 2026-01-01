@@ -1,11 +1,11 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { useFirestore } from '@/firebase';
-import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import type { LatLngExpression } from 'leaflet';
 
 interface WardData {
   id: string;
@@ -29,111 +29,99 @@ const getAqiStatus = (aqi: number) => {
   return 'Severe';
 };
 
-const cityCenters: { [key: string]: LatLngExpression } = {
+const cityCenters: { [key: string]: L.LatLngExpression } = {
   'bengaluru': [12.9716, 77.5946],
   'new-york': [40.7128, -74.0060],
 };
 const defaultCenter = cityCenters['bengaluru'];
 
-function MapContent({ cityId }: { cityId: string }) {
-  const map = useMap();
+const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
+  const mapRef = useRef<L.Map | null>(null);
   const firestore = useFirestore();
-  const [wards, setWards] = useState<WardData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const markersRef = useRef<L.LayerGroup>(new L.LayerGroup());
 
   useEffect(() => {
-    const newCenter = cityCenters[cityId] || defaultCenter;
-    map.flyTo(newCenter, 11);
-  }, [cityId, map]);
+    // Initialize map only once
+    if (!mapRef.current) {
+      // Set default icon paths
+       const iconUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png';
+      const iconRetinaUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png';
+      const shadowUrl = 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png';
 
+      const iconDefault = L.icon({
+          iconUrl,
+          iconRetinaUrl,
+          shadowUrl,
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+      });
+      L.Marker.prototype.options.icon = iconDefault;
+
+      mapRef.current = L.map('map').setView(defaultCenter, 11);
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+      }).addTo(mapRef.current);
+      
+      markersRef.current.addTo(mapRef.current);
+    }
+
+    // Cleanup function to remove map on component unmount
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
+
+  // Effect to update map center when cityId changes
+  useEffect(() => {
+    if (mapRef.current) {
+      const newCenter = cityCenters[cityId] || defaultCenter;
+      mapRef.current.flyTo(newCenter, 11);
+    }
+  }, [cityId]);
+
+  // Effect to subscribe to Firestore data
   useEffect(() => {
     if (!firestore || !cityId) return;
 
-    setIsLoading(true);
-    setError(null);
-    setWards([]);
-    
     const wardsCollectionPath = `locations/${cityId}/wards`;
     const q = query(collection(firestore, wardsCollectionPath));
 
-    const unsubscribe = onSnapshot(q, 
+    const unsubscribe = onSnapshot(q,
       (querySnapshot) => {
-        const wardsData: WardData[] = [];
+        markersRef.current.clearLayers();
         querySnapshot.forEach((doc) => {
-          wardsData.push({ id: doc.id, ...doc.data() } as WardData);
+          const ward = { id: doc.id, ...doc.data() } as WardData;
+          const marker = L.circleMarker([ward.lat, ward.lng], {
+            color: getAqiColor(ward.aqi),
+            fillColor: getAqiColor(ward.aqi),
+            fillOpacity: 0.6,
+            radius: 5 + (ward.aqi / 20),
+          }).bindPopup(`
+            <div class="font-sans">
+              <h3 class="font-bold text-base mb-1">${ward.name}</h3>
+              <p><strong>AQI:</strong> ${ward.aqi}</p>
+              <p><strong>Status:</strong> ${getAqiStatus(ward.aqi)}</p>
+            </div>
+          `);
+          markersRef.current.addLayer(marker);
         });
-        setWards(wardsData);
-        setIsLoading(false);
-      }, 
+      },
       (err) => {
         console.error("Firestore snapshot error:", err);
-        setError("Data unavailable. Could not fetch pollution data.");
-        setIsLoading(false);
       }
     );
 
     return () => unsubscribe();
   }, [firestore, cityId]);
 
-  return (
-    <>
-      {wards.map(ward => (
-        <CircleMarker
-          key={ward.id}
-          center={[ward.lat, ward.lng]}
-          pathOptions={{
-            color: getAqiColor(ward.aqi),
-            fillColor: getAqiColor(ward.aqi),
-            fillOpacity: 0.6,
-          }}
-          radius={5 + (ward.aqi / 20)}
-        >
-          <Popup>
-            <div className="font-sans">
-              <h3 className="font-bold text-base mb-1">{ward.name}</h3>
-              <p>
-                <strong>AQI:</strong> {ward.aqi}
-              </p>
-              <p>
-                <strong>Status:</strong> {getAqiStatus(ward.aqi)}
-              </p>
-            </div>
-          </Popup>
-        </CircleMarker>
-      ))}
-      
-      {(isLoading || error || wards.length === 0) && (
-         <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-[1000] pointer-events-none rounded-md">
-            <div className="text-center p-4 bg-background/80 rounded-lg">
-                {isLoading && <p className="font-semibold text-foreground animate-pulse">Waiting for pollution data...</p>}
-                {error && <p className="font-semibold text-destructive">{error}</p>}
-                {!isLoading && !error && wards.length === 0 && <p className="font-semibold text-muted-foreground">No sensor data found for this location.</p>}
-            </div>
-        </div>
-      )}
-    </>
-  );
-};
 
-const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
-  const mapCenter = cityCenters[cityId] || defaultCenter;
-
-  return (
-    <MapContainer
-      center={mapCenter}
-      zoom={11}
-      scrollWheelZoom={false}
-      style={{ height: '420px', width: '100%' }}
-      className="rounded-xl"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <MapContent cityId={cityId} />
-    </MapContainer>
-  );
+  return <div id="map" style={{ height: "420px" }} className="w-full rounded-xl" />;
 };
 
 export default CitizenHeatmap;
