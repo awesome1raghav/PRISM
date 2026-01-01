@@ -26,7 +26,7 @@ export default function SplashScreen() {
     <div
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background transition-opacity duration-1000"
     >
-      <div className="w-48 h-48 md:w-64 md:h-64 animate-[scale-up_1.5s_cubic-bezier(0.19,1,0.22,1)_forwards,fade-in_1s_ease-out_forwards]">
+      <div className="w-64 h-64 md:w-80 md:h-80 animate-[scale-up_1.5s_cubic-bezier(0.19,1,0.22,1)_forwards,fade-in_1s_ease-out_forwards]">
         <Logo isAnimated={isAnimating} />
       </div>
       <div className="mt-8 text-center">
