@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Gauge, Droplets, Waves, Map, Building, Home, AlertTriangle } from 'lucide-react';
 import HeatmapGrid from '@/components/citizen/HeatmapGrid';
 import { type MetricType, type Ward, type PollutionData } from '@/context/LocationContext';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const data = {
   city: {
@@ -52,6 +53,22 @@ const activeAlerts = [
     { text: 'High turbidity reported in Bellandur Lake', severity: 'High' },
 ];
 
+const trendData = [
+  { day: 'Mon', aqi: 75, wqi: 90, noise: 65 },
+  { day: 'Tue', aqi: 80, wqi: 88, noise: 68 },
+  { day: 'Wed', aqi: 110, wqi: 85, noise: 70 },
+  { day: 'Thu', aqi: 95, wqi: 82, noise: 72 },
+  { day: 'Fri', aqi: 125, wqi: 78, noise: 75 },
+  { day: 'Sat', aqi: 140, wqi: 75, noise: 80 },
+  { day: 'Sun', aqi: 130, wqi: 76, noise: 78 },
+];
+
+const chartConfig = {
+  aqi: { label: 'AQI', color: 'hsl(var(--chart-1))' },
+  wqi: { label: 'WQI', color: 'hsl(var(--chart-2))' },
+  noise: { label: 'Noise (dB)', color: 'hsl(var(--chart-3))' },
+};
+
 
 const StatusCard = ({ icon, title, value, status }: { icon: React.ReactNode, title: string, value: string | number, status: string }) => {
   const statusColor = status === 'Good' || status === 'Low' ? 'text-green-400' : status === 'Moderate' ? 'text-yellow-400' : 'text-red-500';
@@ -84,6 +101,32 @@ const View = ({ viewData, metric }: { viewData: typeof data.city, metric: Metric
         value={currentMetric.data.value}
         status={currentMetric.data.status} 
     />
+  );
+};
+
+const EnvironmentalTrendChart = ({ data, metric }: { data: any[], metric: MetricType }) => {
+  return (
+    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+      <ResponsiveContainer>
+        <LineChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border) / 0.5)" />
+          <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} />
+          <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+          <Tooltip 
+            cursor={{ stroke: 'hsl(var(--border))', strokeWidth: 2, strokeDasharray: '3 3' }}
+            content={<ChartTooltipContent />} 
+          />
+          <Line 
+            dataKey={metric} 
+            type="monotone"
+            stroke={`hsl(var(--chart-${metric === 'aqi' ? '1' : metric === 'wqi' ? '2' : '3'}))`}
+            strokeWidth={2}
+            dot={{ r: 4, fill: `hsl(var(--chart-${metric === 'aqi' ? '1' : metric === 'wqi' ? '2' : '3'}))` }}
+            activeDot={{ r: 6 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </ChartContainer>
   );
 };
 
@@ -143,8 +186,15 @@ export default function MonitoringDashboard() {
             <HeatmapGrid wards={wards} activeMetric={activeMetric} />
         </CardContent>
       </Card>
+
+      <Card className="bg-card/40 border-border/30">
+        <CardHeader>
+          <CardTitle>7-Day Environmental Trends</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <EnvironmentalTrendChart data={trendData} metric={activeMetric} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
-    
