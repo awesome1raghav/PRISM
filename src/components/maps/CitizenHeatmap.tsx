@@ -120,24 +120,20 @@ const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
   const mapCenter = cityCenters[cityId] || defaultCenter;
 
   return (
-    <div className="h-[420px] w-full rounded-xl bg-muted">
-      <MapContainer
-        center={mapCenter}
-        zoom={11}
-        scrollWheelZoom={false}
-        style={{ height: '100%', width: '100%' }}
-        className="rounded-xl"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <MapContent cityId={cityId} />
-      </MapContainer>
-    </div>
+    <MapContainer
+      center={mapCenter}
+      zoom={11}
+      scrollWheelZoom={false}
+      style={{ height: '420px', width: '100%' }}
+      className="rounded-xl"
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <MapContent cityId={cityId} />
+    </MapContainer>
   );
 };
 
 export default CitizenHeatmap;
-
-    
