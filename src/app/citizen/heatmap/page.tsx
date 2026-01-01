@@ -9,17 +9,17 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { LocationContext } from '@/context/LocationContext';
 import HeatmapGrid from '@/components/citizen/HeatmapGrid';
-import { type MetricType, type Ward, type PollutionData } from '@/context/LocationContext';
+import { type MetricType, type Ward, type PollutionData, type RiskLevel } from '@/context/LocationContext';
 import { useSearchParams } from 'next/navigation';
 import MapMetricOverlay from '@/components/citizen/MapMetricOverlay';
 
 const getMetricSummary = (wards: Ward[], metric: MetricType) => {
-    if (!wards || wards.length === 0) return { value: 'N/A', status: 'Unknown', numericValue: 0 };
+    if (!wards || wards.length === 0) return { value: 'N/A', status: 'Unknown' as const, numericValue: 0 };
     
     const totalValue = wards.reduce((sum, ward) => sum + ward.live_data[metric], 0);
     const avgValue = totalValue / wards.length;
 
-    let status: PollutionData['riskLevel'] = 'good';
+    let status: RiskLevel | 'Unknown' = 'good';
      if (metric === 'aqi') {
         if (avgValue > 200) status = 'severe';
         else if (avgValue > 100) status = 'poor';
@@ -48,7 +48,7 @@ function HeatmapContent() {
   const locationParam = searchParams.get('location') || 'Bengaluru';
   
   useEffect(() => {
-    setLocation(locationParam, null);
+    setLocation(locationParam);
   }, [locationParam, setLocation]);
 
   const location = locationParam;
@@ -65,8 +65,8 @@ function HeatmapContent() {
     { id: 'noise' as MetricType, name: 'NQI (Noise)', value: noiseSummary.value, status: noiseSummary.status, icon: <Waves className="h-5 w-5" /> },
   ];
 
-   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
+   const getStatusColor = (status: RiskLevel | 'Unknown') => {
+    switch (status) {
       case 'good': return 'bg-green-500/20 text-green-400 border-green-500/30';
       case 'moderate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
       case 'poor': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
