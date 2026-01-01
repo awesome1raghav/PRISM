@@ -130,6 +130,44 @@
 
   /* Set z-index for leaflet map container */
   .leaflet-container-z-index {
-    z-index: 10;
+    z-index: 1;
+  }
+}
+
+
+/* Logo Animation Keyframes */
+@keyframes draw-ring {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-out {
+  0% { opacity: 0; }
+  20%, 80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes scale-up {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }
