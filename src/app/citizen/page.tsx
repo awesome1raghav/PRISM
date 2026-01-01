@@ -22,7 +22,6 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import MetricDetailModal from '@/components/citizen/MetricDetailModal';
 import { type ReportCategory } from './types';
-import HeatmapGrid from '@/components/citizen/HeatmapGrid';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -35,13 +34,17 @@ const CitizenHeatmap = dynamic(() => import('@/components/maps/CitizenHeatmap'),
 const LocationSelector = () => {
   const { location, setLocation, isLocating, handleLocateMe } = useContext(LocationContext);
   const router = useRouter();
-  
+  const [inputValue, setInputValue] = useState(location);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const input = form.elements.namedItem('location-input') as HTMLInputElement;
-    setLocation(input.value, router);
+    setLocation(inputValue, true); // Pass true to show toast
+    router.push(`/citizen?location=${inputValue}`, { scroll: false });
   }
+  
+  useEffect(() => {
+    setInputValue(location);
+  }, [location]);
 
   return (
      <div className="bg-card/40 border border-border/30 rounded-lg p-4">
@@ -49,7 +52,8 @@ const LocationSelector = () => {
             <Input 
                 name="location-input"
                 placeholder="e.g. Koramangala, Bengaluru"
-                defaultValue={location}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 className="flex-grow"
             />
             <div className="flex gap-2">
@@ -90,14 +94,16 @@ function CitizenDashboardContent() {
   const { locationData, setLocation } = useContext(LocationContext);
   const [selectedMetric, setSelectedMetric] = useState<ReportCategory | null>(null);
   const searchParams = useSearchParams();
-  const locationParam = searchParams.get('location') || 'Bengaluru';
+  const locationParam = searchParams.get('location');
   
-  // Ensure context is updated if URL changes
+  // Initialize context location from URL on first load
   useEffect(() => {
-    setLocation(locationParam, null);
+    if (locationParam) {
+      setLocation(locationParam, false); // false to not show toast on load
+    }
   }, [locationParam, setLocation]);
   
-  const location = locationParam;
+  const location = locationParam || 'Bengaluru';
 
   const cityData = locationData[location] || locationData['Bengaluru'];
   
@@ -167,7 +173,7 @@ function CitizenDashboardContent() {
                     </CardHeader>
                     <CardContent>
                         <div className="h-[420px] bg-muted/30 rounded-md relative overflow-hidden">
-                           <CitizenHeatmap />
+                           <CitizenHeatmap cityId={cityData.id} />
                         </div>
                     </CardContent>
                 </Card>
@@ -240,7 +246,7 @@ export default function CitizenPage() {
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container py-8">
-         <Suspense fallback={<div>Loading location...</div>}>
+         <Suspense fallback={<div className="text-center p-8">Loading Dashboard...</div>}>
           <CitizenDashboardContent />
         </Suspense>
       </main>

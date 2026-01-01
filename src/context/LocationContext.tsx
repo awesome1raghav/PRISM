@@ -2,7 +2,7 @@
 'use client';
 
 import { useToast } from '@/hooks/use-toast';
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export type MetricType = 'aqi' | 'wqi' | 'noise';
@@ -86,7 +86,7 @@ const initialLocationData: LocationDataContext = {
 
 interface LocationContextType {
   location: string;
-  setLocation: (location: string, router: AppRouterInstance | null) => void;
+  setLocation: (location: string, showToast: boolean) => void;
   locationData: LocationDataContext;
   isLocating: boolean;
   handleLocateMe: (router: AppRouterInstance) => void;
@@ -107,7 +107,7 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Generate data on the client side to prevent hydration mismatch
+    // Generate data on the client side to prevent hydration mismatch. This runs only once.
     const bengaluruWards = [
       generateWardData('koramangala', 'Koramangala', [30, 60], [75, 95], [55, 70]),
       generateWardData('jayanagar', 'Jayanagar', [45, 80], [70, 90], [60, 75]),
@@ -134,70 +134,49 @@ export const LocationProvider = ({ children }: { children: ReactNode }) => {
     }));
   }, []);
 
-  const setLocation = (newLocation: string, router: AppRouterInstance | null) => {
+  const setLocation = useCallback((newLocation: string, showToast: boolean) => {
     const foundKey = Object.keys(locationData).find(key => 
         key.toLowerCase() === newLocation.toLowerCase() || 
-        locationData[key].name.toLowerCase() === newLocation.toLowerCase()
+        locationData[key].id.toLowerCase() === newLocation.toLowerCase()
     );
 
     const targetLocation = foundKey || 'Bengaluru';
     
-    if (foundKey) {
-        setLocationState(targetLocation);
-        if (router) {
-            router.push(`?location=${targetLocation}`);
+    setLocationState(prevLocation => {
+        if (prevLocation.toLowerCase() !== targetLocation.toLowerCase()) {
+            if (showToast) {
+                toast({
+                    title: "Location Updated",
+                    description: `Showing data for ${locationData[targetLocation].name}.`,
+                });
+            }
+            return targetLocation;
         }
-        toast({
-            title: "Location Updated",
-            description: `Showing data for ${locationData[targetLocation].name}.`,
-        });
-    } else if (newLocation && newLocation.toLowerCase() !== 'bengaluru') {
-        toast({
-            variant: "destructive",
-            title: "Location Not Found",
-            description: "We don't have data for this location yet. Showing default.",
-        });
-        setLocationState('Bengaluru');
-        if (router) {
-            router.push(`?location=Bengaluru`);
-        }
-    }
-  };
+        return prevLocation;
+    });
+
+  }, [locationData, toast]);
 
   const handleLocateMe = (router: AppRouterInstance) => {
     setIsLocating(true);
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        () => {
-          const locations = Object.keys(locationData);
-          const currentIndex = locations.indexOf(location);
-          const nextIndex = (currentIndex + 1) % locations.length;
-          const newLocationKey = locations[nextIndex];
-          setLocation(newLocationKey, router);
-          setIsLocating(false);
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-          setIsLocating(false);
-          toast({
-            variant: "destructive",
-            title: "Location Error",
-            description: "Could not get your location. Please enter it manually.",
-          });
-        }
-      );
-    } else {
-      setIsLocating(false);
-       toast({
-        variant: "destructive",
-        title: "Unsupported",
-        description: "Geolocation is not supported by your browser.",
-      });
-    }
+    // Simulate finding a location and cycling through available ones
+    setTimeout(() => {
+        const locations = Object.keys(locationData);
+        const currentIndex = locations.findIndex(l => l.toLowerCase() === location.toLowerCase());
+        const nextIndex = (currentIndex + 1) % locations.length;
+        const newLocationKey = locations[nextIndex];
+        
+        setLocation(newLocationKey, true); // Show toast on manual location change
+        router.push(`/citizen?location=${newLocationKey}`, { scroll: false });
+
+        setIsLocating(false);
+    }, 800);
   };
 
+  const value = { location, setLocation, locationData, isLocating, handleLocateMe };
+
   return (
-    <LocationContext.Provider value={{ location, setLocation, locationData, isLocating, handleLocateMe }}>
+    <LocationContext.Provider value={value}>
       {children}
     </LocationContext.Provider>
   );

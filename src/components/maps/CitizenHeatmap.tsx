@@ -1,10 +1,10 @@
 
 'use client';
 
-import { useMemoFirebase } from '@/firebase/provider';
+import { useState, useEffect } from 'react';
+import { useFirestore } from '@/firebase';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
-import { collection, query } from 'firebase/firestore';
-import { useCollection, useFirestore } from '@/firebase';
+import { collection, onSnapshot, query, DocumentData } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface WardData {
@@ -29,36 +29,50 @@ const getAqiStatus = (aqi: number) => {
   return 'Severe';
 };
 
-const CitizenHeatmap = () => {
+const CitizenHeatmap = ({ cityId = 'bengaluru' }: { cityId: string }) => {
   const firestore = useFirestore();
+  const [wards, setWards] = useState<WardData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const wardsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, 'locations/bengaluru/wards'));
-  }, [firestore]);
+  useEffect(() => {
+    if (!firestore || !cityId) return;
 
-  const { data: wards, isLoading, error } = useCollection<WardData>(wardsQuery);
+    setIsLoading(true);
+    setError(null);
+    
+    const wardsCollectionPath = `locations/${cityId}/wards`;
+    const q = query(collection(firestore, wardsCollectionPath));
 
-  if (isLoading) {
-    return <Skeleton className="h-full w-full" />;
-  }
-
-  if (error || !wards || wards.length === 0) {
-    return (
-      <div className="flex h-full w-full items-center justify-center bg-muted/30">
-        <p className="text-muted-foreground">
-          {error ? `Error: ${error.message}` : 'No pollution data available.'}
-        </p>
-      </div>
+    const unsubscribe = onSnapshot(q, 
+      (querySnapshot) => {
+        const wardsData: WardData[] = [];
+        querySnapshot.forEach((doc) => {
+          wardsData.push({ id: doc.id, ...doc.data() } as WardData);
+        });
+        setWards(wardsData);
+        setIsLoading(false);
+      }, 
+      (err) => {
+        console.error("Firestore snapshot error:", err);
+        setError("Data unavailable. Could not fetch pollution data.");
+        setIsLoading(false);
+      }
     );
-  }
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [firestore, cityId]);
+
+  const mapCenter: [number, number] = cityId === 'new-york' ? [40.7128, -74.0060] : [12.9716, 77.5946];
 
   return (
     <MapContainer
-      center={[12.9716, 77.5946]}
+      center={mapCenter}
       zoom={11}
       scrollWheelZoom={false}
       style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+      className="bg-muted"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -88,6 +102,16 @@ const CitizenHeatmap = () => {
           </Popup>
         </CircleMarker>
       ))}
+      
+      {(isLoading || error || wards.length === 0) && (
+         <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-[1000] pointer-events-none rounded-md">
+            <div className="text-center p-4 bg-background/80 rounded-lg">
+                {isLoading && <p className="font-semibold text-foreground animate-pulse">Waiting for pollution data...</p>}
+                {error && <p className="font-semibold text-destructive">{error}</p>}
+                {!isLoading && !error && wards.length === 0 && <p className="font-semibold text-muted-foreground">No sensor data found for this location.</p>}
+            </div>
+        </div>
+      )}
     </MapContainer>
   );
 };
