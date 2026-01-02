@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '../ui/badge';
+import ThemeSwitcher from '../ThemeSwitcher';
 
 const navLinks = [
   { href: '/report', label: 'Report Issue' },
@@ -101,6 +101,7 @@ export default function Header() {
           </ul>
         </nav>
         <div className="flex items-center justify-end space-x-2 sm:space-x-4">
+          <ThemeSwitcher />
           {isLoggedInView ? (
             <>
               <DropdownMenu>

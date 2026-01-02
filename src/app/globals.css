@@ -5,58 +5,160 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 210 28% 10%; /* Deep Blue base for components */
-    --foreground: 210 40% 98%; /* Light text for readability */
-    
-    --card: 210 28% 13%; /* Slightly lighter than background */
-    --card-foreground: 210 40% 98%;
-
-    --popover: 210 28% 10%;
-    --popover-foreground: 210 40% 98%;
-    
-    --primary: 180 50% 50%; /* Teal */
+  /* Default Theme (Citizen - Light) */
+  :root,
+  body.theme-citizen {
+    --background: 220 20% 98%; /* #FAFCFF */
+    --foreground: 200 15% 15%; /* #263238 */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 200 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 15% 15%;
+    --primary: 200 90% 64%; /* #4FC3F7 */
     --primary-foreground: 210 40% 98%;
-    
-    --secondary: 210 28% 20%;
-    --secondary-foreground: 210 40% 98%;
-    
-    --muted: 210 28% 20%;
-    --muted-foreground: 215 20% 65%;
-    
-    --accent: 120 50% 60%; /* Eco Green */
-    --accent-foreground: 210 40% 98%;
-    
-    --destructive: 0 63% 31%;
+    --secondary: 122 39% 70%; /* #81C784 */
+    --secondary-foreground: 200 15% 15%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 208 10% 45%;
+    --accent: 150 40% 70%;
+    --accent-foreground: 200 15% 15%;
+    --destructive: 0 72% 67%; /* #E57373 */
     --destructive-foreground: 210 40% 98%;
-    
-    --border: 210 28% 20%;
-    --input: 210 28% 20%;
-    --ring: 180 50% 50%;
-    
-    --chart-1: 180 50% 50%;
-    --chart-2: 120 50% 60%;
+    --info: 54 100% 74%; /* #FFF176 */
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 200 90% 64%;
+    --radius: 0.5rem;
+    --chart-1: 200 90% 64%;
+    --chart-2: 122 39% 70%;
     --chart-3: 45 80% 60%;
     --chart-4: 200 50% 60%;
     --chart-5: 0 70% 65%;
-    
-    --status-green: 120 60% 55%;
-    --status-yellow: 45 80% 55%;
-    --status-red: 0 80% 60%;
-    --status-red-dark: 0 80% 50%;
-    
-    --radius: 0.5rem;
+  }
+
+  /* Citizen - Dark */
+  .dark body.theme-citizen {
+    --background: 213 10% 12%; /* #1A1F24 */
+    --foreground: 0 0% 88%; /* #E0E0E0 */
+    --card: 216 11% 15%; /* #22272E */
+    --card-foreground: 0 0% 88%;
+    --popover: 216 11% 15%;
+    --popover-foreground: 0 0% 88%;
+    --primary: 200 95% 78%; /* #81D4FA */
+    --primary-foreground: 200 15% 15%;
+    --secondary: 122 39% 65%; /* #81C784 */
+    --secondary-foreground: 200 15% 15%;
+    --muted: 216 11% 20%;
+    --muted-foreground: 0 0% 62%; /* #9E9E9E */
+    --accent: 150 40% 65%;
+    --accent-foreground: 0 0% 88%;
+    --destructive: 0 72% 77%; /* #EF9A9A */
+    --destructive-foreground: 200 15% 15%;
+    --info: 56 100% 80%; /* #FFF59D */
+    --border: 216 11% 25%;
+    --input: 216 11% 25%;
+    --ring: 200 95% 78%;
+  }
+
+  /* Government - Light */
+  body.theme-gov {
+    --background: 216 28% 97%; /* #F3F6FA */
+    --foreground: 220 23% 10%; /* #0F172A */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 220 23% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 23% 10%;
+    --primary: 215 88% 35%; /* #0D47A1 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 14% 34%; /* #455A64 */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 215 16% 35%; /* #475569 */
+    --accent: 200 14% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 37%; /* #B71C1C */
+    --destructive-foreground: 0 0% 100%;
+    --warning: 45 80% 50%; /* #F57F17 */
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 215 88% 35%;
+  }
+
+  /* Government - Dark */
+  .dark body.theme-gov {
+    --background: 220 23% 10%; /* #0F172A */
+    --foreground: 216 12% 90%; /* #E5E7EB */
+    --card: 220 26% 17%; /* #1E293B */
+    --card-foreground: 216 12% 90%;
+    --popover: 220 26% 17%;
+    --popover-foreground: 216 12% 90%;
+    --primary: 207 90% 77%; /* #90CAF9 */
+    --primary-foreground: 220 23% 10%;
+    --secondary: 200 14% 54%; /* #78909C */
+    --secondary-foreground: 216 12% 90%;
+    --muted: 220 26% 22%;
+    --muted-foreground: 217 9% 65%; /* #9CA3AF */
+    --accent: 200 14% 65%;
+    --accent-foreground: 216 12% 90%;
+    --destructive: 0 81% 63%; /* #EF5350 */
+    --destructive-foreground: 220 23% 10%;
+    --warning: 50 100% 65%; /* #FFD54F */
+  }
+
+  /* Company - Light */
+  body.theme-co {
+    --background: 213 33% 98%; /* #F7F9FC */
+    --foreground: 220 25% 16%; /* #1F2937 */
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 16%;
+    --primary: 234 48% 45%; /* #3949AB */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 175 100% 27%; /* #00897B */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 218 14% 31%; /* #4B5563 */
+    --accent: 175 100% 37%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 27 97% 49%; /* #EF6C00 - risk/warning */
+    --destructive-foreground: 0 0% 100%;
+    --success: 123 49% 33%; /* #2E7D32 */
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 234 48% 45%;
+  }
+
+  /* Company - Dark */
+  .dark body.theme-co {
+    --background: 216 15% 11%; /* #161B22 */
+    --foreground: 216 12% 90%; /* #E5E7EB */
+    --card: 220 25% 16%; /* #1F2937 */
+    --card-foreground: 216 12% 90%;
+    --popover: 220 25% 16%;
+    --popover-foreground: 216 12% 90%;
+    --primary: 231 48% 78%; /* #9FA8DA */
+    --primary-foreground: 220 25% 16%;
+    --secondary: 174 45% 67%; /* #4DB6AC */
+    --secondary-foreground: 220 25% 16%;
+    --muted: 220 25% 21%;
+    --muted-foreground: 217 9% 65%; /* #9CA3AF */
+    --accent: 174 45% 57%;
+    --accent-foreground: 220 25% 16%;
+    --destructive: 34 100% 65%; /* #FFB74D - risk/warning */
+    --destructive-foreground: 220 25% 16%;
+    --success: 123 41% 57%; /* #66BB6A */
   }
 }
+
 
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply text-foreground;
-    background-color: hsl(var(--background)); /* Fallback */
-    background-image: linear-gradient(to bottom right, hsl(210, 60%, 10%), hsl(180, 50%, 40%), hsl(120, 50%, 45%));
+    @apply bg-background text-foreground;
+    background-image: none; /* Removed gradient */
     scroll-behavior: smooth;
   }
 }
@@ -71,7 +173,7 @@
   .glassmorphism-card {
     @apply bg-card/60 backdrop-blur-lg border border-border/30 rounded-2xl shadow-lg;
   }
-  
+
   .noise-background {
     position: relative;
   }
@@ -83,24 +185,33 @@
     width: 100%;
     height: 100%;
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
-    opacity: 0.05; /* Slightly increased for textured feel */
+    opacity: 0.05;
     pointer-events: none;
     z-index: -1;
   }
 
-  /* Set z-index for leaflet map container */
-  .leaflet-container-z-index {
-    z-index: 1;
+  .leaflet-container {
+    background: transparent !important;
   }
 
   .leaflet-layer,
   .leaflet-control-zoom-in,
   .leaflet-control-zoom-out,
   .leaflet-control-attribution {
+      filter: none;
+  }
+
+  .dark .leaflet-layer,
+  .dark .leaflet-control-zoom-in,
+  .dark .leaflet-control-zoom-out,
+  .dark .leaflet-control-attribution {
       filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
   }
-}
 
+  .leaflet-container-z-index {
+    z-index: 1;
+  }
+}
 
 /* Logo Animation Keyframes */
 @keyframes draw-ring {
