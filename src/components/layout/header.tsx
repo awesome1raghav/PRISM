@@ -1,9 +1,10 @@
+
 'use client';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X } from 'lucide-react';
 import {
@@ -14,14 +15,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Badge } from '../ui/badge';
 import ThemeSwitcher from '../ThemeSwitcher';
+import { useAuth } from '@/firebase';
+import { signOut } from 'firebase/auth';
 
 const navLinks = [
   { href: '/report', label: 'Report Issue' },
 ];
 
-const loggedInPaths = ['/citizen', '/gov', '/company', '/activate'];
+const loggedInPaths = ['/citizen', '/gov', '/company', '/activate', '/profile', '/settings'];
 
 
 const notifications = [
@@ -50,7 +64,10 @@ const notifications = [
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
+  const auth = useAuth();
   const [scrolled, setScrolled] = useState(false);
+  const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,6 +76,11 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/');
+  }
 
   const isLoggedInView = loggedInPaths.some(path => pathname.startsWith(path));
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -154,16 +176,26 @@ export default function Header() {
                   <DropdownMenuContent align="end">
                       <DropdownMenuLabel>My Account</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <UserCircle className="mr-2 h-4 w-4" />
-                        <span>View Profile</span>
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile">
+                          <UserCircle className="mr-2 h-4 w-4" />
+                          <span>View Profile</span>
+                        </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/settings">
                           <Settings className="mr-2 h-4 w-4" />
                           <span>Settings</span>
+                        </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-red-400 focus:text-red-400 focus:bg-red-500/10">
+                      <DropdownMenuItem 
+                        className="text-red-400 focus:text-red-400 focus:bg-red-500/10"
+                        onSelect={(e) => {
+                          e.preventDefault();
+                          setIsLogoutAlertOpen(true)
+                        }}
+                      >
                           <LogOut className="mr-2 h-4 w-4" />
                           <span>Log Out</span>
                       </DropdownMenuItem>
@@ -179,6 +211,20 @@ export default function Header() {
           )}
         </div>
       </div>
+      <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You will be returned to the homepage. You can log back in at any time.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLogout}>Log Out</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </header>
   );
 }
