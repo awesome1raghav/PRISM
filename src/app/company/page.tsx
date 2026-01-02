@@ -1,4 +1,3 @@
-
 'use client';
 
 import Header from '@/components/layout/header';
@@ -102,7 +101,7 @@ export default function CompanyPage() {
                             <div className="space-y-2">
                                 <p className="font-bold text-red-400 flex items-center gap-2"><ShieldAlert className="h-5 w-5" /> Investigation Initiated</p>
                                 <p className="text-sm text-muted-foreground">Case ID: <span className="font-mono text-xs">{investigation.caseId}</span></p>
-                                <p className="text-sm text-muted-foreground">Severity: <Badge variant="destructive">{investigation.severity}</Badge></p>
+                                <div className="text-sm text-muted-foreground">Severity: <Badge variant="destructive">{investigation.severity}</Badge></div>
                                 <p className="text-sm text-muted-foreground">Category: {investigation.category}</p>
                             </div>
                         ) : (
