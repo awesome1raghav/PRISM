@@ -49,8 +49,10 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: 
 
       mapRef.current = L.map(mapContainerRef.current).setView(mapCenter, 12);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
       }).addTo(mapRef.current);
 
       markersRef.current.addTo(mapRef.current);
@@ -64,7 +66,8 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: 
         mapRef.current = null;
       }
     };
-  }, []); // Run only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (mapRef.current) {
@@ -82,18 +85,20 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: 
         const color = getMetricColor(activeMetric, value);
         const status = getMetricStatus(activeMetric, value);
         const unit = getMetricUnit(activeMetric);
-        const radius = 8 + (value / 15);
+        const radius = 10 + (value / 10);
 
         const marker = L.circleMarker([ward.lat, ward.lng], {
-          color: color,
-          fillColor: color,
-          fillOpacity: 0.6,
+          renderer: L.svg(),
           radius: radius,
+          color: color,
+          weight: 2,
+          fillColor: color,
+          fillOpacity: 0.3
         }).bindPopup(`
-          <div class="font-sans">
-            <h3 class="font-bold text-base mb-1">${ward.name}</h3>
-            <p><strong>${activeMetric.toUpperCase()}:</strong> ${value} ${unit}</p>
-            <p><strong>Status:</strong> ${status}</p>
+           <div class="font-sans p-1">
+            <h3 class="font-bold text-base mb-2 border-b border-border pb-1">${ward.name}</h3>
+            <p class="text-sm"><strong>${activeMetric.toUpperCase()}:</strong> ${value} ${unit}</p>
+            <p class="text-sm"><strong>Status:</strong> ${status}</p>
           </div>
         `);
         markersRef.current.addLayer(marker);
