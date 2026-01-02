@@ -49,11 +49,11 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: 
 
       mapRef.current = L.map(mapContainerRef.current).setView(mapCenter, 12);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 20
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(mapRef.current);
+
 
       mapRef.current.invalidateSize();
     }

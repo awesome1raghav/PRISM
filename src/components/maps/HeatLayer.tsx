@@ -3,8 +3,8 @@
 
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import 'leaflet.heat';
 import { type WardData } from './types';
-import { getMetricColor, getMetricStatus, getMetricUnit } from './utils';
 import { type MetricType } from '@/context/LocationContext';
 
 interface HeatLayerProps {
@@ -13,54 +13,55 @@ interface HeatLayerProps {
   activeMetric: MetricType;
 }
 
+// Normalize value to a 0-1 scale for intensity
+const normalizeValue = (metric: MetricType, value: number): number => {
+    if (metric === 'aqi') {
+        // Higher AQI is worse, scale up to 250
+        return Math.min(value / 250, 1.0);
+    }
+    if (metric === 'wqi') {
+        // Lower WQI is worse
+        return Math.min((100 - value) / 100, 1.0);
+    }
+    // noise
+    // Higher noise is worse, scale up to 120 dB
+    return Math.min(value / 120, 1.0);
+}
+
 const HeatLayer = ({ map, wards, activeMetric }: HeatLayerProps) => {
-  const layerRef = useRef<L.LayerGroup>(new L.LayerGroup());
+  const layerRef = useRef<L.HeatLayer | null>(null);
 
   useEffect(() => {
-    const layer = layerRef.current;
-    layer.addTo(map);
-    return () => {
-      layer.remove();
-    };
-  }, [map]);
+    if (!layerRef.current) {
+      layerRef.current = L.heatLayer([], {
+          radius: 35,
+          blur: 25,
+          maxZoom: 12,
+          minOpacity: 0.3,
+          gradient: {
+            0.1: "#00e400",
+            0.3: "#ffff00",
+            0.5: "#ff7e00",
+            0.7: "#ff0000",
+            1.0: "#7e0023"
+          }
+      }).addTo(map);
+    }
 
-  useEffect(() => {
-    const layer = layerRef.current;
-    layer.clearLayers();
+    const points = wards
+      .map((ward) => {
+        const value = ward[activeMetric];
+        if (value === undefined) return null;
+        const intensity = normalizeValue(activeMetric, value);
+        return [ward.lat, ward.lng, intensity] as L.HeatLatLngTuple;
+      })
+      .filter((p): p is L.HeatLatLngTuple => p !== null);
 
-    wards.forEach((ward) => {
-      const value = ward[activeMetric];
-      if (value === undefined) return;
+    layerRef.current.setLatLngs(points);
 
-      const color = getMetricColor(activeMetric, value);
-      
-      const baseRadius = 2500; 
-      let intensity;
-
-      if (activeMetric === 'aqi') {
-          intensity = Math.min(value / 150, 1);
-      } else if (activeMetric === 'wqi') {
-          intensity = Math.min((100 - value) / 60, 1);
-      } else { // noise
-          intensity = Math.min(value / 90, 1);
-      }
-      
-      const radius = baseRadius * (1 + intensity * 0.5); // Increase radius based on intensity
-      const opacity = 0.3 + (intensity * 0.4); // More aggressive opacity
-
-      const heatCircle = L.circle([ward.lat, ward.lng], {
-        radius: radius,
-        color: color, // Use color for the border
-        weight: 0, // No border weight
-        fillColor: color,
-        fillOpacity: opacity,
-      });
-
-      layer.addLayer(heatCircle);
-    });
   }, [wards, activeMetric, map]);
 
-  return null; // This component does not render any direct DOM elements
+  return null;
 };
 
 export default HeatLayer;
