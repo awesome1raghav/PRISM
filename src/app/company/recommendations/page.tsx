@@ -189,7 +189,7 @@ export default function RecommendationsPage() {
             </div>
 
             <div className="lg:col-span-2 space-y-6">
-                 <Card className="bg-card/40 border-border/30 sticky top-28">
+                 <Card className="bg-card/40 border-border/30">
                     <CardHeader>
                         <CardTitle>Take Action</CardTitle>
                     </CardHeader>
@@ -235,5 +235,3 @@ export default function RecommendationsPage() {
     </div>
   );
 }
-
-    
