@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ import { Area, AreaChart, CartesianGrid, XAxis, Tooltip, ResponsiveContainer, YA
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
-const chartData = [
+const initialChartData = [
   { time: "12:00", PM25: 45, PM10: 60, NO2: 25, SO2: 12 },
   { time: "14:00", PM25: 55, PM10: 75, NO2: 30, SO2: 15 },
   { time: "16:00", PM25: 70, PM10: 90, NO2: 38, SO2: 18 },
@@ -35,6 +36,18 @@ const chartData = [
   { time: "22:00", PM25: 65, PM10: 85, NO2: 35, SO2: 14 },
 ];
 
+const initialPollutantData = [
+    { name: 'PM2.5', value: 88, unit: 'μg/m³', limit: 60, status: 'High' },
+    { name: 'PM10', value: 110, unit: 'μg/m³', limit: 100, status: 'High' },
+    { name: 'NO₂', value: 42, unit: 'μg/m³', limit: 80, status: 'Normal' },
+    { name: 'SO₂', value: 18, unit: 'μg/m³', limit: 80, status: 'Normal' },
+];
+
+const initialAnalysis = {
+    highEmissionWindows: ['6:00 PM – 8:00 PM', '10:30 AM – 11:15 AM'],
+    possibleContributors: ['Production Line 2 – High load', 'Filter efficiency drop', 'Wind direction change']
+}
+
 const chartConfig = {
   PM25: { label: 'PM2.5', color: 'hsl(var(--chart-1))' },
   PM10: { label: 'PM10', color: 'hsl(var(--chart-2))' },
@@ -42,19 +55,68 @@ const chartConfig = {
   SO2: { label: 'SO₂', color: 'hsl(var(--chart-4))' },
 };
 
-const pollutantData = [
-    { name: 'PM2.5', value: 88, unit: 'μg/m³', limit: 60, status: 'High' },
-    { name: 'PM10', value: 110, unit: 'μg/m³', limit: 100, status: 'High' },
-    { name: 'NO₂', value: 42, unit: 'μg/m³', limit: 80, status: 'Normal' },
-    { name: 'SO₂', value: 18, unit: 'μg/m³', limit: 80, status: 'Normal' },
-];
 
-const analysis = {
-    highEmissionWindows: ['6:00 PM – 8:00 PM', '10:30 AM – 11:15 AM'],
-    possibleContributors: ['Production Line 2 – High load', 'Filter efficiency drop', 'Wind direction change']
-}
+// Function to generate new mock data based on filters
+const generateMockData = (facility: string, timeRange: string, pollutant: string) => {
+    const randomFactor = (str: string) => {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return (Math.sin(hash) + 1) / 2; // Return value between 0 and 1
+    };
+    
+    const factor = randomFactor(facility + timeRange + pollutant);
+
+    const newChartData = initialChartData.map(item => ({
+        ...item,
+        PM25: Math.round(item.PM25 * (0.8 + factor * 0.4)),
+        PM10: Math.round(item.PM10 * (0.8 + factor * 0.4)),
+    }));
+    
+    const newPollutantData = initialPollutantData.map(item => ({
+        ...item,
+        value: Math.round(item.value * (0.8 + factor * 0.4)),
+    }));
+
+     const newAnalysis = {
+        highEmissionWindows: initialAnalysis.highEmissionWindows.map(w => w.replace(/\d/g, (d) => String((parseInt(d) + Math.floor(factor * 5)) % 10))),
+        possibleContributors: facility.includes('Whitefield') ? initialAnalysis.possibleContributors : ['Boiler startup sequence', 'Shift change', 'Abnormal process venting']
+    };
+
+    return { chartData: newChartData, pollutantData: newPollutantData, analysis: newAnalysis };
+};
+
 
 export default function AnalyticsPage() {
+    const [facility, setFacility] = useState('whitefield');
+    const [timeRange, setTimeRange] = useState('24h');
+    const [pollutant, setPollutant] = useState('all');
+
+    const { chartData, pollutantData, analysis } = generateMockData(facility, timeRange, pollutant);
+
+    const facilityNames: { [key: string]: string } = {
+        whitefield: 'Whitefield Manufacturing Unit',
+        peenya: 'Peenya Industrial Plant'
+    };
+
+    const timeRangeNames: { [key: string]: string } = {
+        '24h': 'Last 24 Hours',
+        '7d': 'Last 7 Days',
+        '30d': 'Last 30 Days'
+    };
+
+    const pollutantNames: { [key: string]: string } = {
+        'all': 'All',
+        'pm25': 'PM2.5',
+        'pm10': 'PM10',
+        'no2': 'NO₂',
+        'so2': 'SO₂'
+    };
+    
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
@@ -69,11 +131,11 @@ export default function AnalyticsPage() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                        Facility: <span className="font-semibold ml-1">Whitefield Manufacturing Unit</span> <ChevronDown className="ml-2 h-4 w-4" />
+                        Facility: <span className="font-semibold ml-1">{facilityNames[facility]}</span> <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value="whitefield">
+                    <DropdownMenuRadioGroup value={facility} onValueChange={setFacility}>
                         <DropdownMenuRadioItem value="whitefield">Whitefield Manufacturing Unit</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="peenya">Peenya Industrial Plant</DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
@@ -82,11 +144,11 @@ export default function AnalyticsPage() {
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                       Time Range: <span className="font-semibold ml-1">Last 24h</span> <ChevronDown className="ml-2 h-4 w-4" />
+                       Time Range: <span className="font-semibold ml-1">{timeRangeNames[timeRange]}</span> <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value="24h">
+                    <DropdownMenuRadioGroup value={timeRange} onValueChange={setTimeRange}>
                         <DropdownMenuRadioItem value="24h">Last 24 Hours</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="7d">Last 7 Days</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="30d">Last 30 Days</DropdownMenuRadioItem>
@@ -96,11 +158,11 @@ export default function AnalyticsPage() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                        Pollutant: <span className="font-semibold ml-1">All</span> <ChevronDown className="ml-2 h-4 w-4" />
+                        Pollutant: <span className="font-semibold ml-1">{pollutantNames[pollutant]}</span> <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value="all">
+                    <DropdownMenuRadioGroup value={pollutant} onValueChange={setPollutant}>
                         <DropdownMenuRadioItem value="all">All</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="pm25">PM2.5</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="pm10">PM10</DropdownMenuRadioItem>
@@ -115,7 +177,7 @@ export default function AnalyticsPage() {
         <Card className="bg-card/40 border-border/30">
             <CardHeader>
                 <CardTitle>Emissions Overview</CardTitle>
-                <CardDescription>Live data from Whitefield Manufacturing Unit</CardDescription>
+                <CardDescription>Live data from {facilityNames[facility]}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="overview">
@@ -136,8 +198,8 @@ export default function AnalyticsPage() {
                                             <CardContent>
                                                 <span className="text-2xl font-bold">{p.value}</span>
                                                 <span className="text-xs text-muted-foreground"> {p.unit}</span>
-                                                <p className={`text-xs font-semibold ${p.status === 'High' ? 'text-red-500' : 'text-green-500'}`}>
-                                                    (Limit: {p.limit}) {p.status === 'High' && <AlertTriangle className="inline h-3 w-3" />}
+                                                <p className={`text-xs font-semibold ${p.value > p.limit ? 'text-red-500' : 'text-green-500'}`}>
+                                                    (Limit: {p.limit}) {p.value > p.limit ? <AlertTriangle className="inline h-3 w-3" /> : ''}
                                                 </p>
                                             </CardContent>
                                         </Card>
@@ -160,11 +222,11 @@ export default function AnalyticsPage() {
                                             <TableRow key={p.name}>
                                                 <TableCell>{p.name}</TableCell>
                                                 <TableCell>{p.value}</TableCell>
-                                                <TableCell>{Math.round(p.value * 1.3)}</TableCell>
+                                                <TableCell>{Math.round(p.value * (1 + randomFactor(p.name) * 0.3))}</TableCell>
                                                 <TableCell>
-                                                    <Badge variant={p.status === 'High' ? 'destructive' : 'default'}>
-                                                        {p.status === 'High' ? <AlertTriangle className="h-3 w-3 mr-1"/> : <CheckCircle className="h-3 w-3 mr-1"/>}
-                                                        {p.status}
+                                                    <Badge variant={p.value > p.limit ? 'destructive' : 'default'}>
+                                                        {p.value > p.limit ? <AlertTriangle className="h-3 w-3 mr-1"/> : <CheckCircle className="h-3 w-3 mr-1"/>}
+                                                        {p.value > p.limit ? 'High' : 'Normal'}
                                                     </Badge>
                                                 </TableCell>
                                             </TableRow>
@@ -222,3 +284,4 @@ export default function AnalyticsPage() {
   );
 }
 
+    
