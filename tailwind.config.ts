@@ -22,10 +22,10 @@ export default {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       fontWeight: {
-        normal: '450',
-        medium: '550',
-        semibold: '650',
-        bold: '750',
+        normal: 'var(--font-weight-body)',
+        medium: '500', // Kept for things that need to be in-between
+        semibold: 'var(--font-weight-heading)',
+        bold: '700', // Kept for things that need to be extra bold
       },
       colors: {
         background: 'hsl(var(--background))',
