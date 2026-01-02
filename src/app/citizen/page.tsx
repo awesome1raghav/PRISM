@@ -189,7 +189,19 @@ function CitizenDashboardContent() {
     const q = query(collection(firestore, wardsCollectionPath));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const wards = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as WardData));
+      const wards = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+              id: doc.id,
+              name: data.name,
+              lat: data.lat,
+              lng: data.lng,
+              aqi: data.aqi,
+              wqi: data.wqi || 85, // Mock data for WQI
+              noise: data.noise || 68, // Mock data for Noise
+          } as WardData
+      });
+
       setWardsData(wards);
       if (wards.length > 0) {
         const totalAqi = wards.reduce((sum, ward) => sum + ward.aqi, 0);
