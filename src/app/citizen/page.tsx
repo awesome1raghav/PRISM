@@ -367,15 +367,18 @@ function CitizenDashboardContent() {
 }
 
 export default function CitizenPage() {
+  const firestore = useFirestore();
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container py-8">
          <Suspense fallback={<div className="text-center p-8">Loading Dashboard...</div>}>
-          <CitizenDashboardContent />
+          {firestore ? <CitizenDashboardContent /> : <div className="text-center p-8">Initializing Connection...</div>}
         </Suspense>
       </main>
     </div>
   );
 }
+
+    
