@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useContext, useState, Suspense, useEffect } from 'react';
@@ -28,7 +27,7 @@ import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase';
-import { collection, onSnapshot, query, Query } from 'firebase/firestore';
+import { collection, onSnapshot, query } from 'firebase/firestore';
 import type { WardData } from '@/components/maps/types';
 
 const CitizenHeatmap = dynamic(
@@ -380,5 +379,3 @@ export default function CitizenPage() {
     </div>
   );
 }
-
-    
