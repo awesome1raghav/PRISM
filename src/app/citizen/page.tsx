@@ -347,6 +347,7 @@ function CitizenDashboardContent() {
           wardsData={wardsData}
           isLoading={isLoadingWards}
           onClose={() => setMapFullScreen(false)}
+          activeMetric={activeMapMetric}
         />
       )}
     </div>

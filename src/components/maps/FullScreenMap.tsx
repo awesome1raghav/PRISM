@@ -7,13 +7,15 @@ import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { Minimize, Loader } from 'lucide-react';
 import { type WardData } from './types';
-import { getAqiColor, getAqiStatus } from './utils';
+import { getMetricColor, getMetricStatus, getMetricUnit } from './utils';
+import { type MetricType } from '@/context/LocationContext';
 
 interface FullScreenMapProps {
   cityId: string;
   wardsData: WardData[];
   isLoading: boolean;
   onClose: () => void;
+  activeMetric: MetricType;
 }
 
 const cityCenters: { [key: string]: L.LatLngExpression } = {
@@ -21,7 +23,7 @@ const cityCenters: { [key: string]: L.LatLngExpression } = {
   'new-york': [40.7128, -74.0060],
 };
 
-const FullScreenMap = ({ cityId, wardsData, isLoading, onClose }: FullScreenMapProps) => {
+const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: FullScreenMapProps) => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.LayerGroup>(new L.LayerGroup());
@@ -74,22 +76,30 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose }: FullScreenMapP
     if (markersRef.current) {
       markersRef.current.clearLayers();
       wardsData.forEach((ward) => {
+        const value = ward[activeMetric];
+        if (value === undefined) return;
+
+        const color = getMetricColor(activeMetric, value);
+        const status = getMetricStatus(activeMetric, value);
+        const unit = getMetricUnit(activeMetric);
+        const radius = 8 + (value / 15);
+
         const marker = L.circleMarker([ward.lat, ward.lng], {
-          color: getAqiColor(ward.aqi),
-          fillColor: getAqiColor(ward.aqi),
+          color: color,
+          fillColor: color,
           fillOpacity: 0.6,
-          radius: 8 + (ward.aqi / 20),
+          radius: radius,
         }).bindPopup(`
           <div class="font-sans">
             <h3 class="font-bold text-base mb-1">${ward.name}</h3>
-            <p><strong>AQI:</strong> ${ward.aqi}</p>
-            <p><strong>Status:</strong> ${getAqiStatus(ward.aqi)}</p>
+            <p><strong>${activeMetric.toUpperCase()}:</strong> ${value} ${unit}</p>
+            <p><strong>Status:</strong> ${status}</p>
           </div>
         `);
         markersRef.current.addLayer(marker);
       });
     }
-  }, [wardsData]);
+  }, [wardsData, activeMetric]);
 
   return (
     <div className="fixed inset-0 z-[200]">
