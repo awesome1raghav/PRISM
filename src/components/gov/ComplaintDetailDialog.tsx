@@ -25,11 +25,9 @@ import {
   FileText,
   Camera,
   Bot,
-  BarChart,
-  ClipboardList,
   Building,
   Save,
-  ShieldAlert,
+  PlusCircle,
 } from 'lucide-react';
 import Image from 'next/image';
 import { type Incident, type IncidentStatus } from '@/app/gov/types';
@@ -56,14 +54,47 @@ const InfoSection = ({ title, icon, children }: { title: string, icon: React.Rea
 export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: ComplaintDetailDialogProps) {
     const [editableIncident, setEditableIncident] = useState<Incident | null>(null);
     const { toast } = useToast();
+    
+    const [officers, setOfficers] = useState(['Unassigned', 'R. Sharma', 'S. Patel', 'A. Gupta', 'Field Team B']);
+    const [departments, setDepartments] = useState(['Pollution Control Board', 'Solid Waste Management', 'Local Police']);
+    
+    const [isEditingOfficer, setIsEditingOfficer] = useState(false);
+    const [newOfficer, setNewOfficer] = useState('');
+
+    const [isEditingDepartment, setIsEditingDepartment] = useState(false);
+    const [newDepartment, setNewDepartment] = useState('');
+    const [assignedDepartment, setAssignedDepartment] = useState('Pollution Control Board');
+
 
     useEffect(() => {
         if (incident) {
             setEditableIncident({ ...incident });
+            setAssignedDepartment('Pollution Control Board');
         } else {
             setEditableIncident(null);
         }
     }, [incident]);
+    
+    const handleAddNewOfficer = () => {
+        if (newOfficer && !officers.includes(newOfficer)) {
+            const newOfficers = [...officers, newOfficer];
+            setOfficers(newOfficers);
+            handleFieldChange('assignee', newOfficer);
+        }
+        setNewOfficer('');
+        setIsEditingOfficer(false);
+    }
+    
+    const handleAddNewDepartment = () => {
+        if (newDepartment && !departments.includes(newDepartment)) {
+            const newDepartments = [...departments, newDepartment];
+            setDepartments(newDepartments);
+            setAssignedDepartment(newDepartment);
+        }
+        setNewDepartment('');
+        setIsEditingDepartment(false);
+    };
+
 
     const handleUpdate = () => {
         if (!editableIncident) return;
@@ -126,27 +157,69 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                 </div>
                                 <div>
                                     <Label htmlFor="assignee">Assign Officer</Label>
-                                    <Select value={editableIncident.assignee} onValueChange={(value) => handleFieldChange('assignee', value)}>
-                                        <SelectTrigger id="assignee"><SelectValue /></SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Unassigned">Unassigned</SelectItem>
-                                            <SelectItem value="R. Sharma">R. Sharma</SelectItem>
-                                            <SelectItem value="S. Patel">S. Patel</SelectItem>
-                                            <SelectItem value="A. Gupta">A. Gupta</SelectItem>
-                                            <SelectItem value="Field Team B">Field Team B</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    {isEditingOfficer ? (
+                                        <div className="flex items-center gap-2">
+                                            <Input 
+                                                value={newOfficer}
+                                                onChange={(e) => setNewOfficer(e.target.value)}
+                                                placeholder="New officer name"
+                                            />
+                                            <Button size="sm" onClick={handleAddNewOfficer}>Save</Button>
+                                        </div>
+                                    ) : (
+                                        <Select value={editableIncident.assignee} onValueChange={(value) => {
+                                            if (value === 'add_new') {
+                                                setIsEditingOfficer(true);
+                                            } else {
+                                                handleFieldChange('assignee', value)
+                                            }
+                                        }}>
+                                            <SelectTrigger id="assignee"><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                {officers.map(officer => <SelectItem key={officer} value={officer}>{officer}</SelectItem>)}
+                                                <Separator />
+                                                <SelectItem value="add_new">
+                                                    <div className="flex items-center gap-2">
+                                                        <PlusCircle className="h-4 w-4" />
+                                                        Add New Officer...
+                                                    </div>
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    )}
                                 </div>
                                  <div>
                                     <Label htmlFor="department">Assign Department</Label>
-                                    <Select value="Pollution Control Board" onValueChange={() => {}}>
-                                        <SelectTrigger id="department"><SelectValue /></SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Pollution Control Board">Pollution Control Board</SelectItem>
-                                            <SelectItem value="Solid Waste Management">Solid Waste Management</SelectItem>
-                                            <SelectItem value="Local Police">Local Police</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                     {isEditingDepartment ? (
+                                        <div className="flex items-center gap-2">
+                                            <Input
+                                                value={newDepartment}
+                                                onChange={(e) => setNewDepartment(e.target.value)}
+                                                placeholder="New department name"
+                                            />
+                                            <Button size="sm" onClick={handleAddNewDepartment}>Save</Button>
+                                        </div>
+                                    ) : (
+                                        <Select value={assignedDepartment} onValueChange={(value) => {
+                                            if (value === 'add_new') {
+                                                setIsEditingDepartment(true);
+                                            } else {
+                                                setAssignedDepartment(value);
+                                            }
+                                        }}>
+                                            <SelectTrigger id="department"><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                {departments.map(dep => <SelectItem key={dep} value={dep}>{dep}</SelectItem>)}
+                                                <Separator />
+                                                <SelectItem value="add_new">
+                                                    <div className="flex items-center gap-2">
+                                                        <PlusCircle className="h-4 w-4" />
+                                                        Add New Department...
+                                                    </div>
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    )}
                                 </div>
                             </div>
                         </InfoSection>
@@ -178,7 +251,7 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                     <div className="grid grid-cols-2 gap-2">
                                         {incident.evidence.photos.map((photo, index) => (
                                             <div key={index} className="relative aspect-video">
-                                                <Image src={photo} alt={`Evidence ${index + 1}`} width={400} height={400} objectFit="cover" className="rounded-md" />
+                                                <Image src={photo} alt={`Evidence ${index + 1}`} width={400} height={400} className="rounded-md object-cover" />
                                             </div>
                                         ))}
                                     </div>
@@ -209,3 +282,5 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
         </Dialog>
     )
 }
+
+    
