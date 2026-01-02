@@ -81,11 +81,14 @@ const DashboardMap = ({ center, zoom, wards, activeMetric }: DashboardMapProps) 
         const status = getMetricStatus(activeMetric, value);
         const unit = getMetricUnit(activeMetric);
         
+        // Ensure a base radius and scale it
+        const radius = 8 + (value / 15);
+
         const marker = L.circleMarker([ward.lat, ward.lng], {
           color: color,
           fillColor: color,
           fillOpacity: 0.6,
-          radius: 5 + (value / 20),
+          radius: radius,
         }).bindPopup(`
           <div class="font-sans">
             <h3 class="font-bold text-base mb-1">${ward.name}</h3>

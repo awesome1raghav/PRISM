@@ -17,7 +17,7 @@ import {
   Expand,
 } from 'lucide-react';
 import Link from 'next/link';
-import { LocationContext } from '@/context/LocationContext';
+import { LocationContext, type MetricType } from '@/context/LocationContext';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -157,6 +157,7 @@ const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoadin
 function CitizenDashboardContent() {
   const { location, setLocation, locationData } = useContext(LocationContext);
   const [selectedMetric, setSelectedMetric] = useState<ReportCategory | null>(null);
+  const [activeMapMetric, setActiveMapMetric] = useState<MetricType>('aqi');
   const searchParams = useSearchParams();
   const [isMapFullScreen, setMapFullScreen] = useState(false);
   const [wardsData, setWardsData] = useState<WardData[]>([]);
@@ -234,6 +235,11 @@ function CitizenDashboardContent() {
   const noiseStatus = getStatus('noise', avgNoise);
   
   const advisories = cityData.advisories;
+  
+  const handleMetricCardClick = (metric: ReportCategory, mapMetric: MetricType) => {
+      setSelectedMetric(metric);
+      setActiveMapMetric(mapMetric);
+  }
 
   return (
      <div className="space-y-8">
@@ -272,7 +278,7 @@ function CitizenDashboardContent() {
                         </Button>
                     </CardHeader>
                     <CardContent>
-                        <CitizenHeatmap cityId={cityData.id} wardsData={wardsData} isLoading={isLoadingWards} />
+                        <CitizenHeatmap cityId={cityData.id} wardsData={wardsData} isLoading={isLoadingWards} activeMetric={activeMapMetric} />
                     </CardContent>
                 </Card>
             </div>
@@ -283,7 +289,7 @@ function CitizenDashboardContent() {
                     value={avgAqi !== null ? `${Math.round(avgAqi)} AQI` : '—'} 
                     status={aqiStatus.label}
                     statusColor={aqiStatus.color}
-                    onClick={() => setSelectedMetric('Air')}
+                    onClick={() => handleMetricCardClick('Air', 'aqi')}
                     isLoading={isLoadingWards}
                 />
                  <MetricCard 
@@ -292,7 +298,7 @@ function CitizenDashboardContent() {
                     value={`${Math.round(avgWqi)} WQI`}
                     status={wqiStatus.label}
                     statusColor={wqiStatus.color}
-                    onClick={() => setSelectedMetric('Water')}
+                    onClick={() => handleMetricCardClick('Water', 'wqi')}
                 />
                  <MetricCard 
                     icon={<Waves className="h-6 w-6 text-orange-400"/>} 
@@ -300,7 +306,7 @@ function CitizenDashboardContent() {
                     value={`${Math.round(avgNoise)} dB`}
                     status={noiseStatus.label}
                     statusColor={noiseStatus.color}
-                    onClick={() => setSelectedMetric('Noise')}
+                    onClick={() => handleMetricCardClick('Noise', 'noise')}
                 />
             </div>
          </div>
