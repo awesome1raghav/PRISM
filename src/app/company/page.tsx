@@ -1,7 +1,7 @@
 'use client';
 
 import Header from '@/components/layout/header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Factory, BarChart3, FileText, Bot, ArrowRight, Shield, ShieldAlert, ShieldCheck, Gavel } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
@@ -44,22 +44,24 @@ const companyFeatures = [
 
 const FeatureCard = ({ feature }: { feature: typeof companyFeatures[0]}) => (
      <Link href={feature.href} key={feature.title} className="group block">
-        <Card className="bg-card/40 border-border/30 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
+        <Card className="bg-card/40 border-border/30 h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
             <CardHeader>
                 <CardTitle className="flex items-center gap-3">
                     {feature.icon}
                     <span>{feature.title}</span>
                 </CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col justify-between h-full">
-                <p className="text-muted-foreground mb-4 flex-grow">
+            <CardContent className="flex-grow">
+                <p className="text-muted-foreground">
                     {feature.description}
                 </p>
+            </CardContent>
+            <CardFooter>
                  <div className="text-primary font-semibold text-sm group-hover:underline flex items-center gap-1">
                     Go to {feature.title}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
-            </CardContent>
+            </CardFooter>
         </Card>
     </Link>
 )
@@ -99,10 +101,10 @@ export default function CompanyPage() {
                     <CardContent>
                         {investigation.active ? (
                             <div className="space-y-2">
-                                <p className="font-bold text-red-400 flex items-center gap-2"><ShieldAlert className="h-5 w-5" /> Investigation Initiated</p>
-                                <p className="text-sm text-muted-foreground">Case ID: <span className="font-mono text-xs">{investigation.caseId}</span></p>
+                                <div className="font-bold text-red-400 flex items-center gap-2"><ShieldAlert className="h-5 w-5" /> Investigation Initiated</div>
+                                <div className="text-sm text-muted-foreground">Case ID: <span className="font-mono text-xs">{investigation.caseId}</span></div>
                                 <div className="text-sm text-muted-foreground">Severity: <Badge variant="destructive">{investigation.severity}</Badge></div>
-                                <p className="text-sm text-muted-foreground">Category: {investigation.category}</p>
+                                <div className="text-sm text-muted-foreground">Category: {investigation.category}</div>
                             </div>
                         ) : (
                              <div className="space-y-2">
@@ -110,11 +112,13 @@ export default function CompanyPage() {
                                 <p className="text-sm text-muted-foreground">You are currently compliant with regulatory authorities.</p>
                             </div>
                         )}
-                        <div className="text-primary font-semibold text-sm group-hover:underline flex items-center gap-1 mt-4">
-                            {investigation.active ? 'View Case' : 'View Status'}
-                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </div>
-                    </CardContent>
+                        </CardContent>
+                        <CardFooter>
+                            <div className="text-primary font-semibold text-sm group-hover:underline flex items-center gap-1 mt-4">
+                                {investigation.active ? 'View Case' : 'View Status'}
+                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                            </div>
+                        </CardFooter>
                 </Card>
             </Link>
 
