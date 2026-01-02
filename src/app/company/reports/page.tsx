@@ -217,8 +217,8 @@ export default function ReportsPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {complianceData.timeline.map((entry) => (
-                                    <TableRow key={entry.reference} onClick={() => setSelectedRecord(entry)} className="cursor-pointer">
+                                {complianceData.timeline.map((entry, index) => (
+                                    <TableRow key={`${entry.reference}-${entry.date}-${index}`} onClick={() => setSelectedRecord(entry)} className="cursor-pointer">
                                         <TableCell>{entry.date}</TableCell>
                                         <TableCell>{entry.category}</TableCell>
                                         <TableCell>
