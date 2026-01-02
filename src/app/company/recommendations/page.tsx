@@ -23,6 +23,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet"
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 
 const recommendation = {
     facility: 'Whitefield Manufacturing Unit',
@@ -114,7 +115,7 @@ export default function RecommendationsPage() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                        Facility: <span className="font-semibold ml-1">{recommendation.facility}</span> <ChevronDown className="ml-2 h-4 w-4" />
+                        Facility: <span className="font-semibold ml-1">{recommendation.facility}</span> <ChevronDown className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -234,3 +235,5 @@ export default function RecommendationsPage() {
     </div>
   );
 }
+
+    
