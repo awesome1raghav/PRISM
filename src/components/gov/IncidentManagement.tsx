@@ -19,6 +19,7 @@ import {
   Droplets,
   Waves,
   Trash2,
+  Filter,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -64,8 +65,8 @@ const categoryIcons: Record<IncidentCategory, React.ReactNode> = {
 const FilterDropdown = ({ label, options, value, onValueChange }: { label: string, options: string[], value: string, onValueChange: (value: string) => void }) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
-      <Button variant="outline">
-        {label}: {value === 'all' ? 'All' : value} <ChevronDown className="ml-2 h-4 w-4" />
+      <Button variant="outline" className="text-sm">
+        {label}: <span className="font-semibold ml-1">{value === 'all' ? 'All' : value}</span> <ChevronDown className="ml-2 h-4 w-4" />
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent>
@@ -102,16 +103,15 @@ export default function IncidentManagement() {
     });
 
   return (
-    <>
-    <Card className="bg-card/40 border-border/30">
-      <CardHeader>
-        <CardTitle>Complaint & Incident Management</CardTitle>
-        <CardDescription>
-          View, assign, and track citizen-submitted reports and system-detected incidents.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-4 mb-6">
+    <div className="space-y-8">
+      <Card className="bg-card/40 border-border/30">
+        <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+                <Filter className="h-5 w-5" />
+                Filter Incidents
+            </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-4">
             <FilterDropdown 
                 label="Status" 
                 options={['New', 'Under investigation', 'Action taken', 'Closed']} 
@@ -136,71 +136,79 @@ export default function IncidentManagement() {
                 value={filters.source} 
                 onValueChange={handleFilterChange('source')}
             />
-        </div>
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Report ID</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Submitted</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Assignee</TableHead>
-              <TableHead>Source</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredIncidents.map((incident) => (
-              <TableRow key={incident.id} onClick={() => setSelectedIncident(incident)} className="cursor-pointer">
-                <TableCell className="font-mono text-xs">{incident.id}</TableCell>
-                <TableCell>
-                    <div className="flex items-center gap-2">
-                        {categoryIcons[incident.category]}
-                        {incident.category}
-                    </div>
-                </TableCell>
-                <TableCell>{incident.location}</TableCell>
-                <TableCell>{incident.submitted}</TableCell>
-                <TableCell>
-                  <Badge variant="outline" className={cn(priorityStyles[incident.priority])}>
-                    {incident.priority}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                   <Badge variant="outline" className={cn(statusStyles[incident.status])}>
-                    {incident.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{incident.assignee}</TableCell>
-                 <TableCell>{incident.source}</TableCell>
-                <TableCell className="text-right">
-                  <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setSelectedIncident(incident); }}>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </TableCell>
+        </CardContent>
+      </Card>
+      
+      <Card className="bg-card/40 border-border/30">
+        <CardHeader>
+          <CardTitle>Complaint & Incident Queue</CardTitle>
+          <CardDescription>
+            View, assign, and track citizen-submitted reports and system-detected incidents. Found {filteredIncidents.length} incidents.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Incident</TableHead>
+                <TableHead>Submitted</TableHead>
+                <TableHead>Priority</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Assignee</TableHead>
+                <TableHead>Source</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-     <ComplaintDetailDialog
-        incident={selectedIncident}
-        onClose={() => setSelectedIncident(null)}
-        onUpdate={(updatedIncident) => {
-            // In a real app, this would be a Firestore update.
-            // Here, we just log it and update the local state for demonstration.
-            console.log('Updating incident:', updatedIncident);
-            const index = incidents.findIndex(i => i.id === updatedIncident.id);
-            if (index !== -1) {
-                incidents[index] = updatedIncident;
-            }
-            setSelectedIncident(updatedIncident);
-        }}
-    />
-    </>
+            </TableHeader>
+            <TableBody>
+              {filteredIncidents.map((incident) => (
+                <TableRow key={incident.id} onClick={() => setSelectedIncident(incident)} className="cursor-pointer">
+                  <TableCell>
+                    <div className="font-medium flex items-center gap-2">
+                        {categoryIcons[incident.category]}
+                        <div>
+                            <div>{incident.id}</div>
+                            <div className="text-xs text-muted-foreground">{incident.location}</div>
+                        </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{incident.submitted}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className={cn(priorityStyles[incident.priority])}>
+                      {incident.priority}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                     <Badge variant="outline" className={cn(statusStyles[incident.status])}>
+                      {incident.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{incident.assignee}</TableCell>
+                   <TableCell>{incident.source}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setSelectedIncident(incident); }}>
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+       <ComplaintDetailDialog
+          incident={selectedIncident}
+          onClose={() => setSelectedIncident(null)}
+          onUpdate={(updatedIncident) => {
+              // In a real app, this would be a Firestore update.
+              // Here, we just log it and update the local state for demonstration.
+              console.log('Updating incident:', updatedIncident);
+              const index = incidents.findIndex(i => i.id === updatedIncident.id);
+              if (index !== -1) {
+                  incidents[index] = updatedIncident;
+              }
+              setSelectedIncident(updatedIncident);
+          }}
+      />
+    </div>
   );
 }
