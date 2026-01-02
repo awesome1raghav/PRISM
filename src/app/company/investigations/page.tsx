@@ -20,7 +20,7 @@ const investigation = {
     facility: 'Whitefield Manufacturing Unit',
     reason: 'Emission levels for PM2.5 consistently exceeded permitted thresholds over a 48-hour period, as detected by the PRISM sensor network and corroborated by satellite data.',
     timeline: [
-        { name: 'Forwarded by Govt', status: 'completed' },
+        { name: 'Report Registered', status: 'completed' },
         { name: 'Evidence Requested', status: 'active' },
         { name: 'Inspection Scheduled', status: 'pending' },
         { name: 'Case Closed', status: 'pending' },
