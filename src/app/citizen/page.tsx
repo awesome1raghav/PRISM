@@ -298,7 +298,7 @@ function CitizenDashboardContent() {
                 <MetricCard 
                     icon={<Wind className="h-6 w-6 text-sky-400"/>} 
                     title="Air Quality" 
-                    value={avgAqi !== null ? `${Math.round(avgAqi)} AQI` : '—'} 
+                    value={avgAqi !== null ? `${Math.round(avgAqi)} AQI` : null} 
                     status={aqiStatus.label}
                     statusColor={aqiStatus.color}
                     onClick={() => handleMetricCardClick('Air', 'aqi')}
