@@ -55,19 +55,18 @@ const chartConfig = {
   SO2: { label: 'SO₂', color: 'hsl(var(--chart-4))' },
 };
 
+const randomFactor = (str: string) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return (Math.sin(hash) + 1) / 2; // Return value between 0 and 1
+};
 
 // Function to generate new mock data based on filters
 const generateMockData = (facility: string, timeRange: string, pollutant: string) => {
-    const randomFactor = (str: string) => {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash |= 0; // Convert to 32bit integer
-        }
-        return (Math.sin(hash) + 1) / 2; // Return value between 0 and 1
-    };
-    
     const factor = randomFactor(facility + timeRange + pollutant);
 
     const newChartData = initialChartData.map(item => ({
