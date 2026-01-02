@@ -178,7 +178,7 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                     <div className="grid grid-cols-2 gap-2">
                                         {incident.evidence.photos.map((photo, index) => (
                                             <div key={index} className="relative aspect-video">
-                                                <Image src={photo} alt={`Evidence ${index + 1}`} layout="fill" objectFit="cover" className="rounded-md" />
+                                                <Image src={photo} alt={`Evidence ${index + 1}`} width={400} height={400} objectFit="cover" className="rounded-md" />
                                             </div>
                                         ))}
                                     </div>
