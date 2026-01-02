@@ -8,7 +8,7 @@
   /* Default Theme (Citizen - Light) */
   :root,
   body.theme-citizen {
-    --background: 220 20% 98%; /* #FAFCFF */
+    --background: 220 20% 98%; /* #FAFCFF -> a bit darker for contrast */
     --foreground: 200 15% 15%; /* #263238 */
     --card: 0 0% 100%; /* #FFFFFF */
     --card-foreground: 200 15% 15%;
@@ -28,7 +28,6 @@
     --border: 210 20% 88%;
     --input: 210 20% 88%;
     --ring: 200 90% 64%;
-    --radius: 0.5rem;
     --chart-1: 200 90% 64%;
     --chart-2: 122 39% 70%;
     --chart-3: 45 80% 60%;
