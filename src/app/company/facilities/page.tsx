@@ -268,7 +268,7 @@ export default function FacilitiesPage() {
                     </TableHeader>
                     <TableBody>
                         {facilitiesData.map(facility => (
-                            <TableRow key={facility.name}>
+                            <TableRow key={facility.name} className="cursor-pointer" onClick={() => setSelectedFacility(facility)}>
                                 <TableCell>
                                     <div className="font-medium">{facility.name}</div>
                                     <div className="text-sm text-muted-foreground flex items-center gap-1">
@@ -291,8 +291,8 @@ export default function FacilitiesPage() {
                                     <Badge variant={facility.alerts > 0 ? 'destructive' : 'secondary'}>{facility.alerts}</Badge>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Button onClick={() => setSelectedFacility(facility)}>
-                                        Details
+                                    <Button onClick={(e) => { e.stopPropagation(); setSelectedFacility(facility); }}>
+                                        View Details
                                     </Button>
                                 </TableCell>
                             </TableRow>
@@ -306,4 +306,3 @@ export default function FacilitiesPage() {
     </div>
   );
 }
-

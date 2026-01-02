@@ -116,7 +116,7 @@ export default function ReportsPage() {
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                        Facility: <span className="font-semibold ml-1">Whitefield Manufacturing Unit</span> <ChevronDown className="ml-2 h-4 w-4" />
+                        Facility: <span className="font-semibold ml-1">Whitefield Manufacturing Unit</span> <ChevronDown className="mr-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -129,7 +129,7 @@ export default function ReportsPage() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                        Record Type: <span className="font-semibold ml-1">Emission</span> <ChevronDown className="ml-2 h-4 w-4" />
+                        Record Type: <span className="font-semibold ml-1">Emission</span> <ChevronDown className="mr-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -143,7 +143,7 @@ export default function ReportsPage() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                       Time Range: <span className="font-semibold ml-1">Last 12 Months</span> <ChevronDown className="ml-2 h-4 w-4" />
+                       Time Range: <span className="font-semibold ml-1">Last 12 Months</span> <ChevronDown className="mr-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent>
@@ -263,4 +263,3 @@ export default function ReportsPage() {
     </div>
   );
 }
-
