@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useContext, useState, Suspense, useEffect } from 'react';
@@ -176,8 +177,7 @@ function CitizenDashboardContent() {
     if (location !== foundKey) {
         setLocation(foundKey);
     }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+  }, [searchParams, location, setLocation, locationData]); 
 
   const cityData = locationData[location] || locationData['Bengaluru'];
 
