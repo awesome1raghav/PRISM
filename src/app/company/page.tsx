@@ -1,9 +1,20 @@
+
 'use client';
 
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Factory, BarChart3, FileText, Bot, ArrowRight } from 'lucide-react';
+import { Factory, BarChart3, FileText, Bot, ArrowRight, Shield, ShieldAlert, ShieldCheck, Gavel } from 'lucide-react';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
+const investigation = {
+    active: true,
+    caseId: 'GOV-INV-2391',
+    severity: 'High',
+    category: 'Air Emissions',
+};
+
 
 const companyFeatures = [
     {
@@ -21,71 +32,97 @@ const companyFeatures = [
     {
         href: '/company/reports',
         icon: <FileText className="h-6 w-6 text-primary" />,
-        title: 'Compliance Reports',
+        title: 'Compliance Records',
         description: 'Generate and submit automated compliance reports to regulatory bodies.'
     },
+     {
+        href: '/company/recommendations',
+        icon: <Bot className="h-6 w-6 text-primary" />,
+        title: 'AI-Powered Recommendations',
+        description: 'Receive AI-driven suggestions for improving operational efficiency.'
+    },
 ];
+
+const FeatureCard = ({ feature }: { feature: typeof companyFeatures[0]}) => (
+     <Link href={feature.href} key={feature.title} className="group block">
+        <Card className="bg-card/40 border-border/30 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-3">
+                    {feature.icon}
+                    <span>{feature.title}</span>
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col justify-between h-full">
+                <p className="text-muted-foreground mb-4 flex-grow">
+                    {feature.description}
+                </p>
+                 <div className="text-primary font-semibold text-sm group-hover:underline flex items-center gap-1">
+                    Go to {feature.title}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </div>
+            </CardContent>
+        </Card>
+    </Link>
+)
 
 export default function CompanyPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container py-12">
-        <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold tracking-tight mb-2">
-                Corporate Responsibility Dashboard
-            </h1>
-            <p className="text-muted-foreground">
-                Monitor your environmental compliance and impact.
-            </p>
+        <div className="mb-12">
+            <div className="flex justify-between items-center mb-2">
+                <h1 className="text-4xl font-bold tracking-tight">
+                    Company Dashboard
+                </h1>
+            </div>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span>Status: <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">Compliant</Badge></span>
+                <span>Last Sync: 2 min ago</span>
+                <span>User: Plant Manager</span>
+            </div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-           {companyFeatures.map((feature) => (
-            <Link href={feature.href} key={feature.title} className="group">
-                <Card className="bg-card/40 border-border/30 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
+            <Link href="/company/investigations" className="group block lg:col-span-1">
+                <Card className={cn(
+                    "bg-card/40 border-l-4 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
+                    investigation.active 
+                        ? 'border-l-red-500 hover:shadow-red-500/10'
+                        : 'border-l-green-500 hover:shadow-green-500/10'
+                )}>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3">
-                            {feature.icon}
-                            <span>{feature.title}</span>
+                            {investigation.active ? <Gavel className="h-6 w-6 text-red-400" /> : <ShieldCheck className="h-6 w-6 text-green-400" />}
+                            <span>Regulatory Investigation Status</span>
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground mb-4">
-                            {feature.description}
-                        </p>
-                         <div className="text-primary font-semibold text-sm group-hover:underline flex items-center gap-1">
-                            Go to {feature.title}
+                        {investigation.active ? (
+                            <div className="space-y-2">
+                                <p className="font-bold text-red-400 flex items-center gap-2"><ShieldAlert className="h-5 w-5" /> Investigation Initiated</p>
+                                <p className="text-sm text-muted-foreground">Case ID: <span className="font-mono text-xs">{investigation.caseId}</span></p>
+                                <p className="text-sm text-muted-foreground">Severity: <Badge variant="destructive">{investigation.severity}</Badge></p>
+                                <p className="text-sm text-muted-foreground">Category: {investigation.category}</p>
+                            </div>
+                        ) : (
+                             <div className="space-y-2">
+                                <p className="font-semibold text-green-400">No Active Investigations</p>
+                                <p className="text-sm text-muted-foreground">You are currently compliant with regulatory authorities.</p>
+                            </div>
+                        )}
+                        <div className="text-primary font-semibold text-sm group-hover:underline flex items-center gap-1 mt-4">
+                            {investigation.active ? 'View Case' : 'View Status'}
                             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </div>
                     </CardContent>
                 </Card>
             </Link>
+
+           {companyFeatures.map((feature) => (
+            <FeatureCard feature={feature} key={feature.title} />
            ))}
         </div>
-
-        <div className="mt-8">
-            <Link href="/company/recommendations" className="group">
-                <Card className="bg-card/40 border-border/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-3">
-                            <Bot className="h-6 w-6 text-primary" />
-                            <span>AI-Powered Recommendations</span>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground mb-4">
-                            Receive AI-driven suggestions for improving operational efficiency and reducing your environmental footprint.
-                        </p>
-                        <div className="text-primary font-semibold text-sm group-hover:underline flex items-center gap-1">
-                            View Recommendations
-                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </div>
-                    </CardContent>
-                </Card>
-            </Link>
-        </div>
-
       </main>
     </div>
   );
