@@ -7,8 +7,9 @@ import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { Minimize, Loader } from 'lucide-react';
 import { type WardData } from './types';
-import { getMetricColor, getMetricStatus, getMetricUnit } from './utils';
 import { type MetricType } from '@/context/LocationContext';
+import HeatLayer from './HeatLayer';
+
 
 interface FullScreenMapProps {
   cityId: string;
@@ -26,7 +27,6 @@ const cityCenters: { [key: string]: L.LatLngExpression } = {
 const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: FullScreenMapProps) => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const markersRef = useRef<L.LayerGroup>(new L.LayerGroup());
 
   const mapCenter = cityCenters[cityId] || cityCenters['bengaluru'];
 
@@ -55,8 +55,6 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: 
         maxZoom: 20
       }).addTo(mapRef.current);
 
-      markersRef.current.addTo(mapRef.current);
-
       mapRef.current.invalidateSize();
     }
 
@@ -75,50 +73,20 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: 
     }
   }, [cityId, mapCenter]);
 
-  useEffect(() => {
-    if (markersRef.current) {
-      markersRef.current.clearLayers();
-      wardsData.forEach((ward) => {
-        const value = ward[activeMetric];
-        if (value === undefined) return;
-
-        const color = getMetricColor(activeMetric, value);
-        const status = getMetricStatus(activeMetric, value);
-        const unit = getMetricUnit(activeMetric);
-        const radius = 10 + (value / 10);
-
-        const marker = L.circleMarker([ward.lat, ward.lng], {
-          renderer: L.svg(),
-          radius: radius,
-          color: color,
-          weight: 2,
-          fillColor: color,
-          fillOpacity: 0.3
-        }).bindPopup(`
-           <div class="font-sans p-1">
-            <h3 class="font-bold text-base mb-2 border-b border-border pb-1">${ward.name}</h3>
-            <p class="text-sm"><strong>${activeMetric.toUpperCase()}:</strong> ${value} ${unit}</p>
-            <p class="text-sm"><strong>Status:</strong> ${status}</p>
-          </div>
-        `);
-        markersRef.current.addLayer(marker);
-      });
-    }
-  }, [wardsData, activeMetric]);
-
   return (
     <div className="fixed inset-0 z-[200]">
       <div ref={mapContainerRef} className="h-full w-full leaflet-container-z-index" />
+      {mapRef.current && <HeatLayer map={mapRef.current} wards={wardsData} activeMetric={activeMetric} />}
       <Button
         variant="secondary"
         size="icon"
         onClick={onClose}
-        className="absolute top-4 right-4 z-[401] h-12 w-12 rounded-full shadow-lg"
+        className="absolute top-4 right-4 z-[1001] h-12 w-12 rounded-full shadow-lg"
       >
         <Minimize className="h-6 w-6" />
       </Button>
       {isLoading && (
-        <div className="absolute inset-0 z-[402] bg-background/50 backdrop-blur-sm flex items-center justify-center">
+        <div className="absolute inset-0 z-[1002] bg-background/50 backdrop-blur-sm flex items-center justify-center">
             <Loader className="h-8 w-8 animate-spin" />
         </div>
       )}
