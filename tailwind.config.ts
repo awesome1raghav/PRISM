@@ -23,9 +23,9 @@ export default {
       },
       fontWeight: {
         normal: 'var(--font-weight-body)',
-        medium: '500', // Kept for things that need to be in-between
+        medium: '500',
         semibold: 'var(--font-weight-heading)',
-        bold: '700', // Kept for things that need to be extra bold
+        bold: '700',
       },
       colors: {
         background: 'hsl(var(--background))',
