@@ -5,4 +5,6 @@ export interface WardData {
   lat: number;
   lng: number;
   aqi: number;
+  wqi: number;
+  noise: number;
 }

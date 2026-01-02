@@ -5,15 +5,17 @@ import { useEffect, useRef } from 'react';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { type WardData } from './types';
-import { getAqiColor, getAqiStatus } from './utils';
+import { getMetricColor, getMetricStatus, getMetricUnit } from './utils';
+import { type MetricType } from '@/context/LocationContext';
 
 interface DashboardMapProps {
   center: LatLngExpression;
   zoom: number;
   wards: WardData[];
+  activeMetric: MetricType;
 }
 
-const DashboardMap = ({ center, zoom, wards }: DashboardMapProps) => {
+const DashboardMap = ({ center, zoom, wards, activeMetric }: DashboardMapProps) => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.LayerGroup>(new L.LayerGroup());
@@ -72,22 +74,29 @@ const DashboardMap = ({ center, zoom, wards }: DashboardMapProps) => {
     if (markersRef.current) {
       markersRef.current.clearLayers();
       wards.forEach((ward) => {
+        const value = ward[activeMetric];
+        if (value === undefined) return;
+
+        const color = getMetricColor(activeMetric, value);
+        const status = getMetricStatus(activeMetric, value);
+        const unit = getMetricUnit(activeMetric);
+        
         const marker = L.circleMarker([ward.lat, ward.lng], {
-          color: getAqiColor(ward.aqi),
-          fillColor: getAqiColor(ward.aqi),
+          color: color,
+          fillColor: color,
           fillOpacity: 0.6,
-          radius: 5 + (ward.aqi / 20),
+          radius: 5 + (value / 20),
         }).bindPopup(`
           <div class="font-sans">
             <h3 class="font-bold text-base mb-1">${ward.name}</h3>
-            <p><strong>AQI:</strong> ${ward.aqi}</p>
-            <p><strong>Status:</strong> ${getAqiStatus(ward.aqi)}</p>
+            <p><strong>${activeMetric.toUpperCase()}:</strong> ${value} ${unit}</p>
+            <p><strong>Status:</strong> ${status}</p>
           </div>
         `);
         markersRef.current.addLayer(marker);
       });
     }
-  }, [wards]);
+  }, [wards, activeMetric]);
 
   return <div ref={mapContainerRef} className="h-[420px] w-full rounded-xl leaflet-container-z-index" />;
 };

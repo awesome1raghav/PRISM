@@ -10,6 +10,7 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContai
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { type WardData } from '../maps/types';
 
 
 const CitizenHeatmap = dynamic(() => import('../maps/CitizenHeatmap'), {
@@ -36,7 +37,7 @@ const data = {
   }
 }
 
-const generateWardData = (id: string, name: string, aqi: number, wqi: number, noise: number, lat: number, lng: number) => ({
+const generateWardData = (id: string, name: string, aqi: number, wqi: number, noise: number, lat: number, lng: number): WardData => ({
   id,
   name,
   lat,
@@ -44,13 +45,6 @@ const generateWardData = (id: string, name: string, aqi: number, wqi: number, no
   aqi,
   wqi,
   noise,
-  live_data: {
-    aqi,
-    wqi,
-    noise,
-    updatedAt: '2 min ago',
-    riskLevel: 'moderate',
-  },
 });
 
 const wards = [
@@ -159,12 +153,14 @@ const EnvironmentalTrendChart = ({ data, metric }: { data: any[], metric: Metric
 export default function MonitoringDashboard() {
   const [activeMetric, setActiveMetric] = useState<MetricType>('aqi');
   
-  const wardDataForMap = wards.map(ward => ({
+  const wardDataForMap: WardData[] = wards.map(ward => ({
     id: ward.id,
     name: ward.name,
     lat: ward.lat,
     lng: ward.lng,
-    aqi: ward.live_data.aqi,
+    aqi: ward.aqi,
+    wqi: ward.wqi,
+    noise: ward.noise,
   }));
 
   return (
@@ -239,7 +235,7 @@ export default function MonitoringDashboard() {
           <CardTitle>Pollution Heatmap</CardTitle>
         </CardHeader>
         <CardContent>
-            <CitizenHeatmap cityId="bengaluru" wardsData={wardDataForMap} isLoading={false} />
+            <CitizenHeatmap cityId="bengaluru" wardsData={wardDataForMap} isLoading={false} activeMetric={activeMetric} />
         </CardContent>
       </Card>
 
