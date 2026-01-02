@@ -6,44 +6,44 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 210 28% 10%; /* Deep Blue base for components */
+    --foreground: 210 40% 98%; /* Light text for readability */
     
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 210 28% 13%; /* Slightly lighter than background */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 210 28% 10%;
+    --popover-foreground: 210 40% 98%;
     
-    --primary: 195 47% 55%; /* Lighter Teal */
-    --primary-foreground: 195 47% 15%;
+    --primary: 180 50% 50%; /* Teal */
+    --primary-foreground: 210 40% 98%;
     
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 28% 20%;
+    --secondary-foreground: 210 40% 98%;
     
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 28% 20%;
+    --muted-foreground: 215 20% 65%;
     
-    --accent: 18 90% 68%; /* Lighter Orange/Red */
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 120 50% 60%; /* Eco Green */
+    --accent-foreground: 210 40% 98%;
     
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
     
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 210 28% 20%;
+    --input: 210 28% 20%;
+    --ring: 180 50% 50%;
     
-    --chart-1: 195 47% 55%;
-    --chart-2: 122 40% 60%;
-    --chart-3: 18 90% 68%;
+    --chart-1: 180 50% 50%;
+    --chart-2: 120 50% 60%;
+    --chart-3: 45 80% 60%;
     --chart-4: 200 50% 60%;
-    --chart-5: 0 60% 60%;
+    --chart-5: 0 70% 65%;
     
-    --status-green: 122 40% 55%;
+    --status-green: 120 60% 55%;
     --status-yellow: 45 80% 55%;
-    --status-red: 0 70% 60%;
-    --status-red-dark: 0 70% 50%;
+    --status-red: 0 80% 60%;
+    --status-red-dark: 0 80% 50%;
     
     --radius: 0.5rem;
   }
@@ -54,7 +54,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: hsl(var(--background)); /* Fallback */
+    background-image: linear-gradient(to bottom right, hsl(210, 60%, 10%), hsl(180, 50%, 40%), hsl(120, 50%, 45%));
     scroll-behavior: smooth;
   }
 }
@@ -89,6 +91,13 @@
   /* Set z-index for leaflet map container */
   .leaflet-container-z-index {
     z-index: 1;
+  }
+
+  .leaflet-layer,
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out,
+  .leaflet-control-attribution {
+      filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
   }
 }
 
