@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Building, MapPin, AlertTriangle, CheckCircle, MoreHorizontal, Zap, Recycle, FileDown, Clock, X, Check, Calendar, User,ChevronDown, PlusCircle } from 'lucide-react';
+import { Building, MapPin, AlertTriangle, CheckCircle, MoreHorizontal, Zap, Recycle, FileDown, Clock, X, Check, Calendar, User,ChevronDown, PlusCircle, Phone, Mail, LifeBuoy } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -234,9 +234,82 @@ const FacilityDetailSheet = ({ facility, open, onOpenChange }: { facility: Facil
     );
 };
 
+const ContactSheet = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    return (
+        <Sheet open={open} onOpenChange={onOpenChange}>
+            <SheetContent>
+                <SheetHeader>
+                    <SheetTitle>Contact Information</SheetTitle>
+                    <SheetDescription>
+                        Get in touch with the right people for your inquiries.
+                    </SheetDescription>
+                </SheetHeader>
+                <div className="py-6 space-y-8">
+                    <div>
+                        <h3 className="font-semibold mb-4 text-lg">Government Liaisons</h3>
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-4">
+                                <Avatar>
+                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                    <AvatarFallback>SP</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <p className="font-semibold">S. Patel</p>
+                                    <p className="text-sm text-muted-foreground">Chief Environmental Officer</p>
+                                    <p className="text-sm text-muted-foreground">State Pollution Control Board</p>
+                                    <div className="flex gap-4 mt-2">
+                                        <Button variant="outline" size="sm"><Mail className="mr-2 h-4 w-4" /> Email</Button>
+                                        <Button variant="outline" size="sm"><Phone className="mr-2 h-4 w-4" /> Call</Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <Separator />
+                     <div>
+                        <h3 className="font-semibold mb-4 text-lg">Platform Support</h3>
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-4">
+                                <Avatar>
+                                    <AvatarImage src="https://github.com/prism.png" alt="PRISM Support" />
+                                    <AvatarFallback>PS</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <p className="font-semibold">PRISM Support Team</p>
+                                    <p className="text-sm text-muted-foreground">Technical and Platform Assistance</p>
+                                     <div className="flex gap-4 mt-2">
+                                        <Button variant="outline" size="sm"><Mail className="mr-2 h-4 w-4" /> support@prism.gov</Button>
+                                        <Button variant="outline" size="sm"><LifeBuoy className="mr-2 h-4 w-4" /> Help Center</Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </SheetContent>
+        </Sheet>
+    );
+};
+
+// Dummy Avatar components for the ContactSheet
+const Avatar = ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+    <div className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full" {...props}>
+        {children}
+    </div>
+);
+const AvatarImage = ({ src, alt }: { src: string, alt: string }) => (
+    <img src={src} alt={alt} className="aspect-square h-full w-full" />
+);
+const AvatarFallback = ({ children }: { children: React.ReactNode }) => (
+    <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">
+        {children}
+    </span>
+);
+
 
 export default function FacilitiesPage() {
     const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+    const [isContactSheetOpen, setContactSheetOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -246,8 +319,8 @@ export default function FacilitiesPage() {
             <h1 className="text-4xl font-bold tracking-tight">
                 My Facilities
             </h1>
-            <Button>
-                <PlusCircle className="mr-2 h-4 w-4" /> Add New Facility
+            <Button onClick={() => setContactSheetOpen(true)}>
+                <Phone className="mr-2 h-4 w-4" /> Contact Government
             </Button>
         </div>
 
@@ -280,6 +353,7 @@ export default function FacilitiesPage() {
                                         {facility.airQuality.icon}
                                         <span>{facility.airQuality.value} ({facility.airQuality.status})</span>
                                     </div>
+
                                 </TableCell>
                                 <TableCell>
                                      <div className="flex items-center gap-2">
@@ -302,7 +376,10 @@ export default function FacilitiesPage() {
             </CardContent>
         </Card>
         <FacilityDetailSheet facility={selectedFacility} open={!!selectedFacility} onOpenChange={() => setSelectedFacility(null)} />
+        <ContactSheet open={isContactSheetOpen} onOpenChange={setContactSheetOpen} />
       </main>
     </div>
   );
 }
+
+    
