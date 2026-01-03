@@ -112,7 +112,10 @@ export default function AnalyticsPage() {
         'pm25': 'PM2.5',
         'pm10': 'PM10',
         'no2': 'NO₂',
-        'so2': 'SO₂'
+        'so2': 'SO₂',
+        'ph': 'pH',
+        'turbidity': 'Turbidity',
+        'do': 'Dissolved Oxygen'
     };
     
 
@@ -167,6 +170,9 @@ export default function AnalyticsPage() {
                         <DropdownMenuRadioItem value="pm10">PM10</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="no2">NO₂</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="so2">SO₂</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="ph">pH</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="turbidity">Turbidity</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="do">Dissolved Oxygen</DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
