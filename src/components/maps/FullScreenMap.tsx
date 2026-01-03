@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { Minimize, Loader } from 'lucide-react';
 import { type WardData } from './types';
-import { type MetricType } from '@/context/LocationContext';
+import { type MetricType, LocationContext } from '@/context/LocationContext';
 import HeatLayer from './HeatLayer';
 
 
@@ -27,8 +27,10 @@ const cityCenters: { [key: string]: L.LatLngExpression } = {
 const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: FullScreenMapProps) => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const { locationData } = useContext(LocationContext);
 
-  const mapCenter = cityCenters[cityId] || cityCenters['bengaluru'];
+  const cityData = locationData[cityId];
+  const mapCenter = cityData ? [cityData.wards[0].live_data.lat, cityData.wards[0].live_data.lng] : cityCenters[cityId] || cityCenters['bengaluru'];
 
   useEffect(() => {
     if (mapContainerRef.current && !mapRef.current) {
@@ -54,8 +56,9 @@ const FullScreenMap = ({ cityId, wardsData, isLoading, onClose, activeMetric }: 
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(mapRef.current);
 
-
-      mapRef.current.invalidateSize();
+      setTimeout(() => {
+        mapRef.current?.invalidateSize();
+      }, 400);
     }
 
     return () => {

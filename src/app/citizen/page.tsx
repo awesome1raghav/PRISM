@@ -237,6 +237,18 @@ function CitizenDashboardContent() {
       setSelectedMetric(metric);
       setActiveMapMetric(mapMetric);
   }
+  
+  if (isMapFullScreen) {
+    return (
+      <FullScreenMap
+        cityId={cityData.id}
+        wardsData={wardsData}
+        isLoading={isLoadingWards}
+        onClose={() => setMapFullScreen(false)}
+        activeMetric={activeMapMetric}
+      />
+    );
+  }
 
   return (
      <div className="space-y-8">
@@ -338,15 +350,6 @@ function CitizenDashboardContent() {
         metric={selectedMetric}
         onClose={() => setSelectedMetric(null)}
       />
-       {isMapFullScreen && (
-        <FullScreenMap
-          cityId={cityData.id}
-          wardsData={wardsData}
-          isLoading={isLoadingWards}
-          onClose={() => setMapFullScreen(false)}
-          activeMetric={activeMapMetric}
-        />
-      )}
     </div>
   )
 }
