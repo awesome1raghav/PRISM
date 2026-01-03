@@ -164,6 +164,8 @@ function CitizenDashboardContent() {
   const [isLoadingWards, setIsLoadingWards] = useState(true);
   const firestore = useFirestore();
   const [avgAqi, setAvgAqi] = useState<number | null>(null);
+  const [avgWqi, setAvgWqi] = useState<number | null>(null);
+  const [avgNoise, setAvgNoise] = useState<number | null>(null);
 
   
   useEffect(() => {
@@ -196,8 +198,8 @@ function CitizenDashboardContent() {
               lat: data.lat,
               lng: data.lng,
               aqi: data.aqi,
-              wqi: data.wqi || 85, // Mock data for WQI
-              noise: data.noise || 68, // Mock data for Noise
+              wqi: 100 - (data.aqi / 5), // Mock WQI from AQI
+              noise: 40 + (data.aqi / 5), // Mock Noise from AQI
           } as WardData
       });
 
@@ -205,8 +207,16 @@ function CitizenDashboardContent() {
       if (wards.length > 0) {
         const totalAqi = wards.reduce((sum, ward) => sum + ward.aqi, 0);
         setAvgAqi(totalAqi / wards.length);
+
+        const totalWqi = wards.reduce((sum, ward) => sum + ward.wqi, 0);
+        setAvgWqi(totalWqi / wards.length);
+
+        const totalNoise = wards.reduce((sum, ward) => sum + ward.noise, 0);
+        setAvgNoise(totalNoise / wards.length);
       } else {
         setAvgAqi(null);
+        setAvgWqi(null);
+        setAvgNoise(null);
       }
       setIsLoadingWards(false);
     }, (err) => {
@@ -216,9 +226,6 @@ function CitizenDashboardContent() {
 
     return () => unsubscribe();
   }, [firestore, cityData.id]);
-  
-  const avgWqi = 85; // Mock
-  const avgNoise = 68; // Mock
 
   const getStatus = (metric: 'aqi' | 'wqi' | 'noise', value: number | null) => {
     if (value === null) return { label: 'Updating...', color: 'bg-muted/50 text-muted-foreground border-muted/60'};
@@ -292,18 +299,20 @@ function CitizenDashboardContent() {
               <MetricCard 
                 icon={<Droplets className="h-6 w-6 text-blue-400"/>} 
                 title="Water Quality" 
-                value={`${Math.round(avgWqi)} WQI`}
+                value={avgWqi !== null ? `${Math.round(avgWqi)} WQI` : null}
                 status={wqiStatus.label}
                 statusColor={wqiStatus.color}
                 onClick={() => handleMetricCardClick('Water', 'wqi')}
+                isLoading={isLoadingWards}
             />
               <MetricCard 
                 icon={<Waves className="h-6 w-6 text-orange-400"/>} 
                 title="Noise Levels" 
-                value={`${Math.round(avgNoise)} dB`}
+                value={avgNoise !== null ? `${Math.round(avgNoise)} dB` : null}
                 status={noiseStatus.label}
                 statusColor={noiseStatus.color}
                 onClick={() => handleMetricCardClick('Noise', 'noise')}
+                isLoading={isLoadingWards}
             />
          </div>
 
@@ -377,3 +386,5 @@ export default function CitizenPage() {
     </div>
   );
 }
+
+    
