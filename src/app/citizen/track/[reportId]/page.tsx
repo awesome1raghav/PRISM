@@ -77,11 +77,11 @@ export default function ReportTrackingPage() {
                                         </li>
                                     ))}
                                 </ol>
-                                <div className="mt-3 grid grid-cols-4 text-xs text-muted-foreground">
-                                    <div className="text-left">Submitted</div>
-                                    <div className="text-center">Verified</div>
-                                    <div className="text-center">Action Taken</div>
-                                    <div className="text-right">Closed</div>
+                                <div className="mt-3 flex justify-between text-xs text-muted-foreground">
+                                    <div className="text-left w-1/4">Submitted</div>
+                                    <div className="text-center w-1/4">Verified</div>
+                                    <div className="text-center w-1/4">Action Taken</div>
+                                    <div className="text-right w-1/4">Closed</div>
                                 </div>
                             </div>
                             
