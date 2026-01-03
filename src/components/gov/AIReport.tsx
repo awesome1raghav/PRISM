@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Edit, Shield, Activity, Users, Target, ListOrdered, Building, Clock, AlertTriangle, MessageSquare, Info, Check, Save } from 'lucide-react';
+import { Edit, Shield, Activity, Users, Target, ListOrdered, Building, Clock, AlertTriangle, MessageSquare, Info, Check, Save, Share2 } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -65,9 +65,6 @@ export default function AIReport({ violation, onApprove }: { violation: Violatio
                         <div className="flex items-center gap-2">
                              <Badge variant="outline" className={violation.confidence === 'High' ? 'border-red-500/50' : 'border-yellow-500/50'}>Confidence: {violation.confidence}</Badge>
                         </div>
-                         <div className="flex items-center gap-2">
-                            <Badge variant="outline">Source: {violation.source}</Badge>
-                        </div>
                     </div>
                 </CardHeader>
             </Card>
@@ -76,27 +73,24 @@ export default function AIReport({ violation, onApprove }: { violation: Violatio
                 <p className="text-sm text-foreground/90">{violation.summary}</p>
             </InfoCard>
 
-            <InfoCard icon={<Shield className="h-5 w-5" />} title="Risk & Impact Assessment">
-                 <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <p className="font-semibold text-muted-foreground">Overall Risk</p>
-                        <Badge variant="outline" className={impactStyles[violation.impact?.riskLevel || 'LOW']}>{violation.impact?.riskLevel}</Badge>
+            <div className="grid md:grid-cols-2 gap-6">
+                 <InfoCard icon={<Share2 className="h-5 w-5" />} title="Probable Source">
+                    <p className="text-lg font-bold">{violation.source}</p>
+                </InfoCard>
+                <InfoCard icon={<Shield className="h-5 w-5" />} title="Risk & Impact Assessment">
+                     <div className="flex items-center justify-between text-sm">
+                        <div>
+                            <p className="font-semibold text-muted-foreground">Overall Risk</p>
+                            <Badge variant="outline" className={impactStyles[violation.impact?.riskLevel || 'LOW']}>{violation.impact?.riskLevel}</Badge>
+                        </div>
+                         <div>
+                            <p className="font-semibold text-muted-foreground">Est. Population</p>
+                            <p>{violation.impact?.populationImpacted}</p>
+                        </div>
                     </div>
-                     <div>
-                        <p className="font-semibold text-muted-foreground">Est. Population</p>
-                        <p>{violation.impact?.populationImpacted}</p>
-                    </div>
-                    <div>
-                        <p className="font-semibold text-muted-foreground">Vulnerable Groups</p>
-                        <p className="capitalize">{violation.impact?.vulnerableGroups.join(', ')}</p>
-                    </div>
-                     <div>
-                        <p className="font-semibold text-muted-foreground">Sensitive Zones</p>
-                        <p>{violation.impact?.sensitiveZones.join(', ')}</p>
-                    </div>
-                </div>
-            </InfoCard>
-
+                </InfoCard>
+            </div>
+            
              <InfoCard icon={<ListOrdered className="h-5 w-5" />} title="AI-Recommended Actions">
                 <div className="space-y-4">
                     {violation.recommendations?.map((rec, index) => (
