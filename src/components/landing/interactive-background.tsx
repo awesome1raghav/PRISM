@@ -3,23 +3,27 @@
 
 import React, { useRef, useEffect } from 'react';
 
+interface Ripple {
+  x: number;
+  y: number;
+  age: number;
+  maxAge: number;
+  radius: number;
+}
+
 const InteractiveBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number>();
+  const ripples = useRef<Ripple[]>([]).current;
+  const lastInteractionTime = useRef<number>(0);
 
-  const simState = useRef({
-    w: 0,
-    h: 0,
-    scale: 1, 
-    cols: 0,
-    rows: 0,
-    current: new Float32Array(),
-    previous: new Float32Array(),
-    damping: 0.9, // Increased from 0.92 to make ripples fade a bit slower but feel smoother
-    lastDisturb: 0,
-    strength: 350,
-    threshold: 1.5,
-  }).current;
+  const config = {
+    rippleColor: 'hsl(173, 97%, 50%)', // Neon Teal from dark theme primary
+    rippleGap: 10,
+    maxRipples: 40,
+    rippleDuration: 800, // milliseconds, approx 0.8s
+    idleTimeout: 100, // milliseconds to wait before clearing
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,101 +33,106 @@ const InteractiveBackground: React.FC = () => {
     if (!ctx) return;
 
     const resize = () => {
-      simState.w = canvas.width = window.innerWidth;
-      simState.h = canvas.height = window.innerHeight;
-      simState.cols = Math.floor(simState.w / simState.scale);
-      const size = simState.cols * (simState.rows = Math.floor(simState.h / simState.scale));
-      simState.current = new Float32Array(size);
-      simState.previous = new Float32Array(size);
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
     resize();
     window.addEventListener('resize', resize);
 
-    const disturb = (x: number, y: number, strength = simState.strength) => {
-      const cx = Math.floor(x / simState.scale);
-      const cy = Math.floor(y / simState.scale);
-      if (cx > 1 && cx < simState.cols - 1 && cy > 1 && cy < simState.rows - 1) {
-        simState.previous[cx + cy * simState.cols] = strength;
+    const addRipple = (x: number, y: number) => {
+      if (ripples.length > config.maxRipples) {
+        ripples.shift();
       }
+      ripples.push({
+        x,
+        y,
+        age: 0,
+        maxAge: config.rippleDuration,
+        radius: 0,
+      });
+      lastInteractionTime.current = performance.now();
     };
 
-    const step = () => {
-      for (let y = 1; y < simState.rows - 1; y++) {
-        for (let x = 1; x < simState.cols - 1; x++) {
-          const i = x + y * simState.cols;
-          const scheduler =
-            (simState.previous[i - 1] +
-              simState.previous[i + 1] +
-              simState.previous[i - simState.cols] +
-              simState.previous[i + simState.cols]) / 2 -
-            simState.current[i];
-          simState.current[i] = scheduler * simState.damping;
+    let lastTime = 0;
+    const animate = (time: number) => {
+      if (!lastTime) lastTime = time;
+      const deltaTime = time - lastTime;
+      lastTime = time;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Only draw if there's recent interaction
+      if (performance.now() - lastInteractionTime.current < config.idleTimeout + config.rippleDuration) {
+        ctx.globalCompositeOperation = 'lighter';
+        
+        for (let i = ripples.length - 1; i >= 0; i--) {
+          const ripple = ripples[i];
+          ripple.age += deltaTime;
+
+          if (ripple.age > ripple.maxAge) {
+            ripples.splice(i, 1);
+            continue;
+          }
+
+          const life = ripple.age / ripple.maxAge; // 0 to 1
+          const easeOut = 1 - Math.pow(1 - life, 3); // Easing function
+
+          ripple.radius = easeOut * 70;
+          const opacity = 1 - easeOut;
+
+          ctx.beginPath();
+          ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+
+          const gradient = ctx.createRadialGradient(
+            ripple.x,
+            ripple.y,
+            ripple.radius * 0.8,
+            ripple.x,
+            ripple.y,
+            ripple.radius
+          );
+
+          gradient.addColorStop(0, `rgba(0, 0, 0, 0)`);
+          gradient.addColorStop(1, `${config.rippleColor}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`);
+          
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 2;
+          ctx.stroke();
         }
+      } else {
+        ripples.length = 0; // Clear all ripples when idle
       }
-      [simState.current, simState.previous] = [simState.previous, simState.current];
-    };
-    
-    const render = () => {
-      ctx.clearRect(0, 0, simState.w, simState.h);
-      
-      for (let i = 0; i < simState.current.length; i++) {
-        const v = simState.current[i];
 
-        if (Math.abs(v) > simState.threshold) {
-            const x = i % simState.cols;
-            const y = Math.floor(i / simState.cols);
-            const intensity = Math.min(Math.abs(v) / 100, 1);
-            
-            let r, g, b;
-            if (intensity > 0.5) { // Teal
-                r = 0; g = 128; b = 128;
-            } else { // Green
-                r = 56; g = 163; b = 165;
-            }
-
-            const alpha = Math.min(intensity * 0.2, 0.2); // Reduced alpha for a softer effect
-            const radius = Math.min(intensity * 25, 25); // Slightly increased radius
-
-            ctx.beginPath();
-            ctx.arc(x * simState.scale, y * simState.scale, radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-            ctx.fill();
-        }
-      }
-    };
-
-
-    const animate = () => {
-      step();
-      render();
       animationFrameId.current = requestAnimationFrame(animate);
     };
-    animate();
+
+    animationFrameId.current = requestAnimationFrame(animate);
 
     const handleInteraction = (x: number, y: number) => {
-        const now = performance.now();
-        if (now - simState.lastDisturb > 10) { 
-            disturb(x, y);
-            simState.lastDisturb = now;
-        }
+      addRipple(x, y);
     };
 
+    let lastMoveTime = 0;
     const handleMouseMove = (e: MouseEvent) => {
-      handleInteraction(e.clientX, e.clientY);
+        const now = performance.now();
+        if (now - lastMoveTime > config.rippleGap) {
+            handleInteraction(e.clientX, e.clientY);
+            lastMoveTime = now;
+        }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault(); 
+      e.preventDefault();
       const touch = e.touches[0];
-      handleInteraction(touch.clientX, touch.clientY);
+       const now = performance.now();
+        if (now - lastMoveTime > config.rippleGap) {
+            handleInteraction(touch.clientX, touch.clientY);
+            lastMoveTime = now;
+        }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
-
-    setTimeout(() => {
-        disturb(simState.w / 2, simState.h / 2, 1000);
-    }, 500);
 
     return () => {
       window.removeEventListener('resize', resize);
@@ -133,18 +142,11 @@ const InteractiveBackground: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [simState]);
+  }, [config, ripples]);
 
   return (
-    <div
-      className="fixed inset-0 z-0 overflow-hidden"
-    >
-      <canvas
-        id="water"
-        ref={canvasRef}
-        className="block fixed inset-0 pointer-events-none"
-      />
-       <div className="noise-background absolute inset-0"></div>
+    <div className="fixed inset-0 z-0 overflow-hidden bg-background">
+      <canvas ref={canvasRef} className="block fixed inset-0 pointer-events-none" />
     </div>
   );
 };
