@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
@@ -36,11 +37,26 @@ export interface LocationDataContext {
 }
 
 // --- Mock Data ---
+const pseudoRandom = (seed: string) => {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    const char = seed.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0; // Convert to 32bit integer
+  }
+  const x = Math.sin(hash) * 10000;
+  return x - Math.floor(x);
+};
 
 const generateWardData = (id: string, name: string, aqiRange: [number, number], wqiRange: [number, number], noiseRange: [number, number]): Ward => {
-    const aqi = Math.floor(Math.random() * (aqiRange[1] - aqiRange[0]) + aqiRange[0]);
-    const wqi = Math.floor(Math.random() * (wqiRange[1] - wqiRange[0]) + wqiRange[0]);
-    const noise = Math.floor(Math.random() * (noiseRange[1] - noiseRange[0]) + noiseRange[0]);
+    const seed = id + name;
+    const rand1 = pseudoRandom(seed + 'a');
+    const rand2 = pseudoRandom(seed + 'b');
+    const rand3 = pseudoRandom(seed + 'c');
+
+    const aqi = Math.floor(rand1 * (aqiRange[1] - aqiRange[0]) + aqiRange[0]);
+    const wqi = Math.floor(rand2 * (wqiRange[1] - wqiRange[0]) + wqiRange[0]);
+    const noise = Math.floor(rand3 * (noiseRange[1] - noiseRange[0]) + noiseRange[0]);
     
     let riskLevel: RiskLevel = 'good';
     if (aqi > 200 || wqi < 40 || noise > 100) riskLevel = 'severe';
@@ -54,7 +70,7 @@ const generateWardData = (id: string, name: string, aqiRange: [number, number], 
             aqi,
             wqi,
             noise,
-            updatedAt: `${Math.floor(Math.random() * 10) + 1} min ago`,
+            updatedAt: `${Math.floor(rand1 * 10) + 1} min ago`,
             riskLevel,
         }
     };
