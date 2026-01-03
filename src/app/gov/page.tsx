@@ -76,7 +76,7 @@ export default function GovernmentPage() {
             <TabsTrigger value="incidents">
               <ListChecks className="mr-2 h-4 w-4" />
               Complaint Management
-            </Tabs-Trigger>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="monitoring">
