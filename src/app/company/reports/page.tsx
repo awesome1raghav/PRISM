@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/sheet"
 import { Separator } from '@/components/ui/separator';
 
-const complianceData = {
+const initialComplianceData = {
     summary: {
         status: 'Compliant',
         daysCompliant: '342 / 365',
@@ -48,9 +48,44 @@ const complianceData = {
       { name: 'Sensor Calibration Certificate', type: 'cert' },
       { name: 'Maintenance Log', type: 'log' },
     ]
-}
+};
 
-type TimelineEntry = typeof complianceData.timeline[0];
+type TimelineEntry = typeof initialComplianceData.timeline[0];
+type ComplianceData = typeof initialComplianceData;
+
+
+const generateMockData = (facility: string, recordType: string, timeRange: string): ComplianceData => {
+    const seed = facility + recordType + timeRange;
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+        const char = seed.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0; 
+    }
+    const rand = (min: number, max: number) => (Math.abs(Math.sin(hash++)) % (max - min)) + min;
+
+    const violations = rand(0, 5);
+    const daysCompliant = 365 - violations * rand(2,5);
+
+    const newTimeline: TimelineEntry[] = [...initialComplianceData.timeline].map((item, index) => ({
+        ...item,
+        status: rand(0, 10) > 7 ? 'Warning' : 'Compliant',
+        category: ['Air', 'Water', 'Waste'][rand(0,3)],
+        date: `0${rand(1,9)}/${rand(10,30)}/2025`
+    })).sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+
+    return {
+        summary: {
+            status: violations > 2 ? 'Action Required' : 'Compliant',
+            daysCompliant: `${daysCompliant} / 365`,
+            violations: `${violations} (${violations > 2 ? 'Major' : 'Minor'})`,
+            lastAudit: `${rand(1,28)} Nov 2025`
+        },
+        timeline: newTimeline,
+        documents: initialComplianceData.documents,
+    }
+};
 
 
 const RecordDetailSheet = ({ record, open, onOpenChange }: { record: TimelineEntry | null, open: boolean, onOpenChange: (open: boolean) => void }) => {
@@ -101,12 +136,31 @@ const RecordDetailSheet = ({ record, open, onOpenChange }: { record: TimelineEnt
 
 export default function ReportsPage() {
   const [selectedRecord, setSelectedRecord] = useState<TimelineEntry | null>(null);
+  const [facility, setFacility] = useState('whitefield');
   const [recordType, setRecordType] = useState('emission');
+  const [timeRange, setTimeRange] = useState('12m');
+  const [complianceData, setComplianceData] = useState<ComplianceData>(initialComplianceData);
+
+  useEffect(() => {
+    setComplianceData(generateMockData(facility, recordType, timeRange));
+  }, [facility, recordType, timeRange]);
+
+  const facilityNames: { [key: string]: string } = {
+      whitefield: 'Whitefield Manufacturing Unit',
+      peenya: 'Peenya Industrial Plant'
+  };
 
   const recordTypeNames: { [key: string]: string } = {
     emission: 'Emission',
     water: 'Water',
     waste: 'Waste'
+  };
+
+  const timeRangeNames: { [key: string]: string } = {
+    '24h': 'Last 24 Hours',
+    '7d': 'Last 7 Days',
+    '30d': 'Last 30 Days',
+    '12m': 'Last 12 Months'
   };
 
   return (
@@ -123,11 +177,11 @@ export default function ReportsPage() {
              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                        Facility: <span className="font-semibold ml-1">Whitefield Manufacturing Unit</span> <ChevronDown className="mr-2 h-4 w-4" />
+                        Facility: <span className="font-semibold ml-1">{facilityNames[facility]}</span> <ChevronDown className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value="whitefield">
+                    <DropdownMenuRadioGroup value={facility} onValueChange={setFacility}>
                         <DropdownMenuRadioItem value="whitefield">Whitefield Manufacturing Unit</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="peenya">Peenya Industrial Plant</DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
@@ -136,7 +190,7 @@ export default function ReportsPage() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                        Record Type: <span className="font-semibold ml-1">{recordTypeNames[recordType]}</span> <ChevronDown className="mr-2 h-4 w-4" />
+                        Record Type: <span className="font-semibold ml-1">{recordTypeNames[recordType]}</span> <ChevronDown className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -150,11 +204,11 @@ export default function ReportsPage() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                       Time Range: <span className="font-semibold ml-1">Last 12 Months</span> <ChevronDown className="mr-2 h-4 w-4" />
+                       Time Range: <span className="font-semibold ml-1">{timeRangeNames[timeRange]}</span> <ChevronDown className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                  <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value="12m">
+                    <DropdownMenuRadioGroup value={timeRange} onValueChange={setTimeRange}>
                         <DropdownMenuRadioItem value="24h">Last 24 Hours</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="7d">Last 7 Days</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="30d">Last 30 Days</DropdownMenuRadioItem>
@@ -173,7 +227,7 @@ export default function ReportsPage() {
                          <CheckCircle className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-green-400">Compliant</div>
+                        <div className={`text-2xl font-bold ${complianceData.summary.status.includes('Action') ? 'text-red-400' : 'text-green-400'}`}>{complianceData.summary.status}</div>
                     </CardContent>
                 </Card>
                  <Card className="bg-muted/30">
@@ -270,3 +324,5 @@ export default function ReportsPage() {
     </div>
   );
 }
+
+    
