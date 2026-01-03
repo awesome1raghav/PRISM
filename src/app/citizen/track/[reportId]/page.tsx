@@ -77,8 +77,11 @@ export default function ReportTrackingPage() {
                                         </li>
                                     ))}
                                 </ol>
-                                <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-                                    {statusTimeline.map(status => <span key={status}>{status}</span>)}
+                                <div className="mt-3 grid grid-cols-4 text-xs text-muted-foreground">
+                                    <div className="text-left">Submitted</div>
+                                    <div className="text-center">Verified</div>
+                                    <div className="text-center">Action Taken</div>
+                                    <div className="text-right">Closed</div>
                                 </div>
                             </div>
                             
@@ -217,4 +220,3 @@ export default function ReportTrackingPage() {
     </div>
   );
 }
-
