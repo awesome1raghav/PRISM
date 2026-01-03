@@ -26,7 +26,7 @@ const statusIcons: Record<ReportStatus, JSX.Element> = {
 };
 
 const ReportCard = ({ report }: { report: Report }) => (
-    <Card className="bg-card/40 border-border/30">
+    <Card className="bg-card/40 border-border/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
         <CardHeader>
             <div className="flex justify-between items-start">
                 <div>
