@@ -18,7 +18,7 @@ const InteractiveBackground: React.FC = () => {
   const lastInteractionTime = useRef<number>(0);
 
   const config = {
-    rippleColor: 'hsl(173, 97%, 50%)', // Neon Teal from dark theme primary
+    rippleColor: '173, 97%, 50%', // HSL values for Neon Teal
     rippleGap: 10,
     maxRipples: 40,
     rippleDuration: 800, // milliseconds, approx 0.8s
@@ -92,8 +92,8 @@ const InteractiveBackground: React.FC = () => {
             ripple.radius
           );
 
-          gradient.addColorStop(0, `rgba(0, 0, 0, 0)`);
-          gradient.addColorStop(1, `${config.rippleColor}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`);
+          gradient.addColorStop(0, `hsla(${config.rippleColor}, 0)`);
+          gradient.addColorStop(1, `hsla(${config.rippleColor}, ${opacity})`);
           
           ctx.strokeStyle = gradient;
           ctx.lineWidth = 2;
