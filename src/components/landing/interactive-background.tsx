@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 
 interface Ripple {
   x: number;
@@ -16,13 +17,14 @@ const InteractiveBackground: React.FC = () => {
   const animationFrameId = useRef<number>();
   const ripples = useRef<Ripple[]>([]).current;
   const lastInteractionTime = useRef<number>(0);
+  const { resolvedTheme } = useTheme();
 
   const config = {
-    rippleColor: '173, 97%, 50%', // HSL values for Neon Teal
+    rippleColor: resolvedTheme === 'light' ? '0, 0%, 0%' : '173, 97%, 50%', // Black for light, Teal for dark
     rippleGap: 10,
     maxRipples: 40,
-    rippleDuration: 800, // milliseconds, approx 0.8s
-    idleTimeout: 100, // milliseconds to wait before clearing
+    rippleDuration: 800,
+    idleTimeout: 100,
   };
 
   useEffect(() => {
@@ -61,7 +63,6 @@ const InteractiveBackground: React.FC = () => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Only draw if there's recent interaction
       if (performance.now() - lastInteractionTime.current < config.idleTimeout + config.rippleDuration) {
         ctx.globalCompositeOperation = 'lighter';
         
@@ -74,8 +75,8 @@ const InteractiveBackground: React.FC = () => {
             continue;
           }
 
-          const life = ripple.age / ripple.maxAge; // 0 to 1
-          const easeOut = 1 - Math.pow(1 - life, 3); // Easing function
+          const life = ripple.age / ripple.maxAge;
+          const easeOut = 1 - Math.pow(1 - life, 3);
 
           ripple.radius = easeOut * 70;
           const opacity = 1 - easeOut;
@@ -91,16 +92,18 @@ const InteractiveBackground: React.FC = () => {
             ripple.y,
             ripple.radius
           );
+          
+          const rippleColor = resolvedTheme === 'light' ? '0, 0%, 0%' : '173, 97%, 50%';
 
-          gradient.addColorStop(0, `hsla(${config.rippleColor}, 0)`);
-          gradient.addColorStop(1, `hsla(${config.rippleColor}, ${opacity})`);
+          gradient.addColorStop(0, `hsla(${rippleColor}, 0)`);
+          gradient.addColorStop(1, `hsla(${rippleColor}, ${opacity})`);
           
           ctx.strokeStyle = gradient;
           ctx.lineWidth = 2;
           ctx.stroke();
         }
       } else {
-        ripples.length = 0; // Clear all ripples when idle
+        ripples.length = 0;
       }
 
       animationFrameId.current = requestAnimationFrame(animate);
@@ -142,7 +145,7 @@ const InteractiveBackground: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [config, ripples]);
+  }, [config, ripples, resolvedTheme]);
 
   return (
     <div className="fixed inset-0 z-0 overflow-hidden bg-background">
