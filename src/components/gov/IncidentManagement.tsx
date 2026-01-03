@@ -144,11 +144,11 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
             <TableHeader>
               <TableRow>
                 <TableHead>Incident</TableHead>
+                <TableHead>Source</TableHead>
                 <TableHead>Submitted</TableHead>
                 <TableHead>Priority</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Assignee</TableHead>
-                <TableHead>Source</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -164,6 +164,9 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
                         </div>
                     </div>
                   </TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{incident.source}</Badge>
+                  </TableCell>
                   <TableCell>{incident.submitted}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className={cn(priorityStyles[incident.priority])}>
@@ -176,7 +179,6 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
                     </Badge>
                   </TableCell>
                   <TableCell>{incident.assignee}</TableCell>
-                   <TableCell>{incident.source}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); setSelectedIncident(incident); }}>
                       <MoreHorizontal className="h-4 w-4" />
