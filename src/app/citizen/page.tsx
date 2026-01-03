@@ -102,14 +102,14 @@ const LocationSelector = () => {
   }, [location]);
 
   return (
-     <div className="bg-card/40 border border-border/30 rounded-lg p-4">
+     <div className="bg-card border border-border/60 rounded-lg p-4">
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
             <Input 
                 name="location-input"
                 placeholder="e.g. Koramangala, Bengaluru"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                className="flex-grow"
+                className="flex-grow bg-background/50"
             />
             <div className="flex gap-2">
                 <Button type="submit">Set Location</Button>
@@ -125,7 +125,7 @@ const LocationSelector = () => {
 
 const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoading }: { icon: JSX.Element, title: string, value: string | null, status: string, statusColor: string, onClick: () => void, isLoading?: boolean }) => (
     <div onClick={onClick} className="group cursor-pointer">
-        <Card className="bg-card/40 border-border/30 hover:bg-card/60 hover:border-primary/40 transition-all h-full">
+        <Card className="bg-card border-border/60 hover:bg-muted/40 hover:border-primary/40 transition-all h-full">
             <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -134,7 +134,7 @@ const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoadin
                     </div>
                     <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
                 </div>
-                <div className="text-right mt-2">
+                 <div className="text-right mt-2">
                   {isLoading ? (
                       <>
                         <Skeleton className="h-8 w-24 ml-auto" />
@@ -260,7 +260,7 @@ function CitizenDashboardContent() {
         <h2 className="text-2xl font-bold mb-4 text-left">Health Advisory</h2>
          <div className="grid gap-4 md:grid-cols-2">
             {advisories.map((advisory, index) => (
-                <Card key={index} className={cn("bg-card/40 border-l-4",
+                <Card key={index} className={cn("bg-card border-l-4 border-border/60",
                     advisory.type === 'alert' ? 'border-l-yellow-500' : 'border-l-blue-500'
                 )}>
                     <CardContent className="p-6 flex items-center gap-4">
@@ -280,7 +280,7 @@ function CitizenDashboardContent() {
          <h2 className="text-2xl font-bold mb-4 text-left">Live Environmental Overview: <span className="text-primary">{cityData.name}</span></h2>
          <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-                <Card className="bg-card/40 border-border/30 h-full">
+                <Card className="bg-card border-border/60 h-full">
                     <CardHeader className="flex flex-row items-center justify-between">
                         <CardTitle>Pollution Heatmap</CardTitle>
                         <Button variant="ghost" size="icon" onClick={() => setMapFullScreen(true)}>
@@ -324,7 +324,7 @@ function CitizenDashboardContent() {
       </section>
 
       <section className="grid md:grid-cols-2 gap-8">
-          <Card className="bg-card/40 border-border/30 hover:bg-card/60 transition-colors group">
+          <Card className="bg-card border-border/60 hover:bg-muted/40 transition-colors group">
             <CardContent className="p-6 flex flex-col items-center text-center">
                 <Siren className="h-10 w-10 text-primary mb-4" />
                 <h2 className="text-2xl font-bold mb-2">See Something? Report It.</h2>
@@ -337,7 +337,7 @@ function CitizenDashboardContent() {
             </CardContent>
           </Card>
 
-           <Card className="bg-card/40 border-border/30 hover:bg-card/60 transition-colors group">
+           <Card className="bg-card border-border/60 hover:bg-muted/40 transition-colors group">
                 <CardContent className="p-6 flex flex-col items-center text-center">
                     <MapPin className="h-10 w-10 text-primary mb-4" />
                     <h3 className="text-2xl font-bold mb-2">My Reports</h3>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import Header from '@/components/layout/header';
@@ -44,7 +45,7 @@ const companyFeatures = [
 
 const FeatureCard = ({ feature }: { feature: typeof companyFeatures[0]}) => (
      <Link href={feature.href} key={feature.title} className="group block">
-        <Card className="bg-card/40 border-border/30 h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
+        <Card className="bg-card border-border/60 h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
             <CardHeader>
                 <CardTitle className="flex items-center gap-3">
                     {feature.icon}
@@ -87,7 +88,7 @@ export default function CompanyPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Link href="/company/investigations" className="group block lg:col-span-1">
                 <Card className={cn(
-                    "bg-card/40 border-l-4 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
+                    "bg-card border-border/60 border-l-4 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
                     investigation.active 
                         ? 'border-l-red-500 hover:shadow-red-500/10'
                         : 'border-l-green-500 hover:shadow-green-500/10'

@@ -62,8 +62,8 @@ export default function GovernmentPage() {
           </p>
         </div>
 
-        <Tabs defaultValue="monitoring">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+        <Tabs defaultValue="monitoring" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-8 bg-card border-border/60">
             <TabsTrigger value="monitoring">
               <LayoutGrid className="mr-2 h-4 w-4" />
               Unified Monitoring
@@ -94,4 +94,3 @@ export default function GovernmentPage() {
     </div>
   );
 }
-

@@ -1,4 +1,9 @@
+
 @import "leaflet/dist/leaflet.css";
+
+html, body, #root, * {
+  font-family: 'Manrope', system-ui, sans-serif !important;
+}
 
 @tailwind base;
 @tailwind components;
@@ -42,9 +47,9 @@
 
   /* Citizen - Dark */
   .dark body.theme-citizen {
-    --background: 216 19% 11%; /* #1A1F24 */
+    --background: 220 16% 12%; /* #1A1C20 */
     --foreground: 210 17% 82%; /* #E0E0E0 */
-    --card: 218 19% 16%; /* #22272E */
+    --card: 220 15% 18%; /* #262930 */
     --card-foreground: 210 17% 82%;
     --popover: 218 19% 16%;
     --popover-foreground: 210 17% 82%;
@@ -52,15 +57,15 @@
     --primary-foreground: 215 25% 27%;
     --secondary: 122 39% 65%; /* #81C784 */
     --secondary-foreground: 215 25% 27%;
-    --muted: 216 11% 20%;
+    --muted: 220 14% 25%;
     --muted-foreground: 210 11% 63%; /* #9E9E9E */
-    --accent: 216 11% 20%;
+    --accent: 220 14% 25%;
     --accent-foreground: 210 17% 82%;
     --destructive: 0 72% 77%; /* #EF9A9A */
     --destructive-foreground: 0 86% 97%;
     --info: 56 100% 80%; /* #FFF59D */
-    --border: 216 11% 25%;
-    --input: 216 11% 25%;
+    --border: 220 13% 30%;
+    --input: 220 13% 30%;
     --ring: 200 95% 78%;
   }
 
@@ -95,9 +100,9 @@
 
   /* Government - Dark */
   .dark body.theme-gov {
-    --background: 220 23% 10%; /* #0F172A */
+    --background: 220 16% 12%; /* #1A1C20 */
     --foreground: 216 12% 90%; /* #E5E7EB */
-    --card: 220 26% 17%; /* #1E293B */
+    --card: 220 15% 18%; /* #262930 */
     --card-foreground: 216 12% 90%;
     --popover: 220 26% 17%;
     --popover-foreground: 216 12% 90%;
@@ -105,13 +110,15 @@
     --primary-foreground: 220 23% 10%;
     --secondary: 200 14% 54%; /* #78909C */
     --secondary-foreground: 216 12% 90%;
-    --muted: 220 26% 22%;
+    --muted: 220 14% 25%;
     --muted-foreground: 217 9% 65%; /* #9CA3AF */
     --accent: 200 14% 65%;
     --accent-foreground: 216 12% 90%;
     --destructive: 0 81% 63%; /* #EF5350 */
     --destructive-foreground: 220 23% 10%;
     --warning: 50 100% 65%; /* #FFD54F */
+    --border: 220 13% 30%;
+    --input: 220 13% 30%;
   }
 
   /* Company - Light */
@@ -145,9 +152,9 @@
 
   /* Company - Dark */
   .dark body.theme-co {
-    --background: 216 15% 11%; /* #161B22 */
+    --background: 220 16% 12%; /* #1A1C20 */
     --foreground: 216 12% 90%; /* #E5E7EB */
-    --card: 220 25% 16%; /* #1F2937 */
+    --card: 220 15% 18%; /* #262930 */
     --card-foreground: 216 12% 90%;
     --popover: 220 25% 16%;
     --popover-foreground: 216 12% 90%;
@@ -155,13 +162,15 @@
     --primary-foreground: 220 25% 16%;
     --secondary: 174 45% 67%; /* #4DB6AC */
     --secondary-foreground: 220 25% 16%;
-    --muted: 220 25% 21%;
+    --muted: 220 14% 25%;
     --muted-foreground: 217 9% 65%; /* #9CA3AF */
     --accent: 174 45% 57%;
     --accent-foreground: 220 25% 16%;
     --destructive: 34 100% 65%; /* #FFB74D - risk/warning */
     --destructive-foreground: 220 25% 16%;
     --success: 123 41% 57%; /* #66BB6A */
+    --border: 220 13% 30%;
+    --input: 220 13% 30%;
   }
 }
 
@@ -178,6 +187,7 @@
   
   h1, h2, h3, h4, h5, h6 {
     font-weight: var(--font-weight-heading);
+    letter-spacing: -0.02em;
   }
 
   p, div, span, li, td, th {
