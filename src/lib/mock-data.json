@@ -1,0 +1,294 @@
+
+{
+  "Bengaluru": {
+    "id": "bengaluru",
+    "name": "Bengaluru",
+    "wards": [
+      {
+        "id": "koramangala",
+        "name": "Koramangala",
+        "live_data": {
+          "aqi": 49,
+          "wqi": 90,
+          "noise": 65,
+          "lat": 12.9352,
+          "lng": 77.6245,
+          "updatedAt": "4 min ago",
+          "riskLevel": "good"
+        }
+      },
+      {
+        "id": "jayanagar",
+        "name": "Jayanagar",
+        "live_data": {
+          "aqi": 72,
+          "wqi": 84,
+          "noise": 71,
+          "lat": 12.9308,
+          "lng": 77.5838,
+          "updatedAt": "8 min ago",
+          "riskLevel": "moderate"
+        }
+      },
+      {
+        "id": "indiranagar",
+        "name": "Indiranagar",
+        "live_data": {
+          "aqi": 81,
+          "wqi": 79,
+          "noise": 78,
+          "lat": 12.9784,
+          "lng": 77.6408,
+          "updatedAt": "1 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "whitefield",
+        "name": "Whitefield",
+        "live_data": {
+          "aqi": 133,
+          "wqi": 67,
+          "noise": 85,
+          "lat": 12.9698,
+          "lng": 77.7499,
+          "updatedAt": "3 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "hebbal",
+        "name": "Hebbal",
+        "live_data": {
+          "aqi": 98,
+          "wqi": 74,
+          "noise": 74,
+          "lat": 13.0357,
+          "lng": 77.5972,
+          "updatedAt": "5 min ago",
+          "riskLevel": "moderate"
+        }
+      },
+      {
+        "id": "marathahalli",
+        "name": "Marathahalli",
+        "live_data": {
+          "aqi": 158,
+          "wqi": 62,
+          "noise": 89,
+          "lat": 12.9569,
+          "lng": 77.7011,
+          "updatedAt": "2 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "electronic-city",
+        "name": "Electronic City",
+        "live_data": {
+          "aqi": 115,
+          "wqi": 71,
+          "noise": 83,
+          "lat": 12.8452,
+          "lng": 77.6602,
+          "updatedAt": "9 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "bellandur",
+        "name": "Bellandur",
+        "live_data": {
+          "aqi": 222,
+          "wqi": 36,
+          "noise": 80,
+          "lat": 12.9304,
+          "lng": 77.6784,
+          "updatedAt": "6 min ago",
+          "riskLevel": "severe"
+        }
+      },
+      {
+        "id": "varthur",
+        "name": "Varthur",
+        "live_data": {
+          "aqi": 194,
+          "wqi": 47,
+          "noise": 78,
+          "lat": 12.9436,
+          "lng": 77.7494,
+          "updatedAt": "4 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "yelahanka",
+        "name": "Yelahanka",
+        "live_data": {
+          "aqi": 80,
+          "wqi": 80,
+          "noise": 70,
+          "lat": 13.1007,
+          "lng": 77.5963,
+          "updatedAt": "1 min ago",
+          "riskLevel": "moderate"
+        }
+      },
+      {
+        "id": "rajajinagar",
+        "name": "Rajajinagar",
+        "live_data": {
+          "aqi": 107,
+          "wqi": 75,
+          "noise": 78,
+          "lat": 12.9904,
+          "lng": 77.5513,
+          "updatedAt": "7 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "malleshwaram",
+        "name": "Malleshwaram",
+        "live_data": {
+          "aqi": 91,
+          "wqi": 82,
+          "noise": 73,
+          "lat": 13.0039,
+          "lng": 77.5704,
+          "updatedAt": "5 min ago",
+          "riskLevel": "moderate"
+        }
+      },
+      {
+        "id": "shivajinagar",
+        "name": "Shivajinagar",
+        "live_data": {
+          "aqi": 124,
+          "wqi": 70,
+          "noise": 84,
+          "lat": 12.9859,
+          "lng": 77.6057,
+          "updatedAt": "3 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "basavanagudi",
+        "name": "Basavanagudi",
+        "live_data": {
+          "aqi": 66,
+          "wqi": 87,
+          "noise": 68,
+          "lat": 12.9421,
+          "lng": 77.5714,
+          "updatedAt": "8 min ago",
+          "riskLevel": "moderate"
+        }
+      },
+      {
+        "id": "hsr-layout",
+        "name": "HSR Layout",
+        "live_data": {
+          "aqi": 89,
+          "wqi": 79,
+          "noise": 76,
+          "lat": 12.9121,
+          "lng": 77.6446,
+          "updatedAt": "2 min ago",
+          "riskLevel": "moderate"
+        }
+      }
+    ],
+    "advisories": [
+      {
+        "type": "alert",
+        "title": "High Pollution Alert in Bellandur",
+        "description": "AQI has reached severe levels. Residents are advised to stay indoors."
+      },
+      {
+        "type": "info",
+        "title": "No Critical Alerts City-Wide",
+        "description": "Overall city conditions are moderate. Monitor your specific ward for details."
+      }
+    ]
+  },
+  "New York": {
+    "id": "new-york",
+    "name": "New York",
+    "wards": [
+      {
+        "id": "manhattan",
+        "name": "Manhattan",
+        "live_data": {
+          "aqi": 107,
+          "wqi": 90,
+          "noise": 85,
+          "lat": 40.7831,
+          "lng": -73.9712,
+          "updatedAt": "9 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "brooklyn",
+        "name": "Brooklyn",
+        "live_data": {
+          "aqi": 89,
+          "wqi": 85,
+          "noise": 78,
+          "lat": 40.6782,
+          "lng": -73.9442,
+          "updatedAt": "7 min ago",
+          "riskLevel": "moderate"
+        }
+      },
+      {
+        "id": "queens",
+        "name": "Queens",
+        "live_data": {
+          "aqi": 79,
+          "wqi": 94,
+          "noise": 73,
+          "lat": 40.7282,
+          "lng": -73.7949,
+          "updatedAt": "1 min ago",
+          "riskLevel": "moderate"
+        }
+      },
+      {
+        "id": "bronx",
+        "name": "The Bronx",
+        "live_data": {
+          "aqi": 124,
+          "wqi": 79,
+          "noise": 82,
+          "lat": 40.8448,
+          "lng": -73.8648,
+          "updatedAt": "4 min ago",
+          "riskLevel": "poor"
+        }
+      },
+      {
+        "id": "staten-island",
+        "name": "Staten Island",
+        "live_data": {
+          "aqi": 49,
+          "wqi": 97,
+          "noise": 60,
+          "lat": 40.5795,
+          "lng": -74.1502,
+          "updatedAt": "3 min ago",
+          "riskLevel": "good"
+        }
+      }
+    ],
+    "advisories": [
+      {
+        "type": "alert",
+        "title": "Air Quality Alert",
+        "description": "High levels of ozone detected in The Bronx. Stay indoors if you have respiratory issues."
+      }
+    ]
+  }
+}
