@@ -13,6 +13,8 @@ export interface PollutionData {
   noise: number; // dB
   updatedAt: string; // Using string for mock data simplicity
   riskLevel: RiskLevel;
+  lat: number;
+  lng: number;
 }
 
 export interface Ward {
@@ -48,7 +50,7 @@ const pseudoRandom = (seed: string) => {
   return x - Math.floor(x);
 };
 
-const generateWardData = (id: string, name: string, aqiRange: [number, number], wqiRange: [number, number], noiseRange: [number, number]): Ward => {
+const generateWardData = (id: string, name: string, lat: number, lng: number, aqiRange: [number, number], wqiRange: [number, number], noiseRange: [number, number]): Ward => {
     const seed = id + name;
     const rand1 = pseudoRandom(seed + 'a');
     const rand2 = pseudoRandom(seed + 'b');
@@ -70,6 +72,8 @@ const generateWardData = (id: string, name: string, aqiRange: [number, number], 
             aqi,
             wqi,
             noise,
+            lat,
+            lng,
             updatedAt: `${Math.floor(rand1 * 10) + 1} min ago`,
             riskLevel,
         }
@@ -81,15 +85,15 @@ const initialLocationData: LocationDataContext = {
         id: 'bengaluru',
         name: 'Bengaluru',
         wards: [
-            generateWardData('koramangala', 'Koramangala', [30, 60], [75, 95], [55, 70]),
-            generateWardData('jayanagar', 'Jayanagar', [45, 80], [70, 90], [60, 75]),
-            generateWardData('indiranagar', 'Indiranagar', [55, 90], [65, 85], [65, 85]),
-            generateWardData('whitefield', 'Whitefield', [80, 150], [50, 75], [70, 90]),
-            generateWardData('hebbal', 'Hebbal', [60, 110], [60, 80], [65, 78]),
-            generateWardData('marathahalli', 'Marathahalli', [90, 180], [45, 70], [75, 95]),
-            generateWardData('electronic-city', 'Electronic City', [70, 130], [55, 78], [70, 88]),
-            generateWardData('bellandur', 'Bellandur', [150, 250], [20, 45], [70, 85]),
-            generateWardData('varthur', 'Varthur', [120, 220], [30, 55], [68, 82]),
+            generateWardData('koramangala', 'Koramangala', 12.9352, 77.6245, [30, 60], [75, 95], [55, 70]),
+            generateWardData('jayanagar', 'Jayanagar', 12.9308, 77.5838, [45, 80], [70, 90], [60, 75]),
+            generateWardData('indiranagar', 'Indiranagar', 12.9784, 77.6408, [55, 90], [65, 85], [65, 85]),
+            generateWardData('whitefield', 'Whitefield', 12.9698, 77.7499, [80, 150], [50, 75], [70, 90]),
+            generateWardData('hebbal', 'Hebbal', 13.0357, 77.5972, [60, 110], [60, 80], [65, 78]),
+            generateWardData('marathahalli', 'Marathahalli', 12.9569, 77.7011, [90, 180], [45, 70], [75, 95]),
+            generateWardData('electronic-city', 'Electronic City', 12.8452, 77.6602, [70, 130], [55, 78], [70, 88]),
+            generateWardData('bellandur', 'Bellandur', 12.9304, 77.6784, [150, 250], [20, 45], [70, 85]),
+            generateWardData('varthur', 'Varthur', 12.9436, 77.7494, [120, 220], [30, 55], [68, 82]),
         ],
         advisories: [
             { type: 'alert', title: 'High Pollution Alert in Bellandur', description: 'AQI has reached severe levels. Residents are advised to stay indoors.' },
@@ -100,11 +104,11 @@ const initialLocationData: LocationDataContext = {
         id: 'new-york',
         name: 'New York',
         wards: [
-            generateWardData('manhattan', 'Manhattan', [70, 120], [80, 95], [70, 90]),
-            generateWardData('brooklyn', 'Brooklyn', [60, 100], [75, 90], [65, 85]),
-            generateWardData('queens', 'Queens', [50, 90], [85, 98], [60, 80]),
-            generateWardData('bronx', 'The Bronx', [80, 140], [70, 85], [68, 88]),
-            generateWardData('staten-island', 'Staten Island', [30, 60], [90, 99], [50, 65]),
+            generateWardData('manhattan', 'Manhattan', 40.7831, -73.9712, [70, 120], [80, 95], [70, 90]),
+            generateWardData('brooklyn', 'Brooklyn', 40.6782, -73.9442, [60, 100], [75, 90], [65, 85]),
+            generateWardData('queens', 'Queens', 40.7282, -73.7949, [50, 90], [85, 98], [60, 80]),
+            generateWardData('bronx', 'The Bronx', 40.8448, -73.8648, [80, 140], [70, 85], [68, 88]),
+            generateWardData('staten-island', 'Staten Island', 40.5795, -74.1502, [30, 60], [90, 99], [50, 65]),
         ],
         advisories: [
             { type: 'alert', title: 'Air Quality Alert', description: 'High levels of ozone detected in The Bronx. Stay indoors if you have respiratory issues.' },

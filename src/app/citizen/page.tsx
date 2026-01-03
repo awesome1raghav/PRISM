@@ -198,8 +198,8 @@ function CitizenDashboardContent() {
     return cityData.wards.map(ward => ({
         id: ward.id,
         name: ward.name,
-        lat: 12.9716 + (Math.random() - 0.5) * 0.2, // Mock lat/lng for context data
-        lng: 77.5946 + (Math.random() - 0.5) * 0.2,
+        lat: ward.live_data.lat,
+        lng: ward.live_data.lng,
         aqi: ward.live_data.aqi,
         wqi: ward.live_data.wqi,
         noise: ward.live_data.noise,
@@ -359,11 +359,9 @@ export default function CitizenPage() {
       <Header />
       <main className="flex-grow container py-8">
          <Suspense fallback={<div className="text-center p-8">Loading Dashboard...</div>}>
-          {firestore ? <CitizenDashboardContent /> : <div className="text-center p-8">Initializing Connection...</div>}
+          {<CitizenDashboardContent />}
         </Suspense>
       </main>
     </div>
   );
 }
-
-    

@@ -39,11 +39,12 @@ const HeatLayer = ({ map, wards, activeMetric }: HeatLayerProps) => {
           maxZoom: 12,
           minOpacity: 0.3,
           gradient: {
-            0.1: "#00e400",
-            0.3: "#ffff00",
-            0.5: "#ff7e00",
-            0.7: "#ff0000",
-            1.0: "#7e0023"
+            0.1: "blue",
+            0.3: "lime",
+            0.5: "yellow",
+            0.7: "orange",
+            0.9: "red",
+            1.0: "purple"
           }
       }).addTo(map);
     }
@@ -51,7 +52,7 @@ const HeatLayer = ({ map, wards, activeMetric }: HeatLayerProps) => {
     const points = wards
       .map((ward) => {
         const value = ward[activeMetric];
-        if (value === undefined) return null;
+        if (value === undefined || !ward.lat || !ward.lng) return null;
         const intensity = normalizeValue(activeMetric, value);
         return [ward.lat, ward.lng, intensity] as L.HeatLatLngTuple;
       })
