@@ -31,6 +31,8 @@ import {
   ClipboardList,
   Eye,
   Briefcase,
+  Share2,
+  Bell,
 } from 'lucide-react';
 import Image from 'next/image';
 import { type Incident, type IncidentStatus } from '@/app/gov/types';
@@ -96,6 +98,20 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
         }
         setNewDepartment('');
         setIsEditingDepartment(false);
+    };
+
+    const handleNotifyCompany = () => {
+        toast({
+            title: "Notification Sent",
+            description: `A sanitized report for case ${incident?.id} has been sent to the responsible company.`,
+        });
+    };
+
+    const handlePublishAdvisory = () => {
+        toast({
+            title: "Advisory Published",
+            description: `A public health advisory for residents near ${incident?.location} has been issued.`,
+        });
     };
 
 
@@ -233,6 +249,20 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                 </div>
                             </CardContent>
                         </Card>
+                         <InfoSection title="Actions & Notifications" icon={<Bell />} className="bg-card/40">
+                             <div className="space-y-2">
+                                {incident.aiInsights?.probableSource === 'Industry' && (
+                                    <Button variant="outline" className="w-full" onClick={handleNotifyCompany}>
+                                        <Share2 className="mr-2 h-4 w-4" />
+                                        Notify Company
+                                    </Button>
+                                )}
+                                <Button variant="outline" className="w-full" onClick={handlePublishAdvisory}>
+                                    <Bell className="mr-2 h-4 w-4" />
+                                    Publish Public Advisory
+                                </Button>
+                            </div>
+                        </InfoSection>
                     </div>
 
                     {/* Main Content Area */}
@@ -255,11 +285,11 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                             </div>
                         </InfoSection>
 
-                        <InfoSection title="AI Insights" icon={<Bot />} className="bg-card/40 border-border/30">
+                        <InfoSection title="AI Analysis & Cause of Pollution" icon={<Bot />} className="bg-card/40 border-border/30">
                            {incident.aiInsights ? (
                                 <div className="space-y-3 text-sm">
-                                    <p><strong>Linked AI Violation:</strong> {incident.aiInsights.violationId}</p>
-                                    <p><strong>Probable Source:</strong> {incident.aiInsights.probableSource}</p>
+                                    <div><strong>Linked AI Violation:</strong> {incident.aiInsights.violationId}</div>
+                                    <div className="font-semibold text-base"><strong>Identified Cause:</strong> <span className="text-primary">{incident.aiInsights.probableSource}</span></div>
                                     <div className="flex items-center gap-2">
                                         <strong>Confidence Score:</strong>
                                         <Badge variant="outline" className="font-semibold">{incident.aiInsights.confidence}%</Badge>
@@ -296,3 +326,5 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
         </Dialog>
     )
 }
+
+    
