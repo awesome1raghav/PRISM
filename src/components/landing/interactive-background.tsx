@@ -10,7 +10,7 @@ const InteractiveBackground: React.FC = () => {
   const simState = useRef({
     w: 0,
     h: 0,
-    scale: 4,
+    scale: 1, // Changed from 4 to 1 for higher resolution
     cols: 0,
     rows: 0,
     current: new Float32Array(),
@@ -25,7 +25,7 @@ const InteractiveBackground: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const resize = () => {
@@ -65,42 +65,31 @@ const InteractiveBackground: React.FC = () => {
     
     const render = () => {
       ctx.clearRect(0, 0, simState.w, simState.h);
-      const imageData = ctx.createImageData(simState.w, simState.h);
-      const data = imageData.data;
-
+      
       for (let i = 0; i < simState.current.length; i++) {
-        const x = i % simState.cols;
-        const y = Math.floor(i / simState.cols);
         const v = simState.current[i];
 
         if (Math.abs(v) > simState.threshold) {
-          const intensity = Math.min(Math.abs(v) / 100, 1);
-          
-          let r, g, b;
-          if (intensity > 0.5) { // Teal
-            r = 0; g = 128; b = 128;
-          } else { // Green
-            r = 56; g = 163; b = 165;
-          }
-
-          const alpha = Math.min(intensity, 0.4);
-
-          for (let py = 0; py < simState.scale; py++) {
-            for (let px = 0; px < simState.scale; px++) {
-              const pixelX = x * simState.scale + px;
-              const pixelY = y * simState.scale + py;
-              if (pixelX < simState.w && pixelY < simState.h) {
-                const pixelIndex = (pixelY * simState.w + pixelX) * 4;
-                data[pixelIndex] = r;
-                data[pixelIndex + 1] = g;
-                data[pixelIndex + 2] = b;
-                data[pixelIndex + 3] = alpha * 255;
-              }
+            const x = i % simState.cols;
+            const y = Math.floor(i / simState.cols);
+            const intensity = Math.min(Math.abs(v) / 100, 1);
+            
+            let r, g, b;
+            if (intensity > 0.5) { // Teal
+                r = 0; g = 128; b = 128;
+            } else { // Green
+                r = 56; g = 163; b = 165;
             }
-          }
+
+            const alpha = Math.min(intensity * 0.4, 0.4);
+            const radius = Math.min(intensity * 10, 10);
+
+            ctx.beginPath();
+            ctx.arc(x * simState.scale, y * simState.scale, radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            ctx.fill();
         }
       }
-      ctx.putImageData(imageData, 0, 0);
     };
 
 
