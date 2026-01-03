@@ -34,8 +34,8 @@ const HeatLayer = ({ map, wards, activeMetric }: HeatLayerProps) => {
   useEffect(() => {
     if (!layerRef.current) {
       layerRef.current = L.heatLayer([], {
-          radius: 35,
-          blur: 25,
+          radius: 50,
+          blur: 30,
           maxZoom: 12,
           minOpacity: 0.3,
           gradient: {

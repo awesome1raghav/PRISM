@@ -94,6 +94,12 @@ const initialLocationData: LocationDataContext = {
             generateWardData('electronic-city', 'Electronic City', 12.8452, 77.6602, [70, 130], [55, 78], [70, 88]),
             generateWardData('bellandur', 'Bellandur', 12.9304, 77.6784, [150, 250], [20, 45], [70, 85]),
             generateWardData('varthur', 'Varthur', 12.9436, 77.7494, [120, 220], [30, 55], [68, 82]),
+            generateWardData('yelahanka', 'Yelahanka', 13.1007, 77.5963, [50, 90], [70, 85], [60, 75]),
+            generateWardData('rajajinagar', 'Rajajinagar', 12.9904, 77.5513, [70, 120], [65, 80], [68, 82]),
+            generateWardData('malleshwaram', 'Malleshwaram', 13.0039, 77.5704, [65, 100], [70, 88], [62, 77]),
+            generateWardData('shivajinagar', 'Shivajinagar', 12.9859, 77.6057, [80, 140], [60, 75], [72, 88]),
+            generateWardData('basavanagudi', 'Basavanagudi', 12.9421, 77.5714, [40, 75], [75, 92], [58, 72]),
+            generateWardData('hsr-layout', 'HSR Layout', 12.9121, 77.6446, [60, 100], [68, 85], [65, 80]),
         ],
         advisories: [
             { type: 'alert', title: 'High Pollution Alert in Bellandur', description: 'AQI has reached severe levels. Residents are advised to stay indoors.' },
