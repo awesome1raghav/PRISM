@@ -260,7 +260,10 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                 <div className="space-y-3 text-sm">
                                     <p><strong>Linked AI Violation:</strong> {incident.aiInsights.violationId}</p>
                                     <p><strong>Probable Source:</strong> {incident.aiInsights.probableSource}</p>
-                                    <p><strong>Confidence Score:</strong> <Badge variant="outline" className="font-semibold">{incident.aiInsights.confidence}%</Badge></p>
+                                    <div className="flex items-center gap-2">
+                                        <strong>Confidence Score:</strong>
+                                        <Badge variant="outline" className="font-semibold">{incident.aiInsights.confidence}%</Badge>
+                                    </div>
                                 </div>
                            ) : <p className="text-sm text-muted-foreground">No AI insights linked to this complaint.</p>}
                         </InfoSection>
@@ -293,5 +296,3 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
         </Dialog>
     )
 }
-
-    
