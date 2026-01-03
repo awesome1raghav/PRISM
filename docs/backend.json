@@ -44,23 +44,11 @@
     ]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "locations/bengaluru/wards/{wardId}",
-        "definition": {
-          "entityName": "WardPollutionData",
-          "schema": {
-            "$ref": "#/backend/entities/WardPollutionData"
-          },
-          "description": "Stores pollution data for each ward in Bengaluru. The data includes ward name, coordinates (lat/lng), and air quality index (aqi).",
-          "params": [
-            {
-              "name": "wardId",
-              "description": "Unique identifier for the ward."
-            }
-          ]
-        }
-      }
-    ]
+    "locations/bengaluru/wards/{wardId}": {
+      "schema": {
+        "$ref": "#/entities/WardPollutionData"
+      },
+      "description": "Stores pollution data for each ward in Bengaluru. The data includes ward name, coordinates (lat/lng), and air quality index (aqi)."
+    }
   }
 }
