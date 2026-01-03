@@ -33,14 +33,7 @@ import {
 import { type Incident, type IncidentPriority, type IncidentStatus, type IncidentCategory, type IncidentSource } from '@/app/gov/types';
 import { cn } from '@/lib/utils';
 import ComplaintDetailDialog from './ComplaintDetailDialog';
-
-const incidents: Incident[] = [
-  { id: 'INC-001', category: 'Water', location: 'Bellandur Lake', submitted: '2h ago', priority: 'High', status: 'New', assignee: 'Unassigned', source: 'Citizen', evidence: { photos: ['https://picsum.photos/seed/inc1/400/300'], description: 'Water is dark green and smells foul. Large amount of foam visible.', sensorLinked: true }, aiInsights: { violationId: 'V-005', probableSource: 'Industrial', confidence: 92 }, resolution: null, internalNotes: 'Priority based on potential ecological impact and previous incidents in this area.' },
-  { id: 'INC-002', category: 'Air', location: 'Whitefield', submitted: '5h ago', priority: 'Medium', status: 'Under investigation', assignee: 'R. Sharma', source: 'Sensor', evidence: { photos: [], description: '', sensorLinked: true }, aiInsights: { violationId: 'V-001', probableSource: 'Industrial', confidence: 88 }, resolution: null, internalNotes: '' },
-  { id: 'INC-003', category: 'Waste', location: 'Koramangala 6th Block', submitted: '1 day ago', priority: 'Low', status: 'Action taken', assignee: 'S. Patel', source: 'Both', evidence: { photos: ['https://picsum.photos/seed/inc3/400/300'], description: 'Construction debris dumped on the sidewalk overnight.', sensorLinked: false }, aiInsights: { violationId: 'V-003', probableSource: 'Unknown', confidence: 95 }, resolution: { actionTaken: 'Debris cleared by municipal team. Notice served to nearby construction site.', outcome: 'Area cleared.', followUpRequired: false }, internalNotes: 'Repeat offender in this area. Increased patrolling recommended.' },
-  { id: 'INC-004', category: 'Noise', location: 'Indiranagar 100ft Road', submitted: '2 days ago', priority: 'Low', status: 'Closed', assignee: 'A. Gupta', source: 'Citizen', evidence: { photos: [], description: 'Loud music from a bar well past 11 PM.', sensorLinked: true }, aiInsights: { violationId: 'V-004', probableSource: 'Event', confidence: 75 }, resolution: { actionTaken: 'Patrol unit dispatched. Warning issued to establishment.', outcome: 'Music was stopped. Compliance confirmed.', followUpRequired: false }, internalNotes: 'Establishment has been warned before.' },
-  { id: 'INC-005', category: 'Water', location: 'Varthur Lake', submitted: '3 days ago', priority: 'High', status: 'Under investigation', assignee: 'Field Team B', source: 'Sensor', evidence: { photos: [], description: '', sensorLinked: true }, aiInsights: { violationId: 'V-003', probableSource: 'Sewage', confidence: 85 }, resolution: null, internalNotes: 'Ecologically sensitive area. Needs urgent analysis.' },
-];
+import { initialIncidents } from '@/app/gov/data';
 
 const priorityStyles: Record<IncidentPriority, string> = {
   Low: 'bg-green-500/20 text-green-400 border-green-500/30',
@@ -81,7 +74,7 @@ const FilterDropdown = ({ label, options, value, onValueChange }: { label: strin
 );
 
 
-export default function IncidentManagement() {
+export default function IncidentManagement({ incidents, setIncidents }: { incidents: Incident[], setIncidents: React.Dispatch<React.SetStateAction<Incident[]>> }) {
     const [filters, setFilters] = useState({
         status: 'all',
         priority: 'all',
@@ -199,13 +192,7 @@ export default function IncidentManagement() {
           incident={selectedIncident}
           onClose={() => setSelectedIncident(null)}
           onUpdate={(updatedIncident) => {
-              // In a real app, this would be a Firestore update.
-              // Here, we just log it and update the local state for demonstration.
-              console.log('Updating incident:', updatedIncident);
-              const index = incidents.findIndex(i => i.id === updatedIncident.id);
-              if (index !== -1) {
-                  incidents[index] = updatedIncident;
-              }
+              setIncidents(prev => prev.map(i => i.id === updatedIncident.id ? updatedIncident : i));
               setSelectedIncident(updatedIncident);
           }}
       />

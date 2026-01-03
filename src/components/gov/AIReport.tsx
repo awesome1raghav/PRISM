@@ -38,7 +38,7 @@ const InfoCard = ({ icon, title, children }: { icon: React.ReactNode, title: str
     </Card>
 );
 
-export default function AIReport({ violation }: { violation: Violation }) {
+export default function AIReport({ violation, onApprove }: { violation: Violation, onApprove: () => void }) {
     const [isEditing, setIsEditing] = useState(false);
     // In a real app, you'd use state to manage form data
     // For this prototype, we'll just toggle the view.
@@ -139,7 +139,7 @@ export default function AIReport({ violation }: { violation: Violation }) {
              <Card className="bg-card/40 border-primary/30">
                 <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-sm text-muted-foreground">Review the AI-generated report, make necessary changes, and forward to the responsible departments for action.</p>
-                    <Button size="lg" className="w-full sm:w-auto flex-shrink-0">
+                    <Button size="lg" className="w-full sm:w-auto flex-shrink-0" onClick={onApprove}>
                         <Check className="mr-2 h-4 w-4" />
                         Approve & Forward
                     </Button>

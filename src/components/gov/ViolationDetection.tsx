@@ -12,145 +12,22 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Bot, ChevronRight } from 'lucide-react';
+import { Bot, ChevronRight, Check } from 'lucide-react';
 import { type Violation, type Confidence, type ViolationSource } from '@/app/gov/types';
 import { cn } from '@/lib/utils';
 import AIReport from './AIReport';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-
-const violations: Violation[] = [
-  { 
-    id: 'V-001',
-    type: 'Emission Limit Breach', 
-    location: 'Peenya Industrial Area', 
-    time: '2h ago', 
-    confidence: 'High', 
-    source: 'Industry',
-    summary: 'AQI in Peenya Industrial Area is currently Poor (158), triggered by a sudden spike in PM2.5 levels detected 2 hours ago. This correlates with 3 citizen complaints about thick smoke in the area. Wind patterns are currently blowing southwest, towards residential zones.',
-    impact: {
-      vulnerableGroups: ['children', 'elderly', 'asthmatics'],
-      riskLevel: 'HIGH',
-      populationImpacted: 'est. 15,000 residents',
-      sensitiveZones: ['Peenya Public School (2km)', 'ESI Hospital (3km)']
-    },
-    recommendations: [
-      { action: 'Issue public health warning for Peenya and surrounding areas via SMS and social media.', priority: 'Immediate' },
-      { action: 'Dispatch mobile air quality monitoring unit to verify sensor readings and identify the precise source.', priority: 'Short-term' },
-      { action: 'Initiate on-site inspection of factories with a history of emission violations in the area.', priority: 'Short-term' },
-      { action: 'Increase sensor polling frequency in the affected area to once every 2 minutes for the next 6 hours.', priority: 'Monitoring' }
-    ],
-    responsibleDepartments: ['Pollution Control Board', 'Municipal Health Department', 'Disaster Management Cell'],
-    escalationLogic: {
-      deadline: 'Response required within 1 hour',
-      rule: 'If no action is taken, escalate to State Environmental Secretary and trigger automated public health alert.'
-    },
-    explanation: 'High confidence is based on a 98% correlation with historical emission signatures from Factory ID #F7891 during nighttime production cycles. Weather models predict low wind dispersion for the next 4 hours, increasing ground-level pollutant concentration. A similar incident in 2023 led to a 40% increase in respiratory complaints.'
-  },
-  { 
-    id: 'V-002', 
-    type: 'Sudden Pollution Spike', 
-    location: 'Marathahalli', 
-    time: '5h ago', 
-    confidence: 'Medium', 
-    source: 'Traffic',
-    summary: 'A localized but significant spike in Carbon Monoxide (CO) was detected near the Marathahalli bridge during evening rush hour. The levels exceeded the safe threshold for over 45 minutes.',
-    impact: {
-      vulnerableGroups: ['commuters', 'street vendors'],
-      riskLevel: 'MEDIUM',
-      populationImpacted: 'est. 5,000 people in transit',
-      sensitiveZones: ['Local Market (500m)']
-    },
-    recommendations: [
-      { action: 'Review traffic camera footage to identify any large, idling commercial vehicles or unusual traffic blockages.', priority: 'Short-term' },
-      { action: 'Cross-reference with public transport data to see if a bus breakdown occurred.', priority: 'Monitoring' },
-      { action: 'If this pattern reoccurs, recommend deploying traffic police to improve flow during peak hours.', priority: 'Monitoring' }
-    ],
-    responsibleDepartments: ['Traffic Police', 'Regional Transport Office'],
-    escalationLogic: {
-      deadline: 'Analysis to be completed within 24 hours',
-      rule: 'If spike repeats for 3 consecutive days, escalate to Traffic Management Committee.'
-    },
-    explanation: 'Medium confidence due to transient nature. The event signature matches heavy vehicular congestion. It does not match industrial emission patterns. Two citizen reports mentioned a "terrible smell" in the same timeframe.'
-  },
-  { 
-    id: 'V-003', 
-    type: 'Illegal Dumping', 
-    location: 'Near Varthur Lake', 
-    time: '1 day ago', 
-    confidence: 'High', 
-    source: 'Unknown',
-    summary: 'Satellite imagery analysis from 24 hours ago shows new, unauthorized solid waste deposits near the Varthur Lake buffer zone. The deposit area is approximately 50 sq meters.',
-    impact: {
-      vulnerableGroups: ['local residents', 'aquatic life'],
-      riskLevel: 'HIGH',
-      populationImpacted: 'N/A',
-      sensitiveZones: ['Varthur Lake (Ecologically Sensitive Area)']
-    },
-    recommendations: [
-      { action: 'Dispatch a solid waste management team for immediate inspection and cleanup.', priority: 'Immediate' },
-      { action: 'Install a temporary surveillance camera in the area to deter future dumping and identify culprits.', priority: 'Short-term' },
-      { action: 'Analyze vehicle movement data on nearby roads during the suspected dumping time (night hours).', priority: 'Short-term' }
-    ],
-    responsibleDepartments: ['Solid Waste Management', 'Lake Development Authority', 'Local Police'],
-    escalationLogic: {
-      deadline: 'Cleanup to be initiated within 12 hours.',
-      rule: 'If cleanup is not confirmed within 24 hours, escalate to the Municipal Commissioner.'
-    },
-    explanation: 'High confidence based on 99.7% change detection from high-resolution satellite imagery compared to the previous day. The location is a known hotspot for illegal dumping.'
-  },
-  { 
-    id: 'V-004', 
-    type: 'Noise Limit Breach', 
-    location: 'Koramangala', 
-    time: '3h ago', 
-    confidence: 'Low', 
-    source: 'Event',
-    summary: 'Multiple noise sensors in Koramangala 4th Block registered levels between 75-80 dB for a 30-minute period, exceeding residential nighttime limits. The pattern is consistent with a public event or gathering.',
-    impact: {
-      vulnerableGroups: ['local residents'],
-      riskLevel: 'LOW',
-      populationImpacted: 'est. 2,000 residents',
-      sensitiveZones: ['Residential apartments']
-    },
-    recommendations: [
-      { action: 'Cross-check with local police for any event permits issued in the area.', priority: 'Monitoring' },
-      { action: 'If no permit exists and complaints are received, dispatch a patrol unit to investigate.', priority: 'Short-term' }
-    ],
-    responsibleDepartments: ['Local Police'],
-    escalationLogic: {
-      deadline: 'Initial check to be completed within 2 hours.',
-      rule: 'No automatic escalation unless citizen complaints are filed.'
-    },
-    explanation: 'Low confidence as the source is unconfirmed and could be a temporary, authorized event. The system has flagged it based on sensor data alone. No visual confirmation is available.'
-  },
-  { 
-    id: 'V-005', 
-    type: 'Chemical Effluent Release', 
-    location: 'Bellandur Canal', 
-    time: '8h ago', 
-    confidence: 'High', 
-    source: 'Industry',
-    summary: 'Water quality probes in the Bellandur canal detected a sharp drop in pH (to 5.5) and a rise in turbidity, indicative of an acidic industrial effluent release. The plume is moving downstream.',
-    impact: {
-      vulnerableGroups: ['aquatic ecosystem', 'downstream farmers'],
-      riskLevel: 'HIGH',
-      populationImpacted: 'N/A',
-      sensitiveZones: ['Bellandur Lake', 'Downstream irrigation inlets']
-    },
-    recommendations: [
-      { action: 'Immediately issue a warning to downstream users and agricultural cooperatives to cease water intake.', priority: 'Immediate' },
-      { action: 'Deploy a water sampling team to collect physical samples for lab analysis to identify the specific chemical.', priority: 'Immediate' },
-      { action: 'Inspect all industrial outlets upstream from the detection point.', priority: 'Short-term' }
-    ],
-    responsibleDepartments: ['Pollution Control Board', 'Lake Development Authority', 'Agriculture Department'],
-    escalationLogic: {
-      deadline: 'Public warning to be issued within 30 minutes.',
-      rule: 'If the source is not identified within 6 hours, escalate to the State Environmental Protection Agency.'
-    },
-    explanation: 'High confidence based on simultaneous anomalous readings from three separate water probes. The chemical signature strongly correlates with textile processing waste, a common industry in the upstream area.'
-  },
-];
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { useToast } from '@/hooks/use-toast';
 
 
 const confidenceStyles: Record<Confidence, string> = {
@@ -158,6 +35,49 @@ const confidenceStyles: Record<Confidence, string> = {
   Medium: "bg-orange-500/20 text-orange-400 border-orange-500/30",
   High: "bg-red-500/20 text-red-400 border-red-500/30",
 };
+
+const ApprovalDialog = ({
+    violation,
+    open,
+    onOpenChange,
+    onConfirm
+} : {
+    violation: Violation | null,
+    open: boolean,
+    onOpenChange: (open: boolean) => void,
+    onConfirm: () => void
+}) => {
+    if (!violation) return null;
+    
+    return (
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Confirm Escalation for Case: {violation.id}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This will create a new incident and notify the responsible departments. Please review the details before confirming.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="space-y-4 py-4">
+                    <h4 className="font-semibold">Key Actions to be Triggered:</h4>
+                    <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2">
+                        {violation.recommendations?.slice(0, 2).map((rec, i) => <li key={i}>{rec.action}</li>)}
+                         {violation.recommendations && violation.recommendations.length > 2 && <li>And {violation.recommendations.length - 2} more...</li>}
+                    </ul>
+                    <h4 className="font-semibold">Responsible Departments:</h4>
+                    <div className="flex flex-wrap gap-2">
+                        {violation.responsibleDepartments?.map(dep => <Badge key={dep} variant="secondary">{dep}</Badge>)}
+                    </div>
+                </div>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={onConfirm}>Confirm & Escalate</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+};
+
 
 const ViolationList = ({
   violations,
@@ -200,14 +120,53 @@ const ViolationList = ({
 );
 
 
-export default function ViolationDetection() {
+export default function ViolationDetection({ violations, onApproveViolation }: { violations: Violation[], onApproveViolation: (violation: Violation) => void }) {
   const [selectedViolation, setSelectedViolation] = useState<Violation | null>(violations.find(v => v.confidence === 'High') || violations[0] || null);
+  const [isApprovalDialogOpen, setApprovalDialogOpen] = useState(false);
+  const { toast } = useToast();
   
   const highConfidence = violations.filter(v => v.confidence === 'High');
   const mediumConfidence = violations.filter(v => v.confidence === 'Medium');
   const lowConfidence = violations.filter(v => v.confidence === 'Low');
 
+  const handleApproveClick = () => {
+      if (selectedViolation) {
+          setApprovalDialogOpen(true);
+      }
+  }
+
+  const handleConfirmApproval = () => {
+      if (!selectedViolation) return;
+
+      onApproveViolation(selectedViolation);
+      
+      toast({
+          title: "Violation Escalated",
+          description: `Case ${selectedViolation.id} has been moved to the incident queue.`,
+      });
+
+      if (selectedViolation.source === 'Industry') {
+          console.log(`[SIMULATE] Sanitized notification sent to company associated with ${selectedViolation.location}`);
+      }
+
+      // After approval, select the next violation in the list or null
+      const currentList = violations.filter(v => v.confidence === selectedViolation.confidence);
+      const currentIndex = currentList.findIndex(v => v.id === selectedViolation.id);
+      
+      let nextSelected: Violation | null = null;
+      if (currentList.length > 1) {
+          nextSelected = currentList[(currentIndex + 1) % currentList.length];
+      } else {
+         const otherViolations = violations.filter(v => v.id !== selectedViolation.id);
+         if(otherViolations.length > 0) {
+            nextSelected = otherViolations[0];
+         }
+      }
+      setSelectedViolation(nextSelected);
+  }
+
   return (
+    <>
     <div className="grid lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-1">
             <Card className="bg-card/40 border-border/30">
@@ -242,15 +201,24 @@ export default function ViolationDetection() {
         </div>
         <div className="lg:col-span-2">
             {selectedViolation ? (
-                <AIReport violation={selectedViolation} />
+                <AIReport violation={selectedViolation} onApprove={handleApproveClick} />
             ) : (
-                <Card className="bg-card/40 border-border/30 h-full flex items-center justify-center">
-                    <CardContent>
-                        <p className="text-muted-foreground">Select a violation to view the AI-generated report.</p>
+                <Card className="bg-card/40 border-border/30 h-96 flex items-center justify-center">
+                    <CardContent className="text-center">
+                         <Check className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                        <p className="text-lg font-semibold">All violations reviewed.</p>
+                        <p className="text-muted-foreground">Check the Complaint Management tab for escalated incidents.</p>
                     </CardContent>
                 </Card>
             )}
         </div>
     </div>
+     <ApprovalDialog
+        open={isApprovalDialogOpen}
+        onOpenChange={setApprovalDialogOpen}
+        violation={selectedViolation}
+        onConfirm={handleConfirmApproval}
+    />
+    </>
   );
 }
