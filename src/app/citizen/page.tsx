@@ -102,56 +102,56 @@ const LocationSelector = () => {
   }, [location]);
 
   return (
-     <div className="glassmorphism-card p-4">
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
-            <Input 
-                name="location-input"
-                placeholder="e.g. Koramangala, Bengaluru"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="flex-grow bg-background/50"
-            />
-            <div className="flex gap-2">
-                <Button type="submit">Set Location</Button>
-                <Button variant="outline" type="button" onClick={handleLocateMe}>
-                <LocateFixed className={cn('h-4 w-4')} />
-                <span className="ml-2 hidden sm:inline">Use My Location</span>
-                </Button>
-            </div>
-        </form>
-    </div>
+     <Card className="glassmorphism-card p-4">
+        <CardContent className="p-2">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+                <Input 
+                    name="location-input"
+                    placeholder="e.g. Koramangala, Bengaluru"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    className="flex-grow bg-background/50"
+                />
+                <div className="flex gap-2">
+                    <Button type="submit">Set Location</Button>
+                    <Button variant="outline" type="button" onClick={handleLocateMe}>
+                    <LocateFixed className={cn('h-4 w-4')} />
+                    <span className="ml-2 hidden sm:inline">Use My Location</span>
+                    </Button>
+                </div>
+            </form>
+        </CardContent>
+    </Card>
   );
 };
 
 const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoading }: { icon: JSX.Element, title: string, value: string | null, status: string, statusColor: string, onClick: () => void, isLoading?: boolean }) => (
-    <div onClick={onClick} className="group cursor-pointer">
-        <Card className="glassmorphism-card hover:border-primary/60 transition-all h-full">
-            <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        {icon}
-                        <h3 className="font-semibold">{title}</h3>
-                    </div>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+    <Card onClick={onClick} className="glassmorphism-card hover:border-primary/60 transition-all group cursor-pointer h-full flex flex-col">
+        <CardHeader>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    {icon}
+                    <h3 className="font-semibold">{title}</h3>
                 </div>
-                 <div className="text-right mt-2">
-                  {isLoading ? (
-                      <>
-                        <Skeleton className="h-8 w-24 ml-auto" />
-                        <Skeleton className="h-5 w-16 ml-auto mt-2" />
-                      </>
-                  ) : (
-                    <>
-                      <p className="text-2xl font-bold">{value}</p>
-                      <Badge variant="outline" className={cn("mt-1", statusColor)}>
-                          {status}
-                      </Badge>
-                    </>
-                  )}
+                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+            </div>
+        </CardHeader>
+        <CardContent className="flex-grow flex items-end">
+              {isLoading ? (
+                  <div className="w-full">
+                    <Skeleton className="h-10 w-32" />
+                    <Skeleton className="h-6 w-20 mt-2" />
+                  </div>
+              ) : (
+                <div>
+                  <p className="text-4xl font-bold">{value}</p>
+                  <Badge variant="outline" className={cn("mt-1", statusColor)}>
+                      {status}
+                  </Badge>
                 </div>
-            </CardContent>
-        </Card>
-    </div>
+              )}
+        </CardContent>
+    </Card>
 )
 
 function CitizenDashboardContent() {
@@ -263,7 +263,7 @@ function CitizenDashboardContent() {
                 <Card key={index} className={cn("glassmorphism-card border-l-4",
                     advisory.type === 'alert' ? 'border-l-yellow-500' : 'border-l-blue-500'
                 )}>
-                    <CardContent className="p-6 flex items-center gap-4">
+                    <CardContent className="p-6 flex items-start gap-4">
                         {advisory.type === 'alert' && <Siren className="h-8 w-8 text-yellow-500 shrink-0" />}
                         {advisory.type === 'info' && <ShieldCheck className="h-8 w-8 text-blue-400 shrink-0" />}
                         <div>
@@ -276,51 +276,49 @@ function CitizenDashboardContent() {
         </div>
       </section>
 
-      <section>
-         <h2 className="text-2xl font-bold mb-4 text-left">Live Environmental Overview: <span className="text-primary">{cityData.name}</span></h2>
-         <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-                <Card className="glassmorphism-card h-full">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle>Pollution Heatmap</CardTitle>
-                        <Button variant="ghost" size="icon" onClick={() => setMapFullScreen(true)}>
-                            <Expand className="h-5 w-5" />
-                            <span className="sr-only">Enter full screen</span>
-                        </Button>
-                    </CardHeader>
-                    <CardContent>
-                        <CitizenHeatmap cityId={cityData.id} wardsData={wardsData} isLoading={isLoadingWards} activeMetric={activeMapMetric} />
-                    </CardContent>
-                </Card>
-            </div>
-            <div className="space-y-4">
-                <MetricCard 
-                    icon={<Wind className="h-6 w-6 text-sky-400"/>} 
-                    title="Air Quality" 
-                    value={avgAqi !== null ? `${Math.round(avgAqi)} AQI` : null} 
-                    status={aqiStatus.label}
-                    statusColor={aqiStatus.color}
-                    onClick={() => handleMetricCardClick('Air', 'aqi')}
-                    isLoading={isLoadingWards}
-                />
-                 <MetricCard 
-                    icon={<Droplets className="h-6 w-6 text-blue-400"/>} 
-                    title="Water Quality" 
-                    value={`${Math.round(avgWqi)} WQI`}
-                    status={wqiStatus.label}
-                    statusColor={wqiStatus.color}
-                    onClick={() => handleMetricCardClick('Water', 'wqi')}
-                />
-                 <MetricCard 
-                    icon={<Waves className="h-6 w-6 text-orange-400"/>} 
-                    title="Noise Levels" 
-                    value={`${Math.round(avgNoise)} dB`}
-                    status={noiseStatus.label}
-                    statusColor={noiseStatus.color}
-                    onClick={() => handleMetricCardClick('Noise', 'noise')}
-                />
-            </div>
+      <section className="space-y-8">
+         <h2 className="text-2xl font-bold text-left">Live Environmental Overview: <span className="text-primary">{cityData.name}</span></h2>
+         
+         <div className="grid lg:grid-cols-3 gap-6">
+            <MetricCard 
+                icon={<Wind className="h-6 w-6 text-sky-400"/>} 
+                title="Air Quality" 
+                value={avgAqi !== null ? `${Math.round(avgAqi)} AQI` : null} 
+                status={aqiStatus.label}
+                statusColor={aqiStatus.color}
+                onClick={() => handleMetricCardClick('Air', 'aqi')}
+                isLoading={isLoadingWards}
+            />
+              <MetricCard 
+                icon={<Droplets className="h-6 w-6 text-blue-400"/>} 
+                title="Water Quality" 
+                value={`${Math.round(avgWqi)} WQI`}
+                status={wqiStatus.label}
+                statusColor={wqiStatus.color}
+                onClick={() => handleMetricCardClick('Water', 'wqi')}
+            />
+              <MetricCard 
+                icon={<Waves className="h-6 w-6 text-orange-400"/>} 
+                title="Noise Levels" 
+                value={`${Math.round(avgNoise)} dB`}
+                status={noiseStatus.label}
+                statusColor={noiseStatus.color}
+                onClick={() => handleMetricCardClick('Noise', 'noise')}
+            />
          </div>
+
+        <Card className="glassmorphism-card">
+            <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Pollution Heatmap</CardTitle>
+                <Button variant="ghost" size="icon" onClick={() => setMapFullScreen(true)}>
+                    <Expand className="h-5 w-5" />
+                    <span className="sr-only">Enter full screen</span>
+                </Button>
+            </CardHeader>
+            <CardContent>
+                <CitizenHeatmap cityId={cityData.id} wardsData={wardsData} isLoading={isLoadingWards} activeMetric={activeMapMetric} />
+            </CardContent>
+        </Card>
       </section>
 
       <section className="grid md:grid-cols-2 gap-8">

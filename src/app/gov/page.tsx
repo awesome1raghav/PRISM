@@ -10,7 +10,7 @@ import IncidentManagement from '@/components/gov/IncidentManagement';
 import { LayoutGrid, ListChecks, ShieldAlert } from 'lucide-react';
 import { type Violation, type Incident } from './types';
 import { initialViolations, initialIncidents } from './data';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 
 export default function GovernmentPage() {
@@ -54,43 +54,42 @@ export default function GovernmentPage() {
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold tracking-tight">
-            Government Command Center
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Unified environmental monitoring, detection, and response system.
-          </p>
-        </div>
-
-        <Tabs defaultValue="monitoring" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8 glassmorphism-card p-1 h-auto">
-            <TabsTrigger value="monitoring">
-              <LayoutGrid className="mr-2 h-4 w-4" />
-              Unified Monitoring
-            </TabsTrigger>
-            <TabsTrigger value="violations">
-              <ShieldAlert className="mr-2 h-4 w-4" />
-              AI-Detected Violations
-            </TabsTrigger>
-            <TabsTrigger value="incidents">
-              <ListChecks className="mr-2 h-4 w-4" />
-              Complaint Management
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="monitoring">
-            <MonitoringDashboard />
-          </TabsContent>
-          
-          <TabsContent value="violations">
-            <ViolationDetection violations={violations} onApproveViolation={handleApproveViolation} />
-          </TabsContent>
-          
-          <TabsContent value="incidents">
-            <IncidentManagement incidents={incidents} setIncidents={setIncidents} />
-          </TabsContent>
-        </Tabs>
+        <Card className="glassmorphism-card w-full">
+            <CardHeader>
+                <CardTitle className="text-3xl">Government Command Center</CardTitle>
+                <CardDescription>Unified environmental monitoring, detection, and response system.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Tabs defaultValue="monitoring" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 mb-8 bg-card/80 p-1 h-auto rounded-lg">
+                    <TabsTrigger value="monitoring">
+                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    Unified Monitoring
+                    </TabsTrigger>
+                    <TabsTrigger value="violations">
+                    <ShieldAlert className="mr-2 h-4 w-4" />
+                    AI-Detected Violations
+                    </TabsTrigger>
+                    <TabsTrigger value="incidents">
+                    <ListChecks className="mr-2 h-4 w-4" />
+                    Complaint Management
+                    </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="monitoring">
+                    <MonitoringDashboard />
+                </TabsContent>
+                
+                <TabsContent value="violations">
+                    <ViolationDetection violations={violations} onApproveViolation={handleApproveViolation} />
+                </TabsContent>
+                
+                <TabsContent value="incidents">
+                    <IncidentManagement incidents={incidents} setIncidents={setIncidents} />
+                </TabsContent>
+                </Tabs>
+            </CardContent>
+        </Card>
       </main>
     </div>
   );

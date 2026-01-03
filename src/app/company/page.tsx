@@ -45,7 +45,7 @@ const companyFeatures = [
 
 const FeatureCard = ({ feature }: { feature: typeof companyFeatures[0]}) => (
      <Link href={feature.href} key={feature.title} className="group block">
-        <Card className="bg-card border-border/60 h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
+        <Card className="glassmorphism-card h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30">
             <CardHeader>
                 <CardTitle className="flex items-center gap-3">
                     {feature.icon}
@@ -73,12 +73,10 @@ export default function CompanyPage() {
       <Header />
       <main className="flex-grow container py-12">
         <div className="mb-12">
-            <div className="flex justify-between items-center mb-2">
-                <h1 className="text-4xl font-bold tracking-tight">
-                    Company Dashboard
-                </h1>
-            </div>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <h1 className="text-4xl font-bold tracking-tight">
+                Company Dashboard
+            </h1>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
                 <span>Status: <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">Compliant</Badge></span>
                 <span>Last Sync: 2 min ago</span>
                 <span>User: Plant Manager</span>
@@ -88,7 +86,7 @@ export default function CompanyPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Link href="/company/investigations" className="group block lg:col-span-1">
                 <Card className={cn(
-                    "bg-card border-border/60 border-l-4 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
+                    "glassmorphism-card border-l-4 h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
                     investigation.active 
                         ? 'border-l-red-500 hover:shadow-red-500/10'
                         : 'border-l-green-500 hover:shadow-green-500/10'

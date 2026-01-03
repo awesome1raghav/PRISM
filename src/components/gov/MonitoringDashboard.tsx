@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Gauge, Droplets, Waves, Map, Building, Home, AlertTriangle, Wind } from 'lucide-react';
 import { type MetricType } from '@/context/LocationContext';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -125,26 +125,37 @@ const View = ({ viewData, metric }: { viewData: typeof data.city, metric: Metric
 };
 
 const EnvironmentalTrendChart = ({ data, metric }: { data: any[], metric: MetricType }) => {
+  const chartColor = metric === 'aqi' ? '1' : metric === 'wqi' ? '2' : '3';
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
       <ResponsiveContainer>
-        <LineChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border) / 0.5)" />
+        <AreaChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+          <defs>
+            <linearGradient id={`color-${metric}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={`hsla(var(--chart-${chartColor}-raw), 0.4)`} />
+              <stop offset="95%" stopColor={`hsla(var(--chart-${chartColor}-raw), 0.05)`} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border) / 0.3)" />
           <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} />
           <YAxis tickLine={false} axisLine={false} tickMargin={8} />
           <Tooltip 
-            cursor={{ stroke: 'hsl(var(--border))', strokeWidth: 2, strokeDasharray: '3 3' }}
-            content={<ChartTooltipContent />} 
+            cursor={false}
+            content={<ChartTooltipContent 
+              indicator="line" 
+              className="bg-card/80 backdrop-blur-sm"
+            />} 
           />
-          <Line 
+          <Area 
             dataKey={metric} 
             type="monotone"
-            stroke={`hsl(var(--chart-${metric === 'aqi' ? '1' : metric === 'wqi' ? '2' : '3'}))`}
+            fill={`url(#color-${metric})`}
+            stroke={`hsl(var(--chart-${chartColor}))`}
             strokeWidth={2}
-            dot={{ r: 4, fill: `hsl(var(--chart-${metric === 'aqi' ? '1' : metric === 'wqi' ? '2' : '3'}))` }}
-            activeDot={{ r: 6 }}
+            dot={false}
+            activeDot={{ r: 6, fill: `hsl(var(--chart-${chartColor}))`, stroke: 'hsl(var(--background))', strokeWidth: 2 }}
           />
-        </LineChart>
+        </AreaChart>
       </ResponsiveContainer>
     </ChartContainer>
   );
@@ -164,89 +175,92 @@ export default function MonitoringDashboard() {
   }));
 
   return (
-    <div className="grid gap-8">
-       <Card className="glassmorphism-card">
-        <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-primary">
-                <AlertTriangle />
-                Active Alerts
-            </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-            {activeAlerts.map((alert, index) => {
-                const config = alertConfig[alert.type as keyof typeof alertConfig];
-                const Icon = config.icon;
-                const severityStyle = severityStyles[alert.severity as keyof typeof severityStyles];
-
-                return (
-                    <div key={index} className={cn("relative flex items-center gap-4 rounded-lg border-l-4 p-4 shadow-md transition-all hover:shadow-lg", severityStyle)}>
-                        <div className={`p-2 bg-${config.color}-500/10 rounded-full`}><Icon className={`h-6 w-6 text-${config.color}-400`} /></div>
-                        <div className="flex-grow">
-                             <div className="flex items-center gap-2">
-                                {alert.severity === 'High' && (
-                                     <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                                    </span>
-                                )}
-                                <p className="font-bold text-foreground">{alert.title}</p>
-                            </div>
-                            <p className="text-sm text-muted-foreground">{alert.location}</p>
-                        </div>
-                        <div className="text-right">
-                            <p className="font-semibold text-foreground">{alert.value}</p>
-                            <p className="text-xs text-muted-foreground">{alert.time}</p>
-                        </div>
-                    </div>
-                )
-            })}
-        </CardContent>
-      </Card>
-
-      <Card className="glassmorphism-card">
-        <CardHeader>
-            <CardTitle>Live Regional Monitoring</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <Tabs defaultValue="city">
-                <TabsList className="grid w-full grid-cols-3 max-w-lg">
-                    <TabsTrigger value="city"><Map className="mr-2 h-4 w-4"/>City View</TabsTrigger>
-                    <TabsTrigger value="district"><Building className="mr-2 h-4 w-4"/>District View</TabsTrigger>
-                    <TabsTrigger value="ward"><Home className="mr-2 h-4 w-4"/>Ward View</TabsTrigger>
-                </TabsList>
-                <div className="mt-6">
-                    <Tabs defaultValue={activeMetric} onValueChange={(value) => setActiveMetric(value as MetricType)} className="mb-4">
-                        <TabsList>
-                            <TabsTrigger value="aqi">Air</TabsTrigger>
-                            <TabsTrigger value="wqi">Water</TabsTrigger>
-                            <TabsTrigger value="noise">Noise</TabsTrigger>
+    <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-6">
+            <Card className="glassmorphism-card">
+                <CardHeader>
+                <CardTitle>Live Regional Monitoring</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Tabs defaultValue="city">
+                        <TabsList className="grid w-full grid-cols-3 max-w-lg bg-card/80">
+                            <TabsTrigger value="city"><Map className="mr-2 h-4 w-4"/>City View</TabsTrigger>
+                            <TabsTrigger value="district"><Building className="mr-2 h-4 w-4"/>District View</TabsTrigger>
+                            <TabsTrigger value="ward"><Home className="mr-2 h-4 w-4"/>Ward View</TabsTrigger>
                         </TabsList>
+                        <div className="mt-6">
+                            <Tabs defaultValue={activeMetric} onValueChange={(value) => setActiveMetric(value as MetricType)} className="mb-4">
+                                <TabsList className="bg-card/80">
+                                    <TabsTrigger value="aqi">Air</TabsTrigger>
+                                    <TabsTrigger value="wqi">Water</TabsTrigger>
+                                    <TabsTrigger value="noise">Noise</TabsTrigger>
+                                </TabsList>
+                            </Tabs>
+                            <TabsContent value="city"><View viewData={data.city} metric={activeMetric} /></TabsContent>
+                            <TabsContent value="district"><View viewData={data.district} metric={activeMetric} /></TabsContent>
+                            <TabsContent value="ward"><View viewData={data.ward} metric={activeMetric} /></TabsContent>
+                        </div>
                     </Tabs>
-                    <TabsContent value="city"><View viewData={data.city} metric={activeMetric} /></TabsContent>
-                    <TabsContent value="district"><View viewData={data.district} metric={activeMetric} /></TabsContent>
-                    <TabsContent value="ward"><View viewData={data.ward} metric={activeMetric} /></TabsContent>
-                </div>
-            </Tabs>
-        </CardContent>
-      </Card>
+                </CardContent>
+            </Card>
 
-      <Card className="glassmorphism-card">
-        <CardHeader>
-          <CardTitle>Pollution Heatmap</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <CitizenHeatmap cityId="bengaluru" wardsData={wardDataForMap} isLoading={false} activeMetric={activeMetric} />
-        </CardContent>
-      </Card>
+            <Card className="glassmorphism-card">
+                <CardHeader>
+                <CardTitle>7-Day Environmental Trends</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <EnvironmentalTrendChart data={trendData} metric={activeMetric} />
+                </CardContent>
+            </Card>
+        </div>
+        
+        <div className="lg:col-span-1 space-y-6">
+            <Card className="glassmorphism-card">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-primary">
+                        <AlertTriangle />
+                        Active Alerts
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                    {activeAlerts.map((alert, index) => {
+                        const config = alertConfig[alert.type as keyof typeof alertConfig];
+                        const Icon = config.icon;
+                        const severityStyle = severityStyles[alert.severity as keyof typeof severityStyles];
 
-      <Card className="glassmorphism-card">
-        <CardHeader>
-          <CardTitle>7-Day Environmental Trends</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <EnvironmentalTrendChart data={trendData} metric={activeMetric} />
-        </CardContent>
-      </Card>
+                        return (
+                            <div key={index} className={cn("relative flex items-start gap-3 rounded-lg border-l-4 p-3 shadow-md transition-all hover:shadow-lg", severityStyle)}>
+                                <div className={`p-1.5 bg-${config.color}-500/10 rounded-full mt-1`}><Icon className={`h-5 w-5 text-${config.color}-400`} /></div>
+                                <div className="flex-grow">
+                                    <div className="flex items-center gap-2">
+                                        {alert.severity === 'High' && (
+                                            <span className="relative flex h-2 w-2">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                            </span>
+                                        )}
+                                        <p className="font-bold text-foreground text-sm">{alert.title}</p>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">{alert.location}</p>
+                                </div>
+                                <div className="text-right flex-shrink-0">
+                                    <p className="font-semibold text-foreground text-sm">{alert.value}</p>
+                                    <p className="text-xs text-muted-foreground">{alert.time}</p>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </CardContent>
+            </Card>
+             <Card className="glassmorphism-card">
+                <CardHeader>
+                <CardTitle>Pollution Heatmap</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <CitizenHeatmap cityId="bengaluru" wardsData={wardDataForMap} isLoading={false} activeMetric={activeMetric} />
+                </CardContent>
+            </Card>
+        </div>
     </div>
   );
 }

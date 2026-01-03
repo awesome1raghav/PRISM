@@ -58,7 +58,7 @@ const categoryIcons: Record<IncidentCategory, React.ReactNode> = {
 const FilterDropdown = ({ label, options, value, onValueChange }: { label: string, options: string[], value: string, onValueChange: (value: string) => void }) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
-      <Button variant="outline" className="text-sm">
+      <Button variant="outline" className="text-sm bg-card/80">
         {label}: <span className="font-semibold ml-1">{value === 'all' ? 'All' : value}</span> <ChevronDown className="ml-2 h-4 w-4" />
       </Button>
     </DropdownMenuTrigger>
@@ -96,7 +96,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
     });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <Card className="glassmorphism-card">
         <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
             </TableHeader>
             <TableBody>
               {filteredIncidents.map((incident) => (
-                <TableRow key={incident.id} onClick={() => setSelectedIncident(incident)} className="cursor-pointer">
+                <TableRow key={incident.id} onClick={() => setSelectedIncident(incident)} className="cursor-pointer hover:bg-white/5">
                   <TableCell>
                     <div className="font-medium flex items-center gap-2">
                         {categoryIcons[incident.category]}
@@ -165,7 +165,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline">{incident.source}</Badge>
+                    <Badge variant="secondary">{incident.source}</Badge>
                   </TableCell>
                   <TableCell>{incident.submitted}</TableCell>
                   <TableCell>
