@@ -61,27 +61,25 @@ export default function ReportTrackingPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="mb-6">
-                                <ol className="flex items-center w-full">
+                                <div className="flex w-full items-start">
                                     {statusTimeline.map((status, index) => (
-                                        <li key={status} className={cn(
-                                            "flex w-full items-center",
-                                            index < statusTimeline.length - 1 ? "after:content-[''] after:w-full after:h-1 after:border-b after:border-4 after:inline-block" : "",
-                                            index <= currentStatusIndex ? "after:border-primary" : "after:border-muted",
-                                        )}>
-                                            <span className={cn(
-                                                "flex items-center justify-center w-10 h-10 rounded-full lg:h-12 lg:w-12 shrink-0",
+                                        <div key={status} className="relative flex-1 flex flex-col items-center">
+                                            <div className={cn(
+                                                "flex items-center justify-center w-10 h-10 rounded-full lg:h-12 lg:w-12 shrink-0 z-10",
                                                 index <= currentStatusIndex ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                                             )}>
                                                 {index < currentStatusIndex ? <Check className="w-5 h-5" /> : <span className="text-lg">{index + 1}</span>}
-                                            </span>
-                                        </li>
+                                            </div>
+                                            <p className="mt-2 text-xs text-center text-muted-foreground">{status}</p>
+
+                                            {index < statusTimeline.length - 1 && (
+                                                <div className={cn(
+                                                    "absolute top-5 lg:top-6 left-1/2 w-full h-1",
+                                                    index < currentStatusIndex ? "bg-primary" : "bg-muted"
+                                                )}></div>
+                                            )}
+                                        </div>
                                     ))}
-                                </ol>
-                                <div className="mt-3 flex justify-between text-xs text-muted-foreground">
-                                    <div className="text-left w-1/4">Submitted</div>
-                                    <div className="text-center w-1/4">Verified</div>
-                                    <div className="text-center w-1/4">Action Taken</div>
-                                    <div className="text-right w-1/4">Closed</div>
                                 </div>
                             </div>
                             
