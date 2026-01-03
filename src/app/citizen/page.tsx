@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useContext, useState, Suspense, useEffect } from 'react';
+import { useContext, useState, Suspense, useEffect, useMemo } from 'react';
 import Header from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,7 +28,6 @@ import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase';
-import { collection, onSnapshot, query } from 'firebase/firestore';
 import type { WardData } from '@/components/maps/types';
 
 const CitizenHeatmap = dynamic(
@@ -160,13 +159,6 @@ function CitizenDashboardContent() {
   const [activeMapMetric, setActiveMapMetric] = useState<MetricType>('aqi');
   const searchParams = useSearchParams();
   const [isMapFullScreen, setMapFullScreen] = useState(false);
-  const [wardsData, setWardsData] = useState<WardData[]>([]);
-  const [isLoadingWards, setIsLoadingWards] = useState(true);
-  const firestore = useFirestore();
-  const [avgAqi, setAvgAqi] = useState<number | null>(null);
-  const [avgWqi, setAvgWqi] = useState<number | null>(null);
-  const [avgNoise, setAvgNoise] = useState<number | null>(null);
-
   
   useEffect(() => {
     const locationParam = searchParams.get('location');
@@ -183,49 +175,36 @@ function CitizenDashboardContent() {
 
   const cityData = locationData[location] || locationData['Bengaluru'];
 
-  useEffect(() => {
-    if (!firestore || !cityData.id) return;
-    setIsLoadingWards(true);
-    const wardsCollectionPath = `locations/${cityData.id}/wards`;
-    const q = query(collection(firestore, wardsCollectionPath));
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const wards = querySnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-              id: doc.id,
-              name: data.name,
-              lat: data.lat,
-              lng: data.lng,
-              aqi: data.aqi,
-              wqi: 100 - (data.aqi / 5), // Mock WQI from AQI
-              noise: 40 + (data.aqi / 5), // Mock Noise from AQI
-          } as WardData
-      });
-
-      setWardsData(wards);
-      if (wards.length > 0) {
-        const totalAqi = wards.reduce((sum, ward) => sum + ward.aqi, 0);
-        setAvgAqi(totalAqi / wards.length);
-
-        const totalWqi = wards.reduce((sum, ward) => sum + ward.wqi, 0);
-        setAvgWqi(totalWqi / wards.length);
-
-        const totalNoise = wards.reduce((sum, ward) => sum + ward.noise, 0);
-        setAvgNoise(totalNoise / wards.length);
-      } else {
-        setAvgAqi(null);
-        setAvgWqi(null);
-        setAvgNoise(null);
+  const { avgAqi, avgWqi, avgNoise, isLoadingWards } = useMemo(() => {
+      if (!cityData || !cityData.wards || cityData.wards.length === 0) {
+          return { avgAqi: null, avgWqi: null, avgNoise: null, isLoadingWards: true };
       }
-      setIsLoadingWards(false);
-    }, (err) => {
-      console.error("Firestore snapshot error:", err);
-      setIsLoadingWards(false);
-    });
 
-    return () => unsubscribe();
-  }, [firestore, cityData.id]);
+      const totalAqi = cityData.wards.reduce((sum, ward) => sum + ward.live_data.aqi, 0);
+      const totalWqi = cityData.wards.reduce((sum, ward) => sum + ward.live_data.wqi, 0);
+      const totalNoise = cityData.wards.reduce((sum, ward) => sum + ward.live_data.noise, 0);
+      const wardCount = cityData.wards.length;
+
+      return {
+          avgAqi: totalAqi / wardCount,
+          avgWqi: totalWqi / wardCount,
+          avgNoise: totalNoise / wardCount,
+          isLoadingWards: false,
+      };
+  }, [cityData]);
+
+  const wardsData: WardData[] = useMemo(() => {
+    if (!cityData || !cityData.wards) return [];
+    return cityData.wards.map(ward => ({
+        id: ward.id,
+        name: ward.name,
+        lat: 12.9716 + (Math.random() - 0.5) * 0.2, // Mock lat/lng for context data
+        lng: 77.5946 + (Math.random() - 0.5) * 0.2,
+        aqi: ward.live_data.aqi,
+        wqi: ward.live_data.wqi,
+        noise: ward.live_data.noise,
+    }));
+  }, [cityData]);
 
   const getStatus = (metric: 'aqi' | 'wqi' | 'noise', value: number | null) => {
     if (value === null) return { label: 'Updating...', color: 'bg-muted/50 text-muted-foreground border-muted/60'};
