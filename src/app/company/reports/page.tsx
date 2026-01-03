@@ -62,7 +62,7 @@ const generateMockData = (facility: string, recordType: string, timeRange: strin
         hash = ((hash << 5) - hash) + char;
         hash |= 0; 
     }
-    const rand = (min: number, max: number) => (Math.abs(Math.sin(hash++)) % (max - min)) + min;
+    const rand = (min: number, max: number) => Math.floor(Math.abs(Math.sin(hash++)) * (max - min)) + min;
 
     const violations = rand(0, 5);
     const daysCompliant = 365 - violations * rand(2,5);
@@ -324,5 +324,7 @@ export default function ReportsPage() {
     </div>
   );
 }
+
+    
 
     
