@@ -93,7 +93,7 @@ const chartConfig = {
 const StatusCard = ({ icon, title, value, status }: { icon: React.ReactNode, title: string, value: string | number, status: string }) => {
   const statusColor = status === 'Good' || status === 'Low' ? 'text-green-400' : status === 'Moderate' ? 'text-yellow-400' : 'text-red-500';
   return (
-    <Card className="glassmorphism-card">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
         <div className="text-muted-foreground">{icon}</div>
@@ -177,7 +177,7 @@ export default function MonitoringDashboard() {
   return (
     <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
-            <Card className="glassmorphism-card">
+            <Card>
                 <CardHeader>
                 <CardTitle>Live Regional Monitoring</CardTitle>
                 </CardHeader>
@@ -204,7 +204,7 @@ export default function MonitoringDashboard() {
                 </CardContent>
             </Card>
 
-            <Card className="glassmorphism-card">
+            <Card>
                 <CardHeader>
                 <CardTitle>7-Day Environmental Trends</CardTitle>
                 </CardHeader>
@@ -215,7 +215,7 @@ export default function MonitoringDashboard() {
         </div>
         
         <div className="lg:col-span-1 space-y-6">
-            <Card className="glassmorphism-card">
+            <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-primary">
                         <AlertTriangle />
@@ -252,7 +252,7 @@ export default function MonitoringDashboard() {
                     })}
                 </CardContent>
             </Card>
-             <Card className="glassmorphism-card">
+             <Card>
                 <CardHeader>
                 <CardTitle>Pollution Heatmap</CardTitle>
                 </CardHeader>

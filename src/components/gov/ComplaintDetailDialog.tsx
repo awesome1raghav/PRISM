@@ -161,7 +161,7 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow overflow-hidden">
                     {/* Left Sidebar */}
                     <div className="lg:col-span-1 h-full overflow-y-auto pr-4 border-r border-border/30 space-y-6 sticky top-0">
-                         <Card className="bg-card/40">
+                         <Card>
                             <CardHeader className="pb-4">
                                 <CardTitle className="text-base font-semibold flex items-center gap-2 text-muted-foreground">
                                     <ClipboardList />
@@ -249,12 +249,12 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                 </div>
                             </CardContent>
                         </Card>
-                         <InfoSection title="Actions & Notifications" icon={<Bell />} className="bg-card/40">
+                         <InfoSection title="Actions & Notifications" icon={<Bell />}>
                              <div className="space-y-2">
-                                {incident.aiInsights?.probableSource === 'Industry' && (
+                                {(incident.aiInsights?.probableSource === 'Industry' || incident.sourceName) && (
                                     <Button variant="outline" className="w-full" onClick={handleNotifyCompany}>
                                         <Share2 className="mr-2 h-4 w-4" />
-                                        Notify Company
+                                        Notify {incident.sourceName || 'Company'}
                                     </Button>
                                 )}
                                 <Button variant="outline" className="w-full" onClick={handlePublishAdvisory}>
@@ -267,7 +267,7 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
 
                     {/* Main Content Area */}
                     <div className="lg:col-span-3 h-full overflow-y-auto pr-2 space-y-6">
-                        <InfoSection title="Evidence" icon={<Camera />} className="bg-card/40 border border-border/40 shadow-sm">
+                        <InfoSection title="Evidence" icon={<Camera />} className="border border-border/40 shadow-sm">
                             <div className="space-y-4">
                                 {incident.evidence.description && <p className="text-sm italic">"{incident.evidence.description}"</p>}
                                 {incident.evidence.photos.length > 0 && (
@@ -285,11 +285,11 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                             </div>
                         </InfoSection>
 
-                        <InfoSection title="AI Analysis & Cause of Pollution" icon={<Bot />} className="bg-card/40 border-border/30">
+                        <InfoSection title="AI Analysis & Cause of Pollution" icon={<Bot />}>
                            {incident.aiInsights ? (
                                 <div className="space-y-3 text-sm">
                                     <div><strong>Linked AI Violation:</strong> {incident.aiInsights.violationId}</div>
-                                    <div className="font-semibold text-base"><strong>Identified Cause:</strong> <span className="text-primary">{incident.aiInsights.probableSource}</span></div>
+                                    <div className="font-semibold text-base"><strong>Identified Cause:</strong> <span className="text-primary">{incident.aiInsights.sourceName || incident.aiInsights.probableSource}</span></div>
                                     <div className="flex items-center gap-2">
                                         <strong>Confidence Score:</strong>
                                         <Badge variant="outline" className="font-semibold">{incident.aiInsights.confidence}%</Badge>
@@ -298,7 +298,7 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                            ) : <p className="text-sm text-muted-foreground">No AI insights linked to this complaint.</p>}
                         </InfoSection>
 
-                        <InfoSection title="Resolution Summary" icon={<CheckCircle />} className="bg-card/40 border-border/30">
+                        <InfoSection title="Resolution Summary" icon={<CheckCircle />}>
                              <div className="space-y-4">
                                 <div>
                                     <Label htmlFor="action-taken">Action Taken</Label>
@@ -311,7 +311,7 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                              </div>
                         </InfoSection>
                         
-                         <InfoSection title="Internal Notes" icon={<Eye />} className="bg-muted/40 border-border/30">
+                         <InfoSection title="Internal Notes" icon={<Eye />} className="bg-muted/40">
                              <Textarea placeholder="Add notes visible only to officials..." value={editableIncident.internalNotes || ''} onChange={(e) => handleFieldChange('internalNotes', e.target.value)} />
                         </InfoSection>
                     </div>
@@ -326,5 +326,3 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
         </Dialog>
     )
 }
-
-    

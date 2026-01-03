@@ -97,7 +97,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
 
   return (
     <div className="space-y-6">
-      <Card className="glassmorphism-card">
+      <Card>
         <CardHeader>
             <CardTitle className="flex items-center gap-2">
                 <Filter className="h-5 w-5" />
@@ -132,7 +132,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
         </CardContent>
       </Card>
       
-      <Card className="glassmorphism-card">
+      <Card>
         <CardHeader>
           <CardTitle>Complaint & Incident Queue</CardTitle>
           <CardDescription>
@@ -154,7 +154,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
             </TableHeader>
             <TableBody>
               {filteredIncidents.map((incident) => (
-                <TableRow key={incident.id} onClick={() => setSelectedIncident(incident)} className="cursor-pointer hover:bg-white/5">
+                <TableRow key={incident.id} onClick={() => setSelectedIncident(incident)} className="cursor-pointer hover:bg-muted/50">
                   <TableCell>
                     <div className="font-medium flex items-center gap-2">
                         {categoryIcons[incident.category]}
@@ -165,7 +165,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{incident.source}</Badge>
+                    <Badge variant="secondary">{incident.sourceName || incident.source}</Badge>
                   </TableCell>
                   <TableCell>{incident.submitted}</TableCell>
                   <TableCell>

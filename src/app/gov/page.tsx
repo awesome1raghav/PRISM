@@ -28,6 +28,7 @@ export default function GovernmentPage() {
         status: 'New',
         assignee: 'Unassigned',
         source: violationToApprove.source === 'Industry' ? 'Both' : 'Sensor',
+        sourceName: violationToApprove.sourceName,
         evidence: {
             photos: [],
             description: violationToApprove.summary || 'AI-detected event.',
@@ -36,6 +37,7 @@ export default function GovernmentPage() {
         aiInsights: {
             violationId: violationToApprove.id,
             probableSource: violationToApprove.source,
+            sourceName: violationToApprove.sourceName,
             confidence: violationToApprove.confidence === 'High' ? 95 : violationToApprove.confidence === 'Medium' ? 75 : 50,
         },
         resolution: null,
@@ -54,7 +56,7 @@ export default function GovernmentPage() {
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <Header />
       <main className="flex-grow container py-12">
-        <Card className="glassmorphism-card w-full">
+        <Card>
             <CardHeader>
                 <CardTitle className="text-3xl">Government Command Center</CardTitle>
                 <CardDescription>Unified environmental monitoring, detection, and response system.</CardDescription>

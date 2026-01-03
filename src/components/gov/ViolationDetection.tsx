@@ -103,7 +103,7 @@ const ViolationList = ({
                 <div className="text-sm text-muted-foreground space-y-1 mt-1">
                   <p>{violation.location}</p>
                   <p className="text-xs">{violation.time}</p>
-                  <Badge variant="outline" className="text-xs">Source: {violation.source}</Badge>
+                  <Badge variant="outline" className="text-xs">Source: {violation.sourceName || violation.source}</Badge>
                 </div>
             </div>
             <div className="flex items-center gap-2">
@@ -146,7 +146,10 @@ export default function ViolationDetection({ violations, onApproveViolation }: {
       });
 
       if (selectedViolation.source === 'Industry') {
-          console.log(`[SIMULATE] Sanitized notification sent to company associated with ${selectedViolation.location}`);
+          toast({
+            title: "Notification Sent",
+            description: `A sanitized report for case ${selectedViolation.id} has been sent to ${selectedViolation.sourceName}.`,
+        });
       }
 
       // After approval, select the next violation in the list or null
@@ -169,7 +172,7 @@ export default function ViolationDetection({ violations, onApproveViolation }: {
     <>
     <div className="grid lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-1">
-            <Card className="glassmorphism-card">
+            <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Bot />
@@ -203,7 +206,7 @@ export default function ViolationDetection({ violations, onApproveViolation }: {
             {selectedViolation ? (
                 <AIReport violation={selectedViolation} onApprove={handleApproveClick} />
             ) : (
-                <Card className="glassmorphism-card h-96 flex items-center justify-center">
+                <Card className="h-96 flex items-center justify-center">
                     <CardContent className="text-center">
                          <Check className="h-12 w-12 text-green-500 mx-auto mb-4" />
                         <p className="text-lg font-semibold">All violations reviewed.</p>

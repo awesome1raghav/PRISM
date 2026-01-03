@@ -13,34 +13,34 @@ html, body, #root, * {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
+    --background: 240 10% 97%; /* Light Gray */
+    --foreground: 222.2 84% 4.9%; /* Dark Text */
+    --card: 0 0% 100%; /* White */
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 222.2 47.4% 11.2%; /* Dark Blue/Black */
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
+    --secondary: 240 5% 90%; /* Lighter Gray for secondary elements */
     --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
+    --muted: 240 5% 90%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 340 85% 60%; /* Pink/Red from image */
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-    --chart-1: 222.2 47.4% 11.2%;
-    --chart-2: 210 40% 96.1%;
-    --chart-3: 45 80% 60%;
-    --chart-4: 0 70% 65%;
-    --chart-5: 280 80% 70%;
+    --radius: 0.8rem;
+    --chart-1: 190 80% 50%; /* Teal/Cyan */
+    --chart-2: 340 85% 60%; /* Pink/Red */
+    --chart-3: 45 80% 60%; /* Amber/Yellow */
+    --chart-4: 280 80% 65%; /* Magenta/Purple */
+    --chart-5: 120 70% 55%; /* Lime Green */
   }
 
-  .dark, .theme-gov, .theme-co, .theme-citizen {
+  .dark {
     --background: 224 10% 4%; /* #08070b */
     --foreground: 210 40% 98%;
     --card: 224 10% 9%; /* #151419 */
@@ -75,7 +75,6 @@ html, body, #root, * {
   }
   body {
     @apply bg-background text-foreground;
-    background-image: none;
     scroll-behavior: smooth;
   }
   
@@ -96,8 +95,14 @@ html, body, #root, * {
 }
 
 @layer components {
-  .glassmorphism-card {
-    @apply bg-card/60 backdrop-blur-lg border border-white/5 rounded-2xl shadow-lg;
+  /* Remove glassmorphism for light theme, use clean cards */
+  .light .glassmorphism-card {
+     @apply bg-card border shadow-sm;
+  }
+  
+  /* Keep glassmorphism for dark theme */
+  .dark .glassmorphism-card {
+    @apply bg-card/60 backdrop-blur-lg border border-white/5 shadow-lg;
   }
 }
 

@@ -102,7 +102,7 @@ const LocationSelector = () => {
   }, [location]);
 
   return (
-     <Card className="glassmorphism-card p-4">
+     <Card className="p-4">
         <CardContent className="p-2">
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
                 <Input 
@@ -126,7 +126,7 @@ const LocationSelector = () => {
 };
 
 const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoading }: { icon: JSX.Element, title: string, value: string | null, status: string, statusColor: string, onClick: () => void, isLoading?: boolean }) => (
-    <Card onClick={onClick} className="glassmorphism-card hover:border-primary/60 transition-all group cursor-pointer h-full flex flex-col">
+    <Card onClick={onClick} className="hover:border-primary/60 transition-all group cursor-pointer h-full flex flex-col">
         <CardHeader>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -260,7 +260,7 @@ function CitizenDashboardContent() {
         <h2 className="text-2xl font-bold mb-4 text-left">Health Advisory</h2>
          <div className="grid gap-4 md:grid-cols-2">
             {advisories.map((advisory, index) => (
-                <Card key={index} className={cn("glassmorphism-card border-l-4",
+                <Card key={index} className={cn("border-l-4",
                     advisory.type === 'alert' ? 'border-l-yellow-500' : 'border-l-blue-500'
                 )}>
                     <CardContent className="p-6 flex items-start gap-4">
@@ -307,7 +307,7 @@ function CitizenDashboardContent() {
             />
          </div>
 
-        <Card className="glassmorphism-card">
+        <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Pollution Heatmap</CardTitle>
                 <Button variant="ghost" size="icon" onClick={() => setMapFullScreen(true)}>
@@ -322,7 +322,7 @@ function CitizenDashboardContent() {
       </section>
 
       <section className="grid md:grid-cols-2 gap-8">
-          <Card className="glassmorphism-card hover:border-primary/60 transition-colors group">
+          <Card className="hover:border-primary/60 transition-colors group">
             <CardContent className="p-6 flex flex-col items-center text-center">
                 <Siren className="h-10 w-10 text-primary mb-4" />
                 <h2 className="text-2xl font-bold mb-2">See Something? Report It.</h2>
@@ -335,7 +335,7 @@ function CitizenDashboardContent() {
             </CardContent>
           </Card>
 
-           <Card className="glassmorphism-card hover:border-primary/60 transition-colors group">
+           <Card className="hover:border-primary/60 transition-colors group">
                 <CardContent className="p-6 flex flex-col items-center text-center">
                     <MapPin className="h-10 w-10 text-primary mb-4" />
                     <h3 className="text-2xl font-bold mb-2">My Reports</h3>
