@@ -10,12 +10,12 @@ const InteractiveBackground: React.FC = () => {
   const simState = useRef({
     w: 0,
     h: 0,
-    scale: 1, // Changed from 4 to 1 for higher resolution
+    scale: 1, 
     cols: 0,
     rows: 0,
     current: new Float32Array(),
     previous: new Float32Array(),
-    damping: 0.92,
+    damping: 0.95, // Increased from 0.92 to make ripples fade a bit slower but feel smoother
     lastDisturb: 0,
     strength: 350,
     threshold: 1.5,
@@ -81,8 +81,8 @@ const InteractiveBackground: React.FC = () => {
                 r = 56; g = 163; b = 165;
             }
 
-            const alpha = Math.min(intensity * 0.4, 0.4);
-            const radius = Math.min(intensity * 10, 10);
+            const alpha = Math.min(intensity * 0.25, 0.25); // Reduced alpha for a softer effect
+            const radius = Math.min(intensity * 12, 12); // Slightly increased radius
 
             ctx.beginPath();
             ctx.arc(x * simState.scale, y * simState.scale, radius, 0, Math.PI * 2);
