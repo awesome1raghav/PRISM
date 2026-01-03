@@ -237,14 +237,14 @@ const FacilityDetailSheet = ({ facility, open, onOpenChange }: { facility: Facil
 const ContactSheet = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent>
+            <SheetContent className="flex flex-col">
                 <SheetHeader>
                     <SheetTitle>Contact Information</SheetTitle>
                     <SheetDescription>
                         Get in touch with the right people for your inquiries.
                     </SheetDescription>
                 </SheetHeader>
-                <div className="py-6 space-y-8">
+                <div className="py-6 space-y-8 flex-grow overflow-y-auto">
                     <div>
                         <h3 className="font-semibold mb-4 text-lg">Government Liaisons</h3>
                         <div className="space-y-4">
@@ -381,5 +381,7 @@ export default function FacilitiesPage() {
     </div>
   );
 }
+
+    
 
     
