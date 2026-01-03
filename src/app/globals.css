@@ -150,3 +150,61 @@ html, body, #root, * {
     transform: translateY(-8px);
   }
 }
+
+
+/* Spectral Glow for PRISM title */
+@keyframes spectral-glow {
+  0% {
+    text-shadow: 
+      0 0 5px hsla(0, 0%, 100%, 0.4), /* Inner White */
+      0 0 10px hsla(270, 80%, 70%, 0.5), /* Mid Violet */
+      0 0 20px hsla(240, 80%, 70%, 0.4), /* Mid Indigo */
+      0 0 35px hsla(0, 100%, 70%, 0.2), /* Outer Red */
+      0 0 50px hsla(120, 100%, 70%, 0.1); /* Outer Green */
+  }
+  50% {
+    text-shadow: 
+      0 0 6px hsla(0, 0%, 100%, 0.5),   /* Inner White */
+      0 0 12px hsla(270, 80%, 70%, 0.6),  /* Mid Violet */
+      0 0 24px hsla(240, 80%, 70%, 0.5),  /* Mid Indigo */
+      0 0 40px hsla(200, 100%, 70%, 0.2), /* Outer Blue */
+      0 0 60px hsla(300, 100%, 70%, 0.1); /* Outer Magenta */
+  }
+  100% {
+    text-shadow: 
+      0 0 5px hsla(0, 0%, 100%, 0.4), /* Inner White */
+      0 0 10px hsla(270, 80%, 70%, 0.5), /* Mid Violet */
+      0 0 20px hsla(240, 80%, 70%, 0.4), /* Mid Indigo */
+      0 0 35px hsla(0, 100%, 70%, 0.2), /* Outer Red */
+      0 0 50px hsla(120, 100%, 70%, 0.1); /* Outer Green */
+  }
+}
+
+.spectral-text {
+  animation: spectral-glow 8s ease-in-out infinite;
+  text-shadow: 
+      0 0 5px hsla(0, 0%, 100%, 0.4),
+      0 0 10px hsla(270, 80%, 70%, 0.5),
+      0 0 20px hsla(240, 80%, 70%, 0.4),
+      0 0 35px hsla(0, 100%, 70%, 0.2),
+      0 0 50px hsla(120, 100%, 70%, 0.1);
+}
+
+/* Reduce glow intensity on mobile */
+@media (max-width: 768px) {
+  .spectral-text {
+    text-shadow: 
+      0 0 4px hsla(0, 0%, 100%, 0.35),
+      0 0 8px hsla(270, 80%, 70%, 0.4),
+      0 0 16px hsla(240, 80%, 70%, 0.35);
+    animation: none; /* Disable pulsing on mobile for performance and subtlety */
+  }
+}
+
+.light .spectral-text {
+   text-shadow: 
+      0 0 5px hsla(0, 0%, 10%, 0.2), 
+      0 0 10px hsla(270, 80%, 50%, 0.15),
+      0 0 20px hsla(240, 80%, 50%, 0.1);
+   animation: none;
+}

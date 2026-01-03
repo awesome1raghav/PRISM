@@ -6,7 +6,7 @@ export default function Hero() {
     <section className="relative w-full flex items-center justify-center pt-32 pb-48 overflow-hidden">
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-foreground">
         <div className="container max-w-5xl">
-          <h1 className="text-6xl font-bold tracking-wide sm:text-7xl md:text-8xl text-foreground drop-shadow-lg [text-shadow:0_0_25px_hsl(var(--accent)/0.7),0_0_10px_hsl(var(--primary)/0.5)]">
+          <h1 className="text-6xl font-bold tracking-wide sm:text-7xl md:text-8xl text-foreground spectral-text">
             PRISM
           </h1>
           <p className="mt-6 text-lg tracking-wide text-muted-foreground/90 sm:text-xl max-w-3xl mx-auto text-balance [text-shadow:0_0_10px_hsl(var(--background)/0.9)]">
