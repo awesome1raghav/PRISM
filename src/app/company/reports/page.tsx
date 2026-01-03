@@ -101,6 +101,13 @@ const RecordDetailSheet = ({ record, open, onOpenChange }: { record: TimelineEnt
 
 export default function ReportsPage() {
   const [selectedRecord, setSelectedRecord] = useState<TimelineEntry | null>(null);
+  const [recordType, setRecordType] = useState('emission');
+
+  const recordTypeNames: { [key: string]: string } = {
+    emission: 'Emission',
+    water: 'Water',
+    waste: 'Waste'
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -129,11 +136,11 @@ export default function ReportsPage() {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="text-sm">
-                        Record Type: <span className="font-semibold ml-1">Emission</span> <ChevronDown className="mr-2 h-4 w-4" />
+                        Record Type: <span className="font-semibold ml-1">{recordTypeNames[recordType]}</span> <ChevronDown className="mr-2 h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value="emission">
+                    <DropdownMenuRadioGroup value={recordType} onValueChange={setRecordType}>
                         <DropdownMenuRadioItem value="emission">Emission</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="water">Water</DropdownMenuRadioItem>
                          <DropdownMenuRadioItem value="waste">Waste</DropdownMenuRadioItem>
