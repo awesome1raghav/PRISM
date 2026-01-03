@@ -169,7 +169,7 @@ export default function ViolationDetection({ violations, onApproveViolation }: {
     <>
     <div className="grid lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-1">
-            <Card className="bg-card/40 border-border/30">
+            <Card className="glassmorphism-card">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Bot />
@@ -203,7 +203,7 @@ export default function ViolationDetection({ violations, onApproveViolation }: {
             {selectedViolation ? (
                 <AIReport violation={selectedViolation} onApprove={handleApproveClick} />
             ) : (
-                <Card className="bg-card/40 border-border/30 h-96 flex items-center justify-center">
+                <Card className="glassmorphism-card h-96 flex items-center justify-center">
                     <CardContent className="text-center">
                          <Check className="h-12 w-12 text-green-500 mx-auto mb-4" />
                         <p className="text-lg font-semibold">All violations reviewed.</p>

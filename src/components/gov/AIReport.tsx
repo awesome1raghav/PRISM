@@ -25,7 +25,7 @@ const priorityStyles = {
 }
 
 const InfoCard = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
-    <Card className="bg-muted/30 border-border/30">
+    <Card className="glassmorphism-card">
         <CardHeader className="pb-4">
             <CardTitle className="text-base font-semibold flex items-center gap-2 text-muted-foreground">
                 {icon}
@@ -46,7 +46,7 @@ export default function AIReport({ violation, onApprove }: { violation: Violatio
 
     return (
         <div className="space-y-6">
-            <Card className="bg-card/40 border-border/30">
+            <Card className="glassmorphism-card">
                 <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
@@ -130,7 +130,7 @@ export default function AIReport({ violation, onApprove }: { violation: Violatio
                 <p className="text-sm text-foreground/90 font-mono text-xs">{violation.explanation}</p>
             </InfoCard>
 
-             <Card className="bg-card/40 border-primary/30">
+             <Card className="glassmorphism-card border-primary/30">
                 <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-sm text-muted-foreground">Review the AI-generated report, make necessary changes, and forward to the responsible departments for action.</p>
                     <Button size="lg" className="w-full sm:w-auto flex-shrink-0" onClick={onApprove}>

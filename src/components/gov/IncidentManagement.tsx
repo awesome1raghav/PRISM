@@ -97,7 +97,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
 
   return (
     <div className="space-y-8">
-      <Card className="bg-card/40 border-border/30">
+      <Card className="glassmorphism-card">
         <CardHeader>
             <CardTitle className="flex items-center gap-2">
                 <Filter className="h-5 w-5" />
@@ -132,7 +132,7 @@ export default function IncidentManagement({ incidents, setIncidents }: { incide
         </CardContent>
       </Card>
       
-      <Card className="bg-card/40 border-border/30">
+      <Card className="glassmorphism-card">
         <CardHeader>
           <CardTitle>Complaint & Incident Queue</CardTitle>
           <CardDescription>

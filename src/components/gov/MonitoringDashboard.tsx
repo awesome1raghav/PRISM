@@ -15,7 +15,7 @@ import { type WardData } from '../maps/types';
 
 const CitizenHeatmap = dynamic(() => import('../maps/CitizenHeatmap'), {
   ssr: false,
-  loading: () => <Skeleton className="h-[420px] w-full rounded-xl" />,
+  loading: () => <Skeleton className="h-[420px] w-full rounded-2xl" />,
 });
 
 
@@ -93,7 +93,7 @@ const chartConfig = {
 const StatusCard = ({ icon, title, value, status }: { icon: React.ReactNode, title: string, value: string | number, status: string }) => {
   const statusColor = status === 'Good' || status === 'Low' ? 'text-green-400' : status === 'Moderate' ? 'text-yellow-400' : 'text-red-500';
   return (
-    <Card className="bg-card/80 border-border/30">
+    <Card className="glassmorphism-card">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
         <div className="text-muted-foreground">{icon}</div>
@@ -165,7 +165,7 @@ export default function MonitoringDashboard() {
 
   return (
     <div className="grid gap-8">
-       <Card className="bg-card/40 border-border/30">
+       <Card className="glassmorphism-card">
         <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
                 <AlertTriangle />
@@ -203,7 +203,7 @@ export default function MonitoringDashboard() {
         </CardContent>
       </Card>
 
-      <Card className="bg-card/40 border-border/30">
+      <Card className="glassmorphism-card">
         <CardHeader>
             <CardTitle>Live Regional Monitoring</CardTitle>
         </CardHeader>
@@ -230,7 +230,7 @@ export default function MonitoringDashboard() {
         </CardContent>
       </Card>
 
-      <Card className="bg-card/40 border-border/30">
+      <Card className="glassmorphism-card">
         <CardHeader>
           <CardTitle>Pollution Heatmap</CardTitle>
         </CardHeader>
@@ -239,7 +239,7 @@ export default function MonitoringDashboard() {
         </CardContent>
       </Card>
 
-      <Card className="bg-card/40 border-border/30">
+      <Card className="glassmorphism-card">
         <CardHeader>
           <CardTitle>7-Day Environmental Trends</CardTitle>
         </CardHeader>

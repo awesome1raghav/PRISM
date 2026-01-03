@@ -36,7 +36,7 @@ const CitizenHeatmap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[420px] w-full rounded-xl bg-muted flex items-center justify-center">
+      <div className="h-[420px] w-full rounded-2xl bg-muted/40 flex items-center justify-center">
         <p>Loading map...</p>
       </div>
     ),
@@ -102,7 +102,7 @@ const LocationSelector = () => {
   }, [location]);
 
   return (
-     <div className="bg-card border border-border/60 rounded-lg p-4">
+     <div className="glassmorphism-card p-4">
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
             <Input 
                 name="location-input"
@@ -125,7 +125,7 @@ const LocationSelector = () => {
 
 const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoading }: { icon: JSX.Element, title: string, value: string | null, status: string, statusColor: string, onClick: () => void, isLoading?: boolean }) => (
     <div onClick={onClick} className="group cursor-pointer">
-        <Card className="bg-card border-border/60 hover:bg-muted/40 hover:border-primary/40 transition-all h-full">
+        <Card className="glassmorphism-card hover:border-primary/60 transition-all h-full">
             <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -143,7 +143,7 @@ const MetricCard = ({ icon, title, value, status, statusColor, onClick, isLoadin
                   ) : (
                     <>
                       <p className="text-2xl font-bold">{value}</p>
-                      <Badge variant="outline" className={cn("mt-1 border", statusColor)}>
+                      <Badge variant="outline" className={cn("mt-1", statusColor)}>
                           {status}
                       </Badge>
                     </>
@@ -260,7 +260,7 @@ function CitizenDashboardContent() {
         <h2 className="text-2xl font-bold mb-4 text-left">Health Advisory</h2>
          <div className="grid gap-4 md:grid-cols-2">
             {advisories.map((advisory, index) => (
-                <Card key={index} className={cn("bg-card border-l-4 border-border/60",
+                <Card key={index} className={cn("glassmorphism-card border-l-4",
                     advisory.type === 'alert' ? 'border-l-yellow-500' : 'border-l-blue-500'
                 )}>
                     <CardContent className="p-6 flex items-center gap-4">
@@ -280,7 +280,7 @@ function CitizenDashboardContent() {
          <h2 className="text-2xl font-bold mb-4 text-left">Live Environmental Overview: <span className="text-primary">{cityData.name}</span></h2>
          <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-                <Card className="bg-card border-border/60 h-full">
+                <Card className="glassmorphism-card h-full">
                     <CardHeader className="flex flex-row items-center justify-between">
                         <CardTitle>Pollution Heatmap</CardTitle>
                         <Button variant="ghost" size="icon" onClick={() => setMapFullScreen(true)}>
@@ -324,7 +324,7 @@ function CitizenDashboardContent() {
       </section>
 
       <section className="grid md:grid-cols-2 gap-8">
-          <Card className="bg-card border-border/60 hover:bg-muted/40 transition-colors group">
+          <Card className="glassmorphism-card hover:border-primary/60 transition-colors group">
             <CardContent className="p-6 flex flex-col items-center text-center">
                 <Siren className="h-10 w-10 text-primary mb-4" />
                 <h2 className="text-2xl font-bold mb-2">See Something? Report It.</h2>
@@ -337,7 +337,7 @@ function CitizenDashboardContent() {
             </CardContent>
           </Card>
 
-           <Card className="bg-card border-border/60 hover:bg-muted/40 transition-colors group">
+           <Card className="glassmorphism-card hover:border-primary/60 transition-colors group">
                 <CardContent className="p-6 flex flex-col items-center text-center">
                     <MapPin className="h-10 w-10 text-primary mb-4" />
                     <h3 className="text-2xl font-bold mb-2">My Reports</h3>
