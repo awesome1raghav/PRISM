@@ -28,6 +28,9 @@ import {
   Building,
   Save,
   PlusCircle,
+  ClipboardList,
+  Eye,
+  Briefcase,
 } from 'lucide-react';
 import Image from 'next/image';
 import { type Incident, type IncidentStatus } from '@/app/gov/types';
@@ -39,8 +42,8 @@ interface ComplaintDetailDialogProps {
   onUpdate: (incident: Incident) => void;
 }
 
-const InfoSection = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => (
-    <Card className="bg-muted/30">
+const InfoSection = ({ title, icon, children, className }: { title: string, icon: React.ReactNode, children: React.ReactNode, className?: string }) => (
+    <Card className={className}>
         <CardHeader className="pb-4">
             <CardTitle className="text-base font-semibold flex items-center gap-2 text-muted-foreground">
                 {icon}
@@ -133,18 +136,25 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
 
     return (
         <Dialog open={!!incident} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="max-w-4xl h-[90vh]">
+            <DialogContent className="max-w-6xl h-[90vh] flex flex-col">
                 <DialogHeader>
-                    <DialogTitle className="text-2xl">Complaint Details</DialogTitle>
-                    <DialogDescription>Manage and resolve complaint ID: {incident.id}</DialogDescription>
+                    <DialogTitle className="text-2xl">Complaint Case File</DialogTitle>
+                    <DialogDescription>Managing case ID: {incident.id} for {incident.location}</DialogDescription>
                 </DialogHeader>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full overflow-hidden">
-                    {/* Left Column - Details & Actions */}
-                    <div className="md:col-span-1 space-y-6 overflow-y-auto pr-4">
-                        <InfoSection title="Assignment & Status" icon={<User />}>
-                             <div className="space-y-4">
+                
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow overflow-hidden">
+                    {/* Left Sidebar */}
+                    <div className="lg:col-span-1 h-full overflow-y-auto pr-4 border-r border-border/30 space-y-6 sticky top-0">
+                         <Card className="bg-card/40">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-base font-semibold flex items-center gap-2 text-muted-foreground">
+                                    <ClipboardList />
+                                    Assignment & Task
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
                                 <div>
-                                    <Label htmlFor="status">Status</Label>
+                                    <Label htmlFor="status">Complaint Status</Label>
                                     <Select value={editableIncident.status} onValueChange={(value) => handleFieldChange('status', value as IncidentStatus)}>
                                         <SelectTrigger id="status"><SelectValue /></SelectTrigger>
                                         <SelectContent>
@@ -156,7 +166,7 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                     </Select>
                                 </div>
                                 <div>
-                                    <Label htmlFor="assignee">Assign Officer</Label>
+                                    <Label htmlFor="assignee">Assigned Officer</Label>
                                     {isEditingOfficer ? (
                                         <div className="flex items-center gap-2">
                                             <Input 
@@ -189,7 +199,7 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                     )}
                                 </div>
                                  <div>
-                                    <Label htmlFor="department">Assign Department</Label>
+                                    <Label htmlFor="department">Assigned Department</Label>
                                      {isEditingDepartment ? (
                                         <div className="flex items-center gap-2">
                                             <Input
@@ -221,37 +231,20 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                         </Select>
                                     )}
                                 </div>
-                            </div>
-                        </InfoSection>
-
-                        <InfoSection title="Resolution Summary" icon={<CheckCircle />}>
-                             <div className="space-y-4">
-                                <div>
-                                    <Label htmlFor="action-taken">Action Taken</Label>
-                                    <Textarea id="action-taken" placeholder="e.g., Inspection conducted, notice issued..." value={editableIncident.resolution?.actionTaken || ''} onChange={(e) => handleResolutionChange('actionTaken', e.target.value)} />
-                                </div>
-                                <div>
-                                    <Label htmlFor="outcome">Outcome</Label>
-                                    <Textarea id="outcome" placeholder="e.g., Area cleared, compliance confirmed." value={editableIncident.resolution?.outcome || ''} onChange={(e) => handleResolutionChange('outcome', e.target.value)} />
-                                </div>
-                             </div>
-                        </InfoSection>
-
-                         <InfoSection title="Internal Notes" icon={<FileText />}>
-                             <Textarea placeholder="Add notes visible only to officials..." value={editableIncident.internalNotes || ''} onChange={(e) => handleFieldChange('internalNotes', e.target.value)} />
-                        </InfoSection>
+                            </CardContent>
+                        </Card>
                     </div>
 
-                     {/* Right Column - Evidence & Info */}
-                    <div className="md:col-span-2 space-y-6 overflow-y-auto pr-4">
-                        <InfoSection title="Evidence" icon={<Camera />}>
+                    {/* Main Content Area */}
+                    <div className="lg:col-span-3 h-full overflow-y-auto pr-2 space-y-6">
+                        <InfoSection title="Evidence" icon={<Camera />} className="bg-card/40 border border-border/40 shadow-sm">
                             <div className="space-y-4">
                                 {incident.evidence.description && <p className="text-sm italic">"{incident.evidence.description}"</p>}
                                 {incident.evidence.photos.length > 0 && (
                                     <div className="grid grid-cols-2 gap-2">
                                         {incident.evidence.photos.map((photo, index) => (
                                             <div key={index} className="relative aspect-video">
-                                                <Image src={photo} alt={`Evidence ${index + 1}`} width={400} height={400} className="rounded-md object-cover" />
+                                                <Image src={photo} alt={`Evidence ${index + 1}`} layout="fill" className="rounded-md object-cover" />
                                             </div>
                                         ))}
                                     </div>
@@ -261,19 +254,37 @@ export default function ComplaintDetailDialog({ incident, onClose, onUpdate }: C
                                 </Badge>
                             </div>
                         </InfoSection>
-                        
-                         <InfoSection title="AI Insights" icon={<Bot />}>
+
+                        <InfoSection title="AI Insights" icon={<Bot />} className="bg-card/40 border-border/30">
                            {incident.aiInsights ? (
                                 <div className="space-y-3 text-sm">
                                     <p><strong>Linked AI Violation:</strong> {incident.aiInsights.violationId}</p>
                                     <p><strong>Probable Source:</strong> {incident.aiInsights.probableSource}</p>
-                                    <p><strong>Confidence Score:</strong> <span className="font-semibold">{incident.aiInsights.confidence}%</span></p>
+                                    <p><strong>Confidence Score:</strong> <Badge variant="outline" className="font-semibold">{incident.aiInsights.confidence}%</Badge></p>
                                 </div>
                            ) : <p className="text-sm text-muted-foreground">No AI insights linked to this complaint.</p>}
                         </InfoSection>
+
+                        <InfoSection title="Resolution Summary" icon={<CheckCircle />} className="bg-card/40 border-border/30">
+                             <div className="space-y-4">
+                                <div>
+                                    <Label htmlFor="action-taken">Action Taken</Label>
+                                    <Textarea id="action-taken" placeholder="e.g., Inspection conducted, notice issued..." value={editableIncident.resolution?.actionTaken || ''} onChange={(e) => handleResolutionChange('actionTaken', e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label htmlFor="outcome">Final Outcome</Label>
+                                    <Textarea id="outcome" placeholder="e.g., Area cleared, compliance confirmed." value={editableIncident.resolution?.outcome || ''} onChange={(e) => handleResolutionChange('outcome', e.target.value)} />
+                                </div>
+                             </div>
+                        </InfoSection>
+                        
+                         <InfoSection title="Internal Notes" icon={<Eye />} className="bg-muted/40 border-border/30">
+                             <Textarea placeholder="Add notes visible only to officials..." value={editableIncident.internalNotes || ''} onChange={(e) => handleFieldChange('internalNotes', e.target.value)} />
+                        </InfoSection>
                     </div>
                 </div>
-                <DialogFooter className="pt-4 border-t">
+
+                <DialogFooter className="pt-4 border-t mt-auto flex-shrink-0">
                     <Button onClick={handleUpdate}>
                         <Save className="mr-2 h-4 w-4" /> Save Changes
                     </Button>
