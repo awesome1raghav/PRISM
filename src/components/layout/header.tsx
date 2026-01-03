@@ -6,7 +6,7 @@ import Logo from '@/components/logo';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X, Bot, Gavel } from 'lucide-react';
+import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X, Bot, Gavel, HeartPulse, TrendingDown, Star } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,13 +30,6 @@ import { Badge } from '../ui/badge';
 import ThemeSwitcher from '../ThemeSwitcher';
 import { useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
-
-const navLinks = [
-  { href: '/report', label: 'Report Issue' },
-];
-
-const loggedInPaths = ['/citizen', '/gov', '/company', '/activate', '/profile', '/settings'];
-
 
 const governmentNotifications = [
     {
@@ -69,6 +62,8 @@ const governmentNotifications = [
     }
 ]
 
+const loggedInPaths = ['/citizen', '/gov', '/company', '/profile', '/settings', '/report'];
+
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
@@ -90,6 +85,18 @@ export default function Header() {
     }
     router.push('/');
   }
+
+  const getRole = (path: string) => {
+    if (path.startsWith('/gov')) return 'government';
+    if (path.startsWith('/company')) return 'company';
+    return 'citizen';
+  }
+
+  const role = getRole(pathname);
+
+  const navLinks = role === 'citizen' 
+    ? [{ href: '/report', label: 'Report Issue' }]
+    : [];
 
   const isLoggedInView = loggedInPaths.some(path => pathname.startsWith(path));
   const notifications = governmentNotifications;
