@@ -181,10 +181,6 @@ const FacilityDetailSheet = ({ facility, open, onOpenChange }: { facility: Facil
                                 ))}
                             </ul>
                            ): <p className="text-muted-foreground text-center">No active alerts.</p>}
-                            <div className="flex gap-2 mt-6">
-                                <Button variant="outline" size="sm">Acknowledge</Button>
-                                <Button variant="outline" size="sm" onClick={() => openAssignTask('Sensor Calibration')}>Assign Task</Button>
-                            </div>
                         </CardContent>
                     </Card>
 
@@ -381,7 +377,3 @@ export default function FacilitiesPage() {
     </div>
   );
 }
-
-    
-
-    
