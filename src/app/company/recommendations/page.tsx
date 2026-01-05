@@ -49,11 +49,12 @@ const recommendation = {
     ]
 };
 
-const AssignTaskSheet = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const AssignTaskSheet = ({ open, onOpenChange, onTaskAssign }: { open: boolean, onOpenChange: (open: boolean) => void, onTaskAssign: () => void }) => {
     const { toast } = useToast();
     
     const handleAssign = () => {
         toast({ title: "Task Assigned!", description: "Maintenance task has been assigned to the Maintenance Team." });
+        onTaskAssign();
         onOpenChange(false);
     }
 
@@ -93,6 +94,7 @@ const AssignTaskSheet = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
 export default function RecommendationsPage() {
     const { toast } = useToast();
     const [isAssignTaskOpen, setAssignTaskOpen] = useState(false);
+    const [isTaskAssigned, setIsTaskAssigned] = useState(false);
 
     const handleReviewed = () => {
         toast({
@@ -132,7 +134,7 @@ export default function RecommendationsPage() {
 
         <div className="grid lg:grid-cols-5 gap-8 items-start">
             <div className="lg:col-span-3 space-y-6">
-                <Card className="bg-card/40 border-border/30">
+                <Card className="glassmorphism-card">
                     <CardHeader>
                         <CardTitle>Issue Detected</CardTitle>
                     </CardHeader>
@@ -147,7 +149,7 @@ export default function RecommendationsPage() {
                 </div>
 
 
-                <Card className="bg-card/40 border-border/30">
+                <Card className="glassmorphism-card">
                     <CardHeader>
                         <CardTitle>Why This Happens (AI Analysis)</CardTitle>
                     </CardHeader>
@@ -160,7 +162,7 @@ export default function RecommendationsPage() {
                     <ArrowDown className="h-6 w-6 text-muted-foreground mx-auto" />
                 </div>
 
-                <Card className="bg-card/40 border-border/30">
+                <Card className="glassmorphism-card">
                     <CardHeader>
                         <CardTitle>Recommended Actions</CardTitle>
                     </CardHeader>
@@ -189,13 +191,20 @@ export default function RecommendationsPage() {
             </div>
 
             <div className="lg:col-span-2 space-y-6">
-                 <Card className="bg-card/40 border-border/30">
+                 <Card className="glassmorphism-card">
                     <CardHeader>
                         <CardTitle>Take Action</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex flex-col gap-2">
-                            <Button onClick={() => setAssignTaskOpen(true)}>Assign Task</Button>
+                            <Button onClick={() => setAssignTaskOpen(true)} disabled={isTaskAssigned}>
+                                {isTaskAssigned ? (
+                                    <>
+                                        <CheckCircle className="mr-2 h-4 w-4" />
+                                        Task Assigned
+                                    </>
+                                ) : 'Assign Task'}
+                            </Button>
                             <Button variant="outline" onClick={handleReviewed}>Mark Reviewed</Button>
                         </div>
                         <Separator />
@@ -212,7 +221,7 @@ export default function RecommendationsPage() {
                     </CardContent>
                 </Card>
 
-                 <Card className="bg-card/40 border-border/30">
+                 <Card className="glassmorphism-card">
                     <CardHeader>
                         <CardTitle>Recent AI Recommendations</CardTitle>
                     </CardHeader>
@@ -230,7 +239,7 @@ export default function RecommendationsPage() {
                 </Card>
             </div>
         </div>
-        <AssignTaskSheet open={isAssignTaskOpen} onOpenChange={setAssignTaskOpen} />
+        <AssignTaskSheet open={isAssignTaskOpen} onOpenChange={setAssignTaskOpen} onTaskAssign={() => setIsTaskAssigned(true)} />
       </main>
     </div>
   );
