@@ -12,6 +12,20 @@ html, body, #root, * {
 @tailwind utilities;
 
 @layer base {
+  body {
+    @apply bg-background text-foreground;
+    scroll-behavior: smooth;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  p, div, span, li, td, th {
+    font-weight: 400;
+  }
+
   :root {
     --background: 240 10% 97%; /* Light Gray */
     --foreground: 222.2 84% 4.9%; /* Dark Text */
@@ -81,19 +95,6 @@ html, body, #root, * {
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-    scroll-behavior: smooth;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    letter-spacing: -0.02em;
-  }
-
-  p, div, span, li, td, th {
-    font-weight: 400;
-  }
 }
 
 @layer utilities {
@@ -103,16 +104,27 @@ html, body, #root, * {
 }
 
 @layer components {
-  /* Remove glassmorphism for light theme, use clean cards */
-  .light .glassmorphism-card {
-     @apply bg-card border shadow-sm;
-  }
-  
-  /* Keep glassmorphism for dark theme */
+  /* Glassmorphism for dark theme */
   .dark .glassmorphism-card {
     @apply bg-card/60 backdrop-blur-lg border border-white/5 shadow-lg;
   }
+
+  /* Solid cards for light theme */
+  .light .glassmorphism-card {
+     @apply bg-card border shadow-sm;
+  }
+
+  /* Specific dialog card styles */
+  .dark .dialog-card {
+    @apply bg-card/80 backdrop-blur-lg border border-white/10 shadow-lg;
+  }
+
+  .light .dialog-card {
+    @apply bg-card shadow-lg;
+    border: 2px solid hsl(var(--primary));
+  }
 }
+
 
 /* Logo Animation Keyframes */
 @keyframes draw-ring {
