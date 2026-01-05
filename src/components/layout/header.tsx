@@ -6,7 +6,7 @@ import Logo from '@/components/logo';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X, Bot, Gavel, HeartPulse, TrendingDown, Star, Briefcase, CalendarClock, ShieldCheck, AlertTriangle, MapPin } from 'lucide-react';
+import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X, Bot, Gavel, HeartPulse, Star, Briefcase, CalendarClock, ShieldCheck, AlertTriangle, MapPin } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -101,6 +101,41 @@ const citizenNotifications = [
     }
 ];
 
+const companyNotifications = [
+    {
+        icon: <Gavel className="h-4 w-4 text-red-500" />,
+        title: 'Investigation Notice',
+        description: 'Your Whitefield facility is under regulatory review for emission breaches.',
+        time: '10m ago',
+        read: false,
+        href: '/company/investigations'
+    },
+    {
+        icon: <Bot className="h-4 w-4 text-primary" />,
+        title: 'AI Recommendation',
+        description: 'Corrective action suggested to avoid a penalty for PM2.5 levels.',
+        time: '1h ago',
+        read: false,
+        href: '/company/recommendations'
+    },
+    {
+        icon: <Star className="h-4 w-4 text-green-500" />,
+        title: 'Compliance Score Increased',
+        description: 'Your public compliance rating improved due to sustained low emissions.',
+        time: '1d ago',
+        read: true,
+        href: '/company/reports'
+    },
+     {
+        icon: <FileText className="h-4 w-4 text-yellow-500" />,
+        title: 'Evidence Requested',
+        description: 'Authorities have requested maintenance logs for Case #GOV-INV-2391.',
+        time: '2d ago',
+        read: true,
+        href: '/company/investigations'
+    },
+];
+
 const loggedInPaths = ['/citizen', '/gov', '/company', '/profile', '/settings', '/report', '/activate', '/access'];
 
 export default function Header() {
@@ -151,7 +186,15 @@ export default function Header() {
 
   const isLoggedInView = loggedInPaths.some(path => pathname.startsWith(path));
 
-  const notifications = role === 'citizen' ? citizenNotifications : governmentNotifications;
+  let notifications;
+  if (role === 'citizen') {
+      notifications = citizenNotifications;
+  } else if (role === 'company') {
+      notifications = companyNotifications;
+  } else {
+      notifications = governmentNotifications;
+  }
+  
   const unreadCount = notifications.filter(n => !n.read).length;
 
 
