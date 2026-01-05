@@ -379,31 +379,6 @@ function CitizenDashboardContent() {
         </Card>
       </section>
 
-      <section className="grid md:grid-cols-2 gap-8">
-          <Card className="hover:border-primary/60 transition-colors group">
-            <CardContent className="p-6 flex flex-col items-center text-center">
-                <Siren className="h-10 w-10 text-primary mb-4" />
-                <h2 className="text-2xl font-bold mb-2">See Something? Report It.</h2>
-                <p className="text-muted-foreground mb-6 flex-grow">
-                    Your reports help authorities identify and act on environmental issues faster.
-                </p>
-                <Button asChild size="lg" className="w-full">
-                    <Link href="/report">Report a New Issue</Link>
-                </Button>
-            </CardContent>
-          </Card>
-
-           <Card className="hover:border-primary/60 transition-colors group">
-                <CardContent className="p-6 flex flex-col items-center text-center">
-                    <MapPin className="h-10 w-10 text-primary mb-4" />
-                    <h3 className="text-2xl font-bold mb-2">My Reports</h3>
-                    <p className="text-muted-foreground mb-6 flex-grow">Check the status of issues you've reported and see their resolution.</p>
-                    <Button asChild size="lg" className="w-full" variant="outline">
-                        <Link href="/citizen/reports">Track My Reports</Link>
-                    </Button>
-                </CardContent>
-            </Card>
-      </section>
        <MetricDetailModal 
         metric={selectedMetric}
         onClose={() => setSelectedMetric(null)}
@@ -426,5 +401,3 @@ export default function CitizenPage() {
     </div>
   );
 }
-
-    
