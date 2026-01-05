@@ -146,12 +146,15 @@ export default function RecommendationsPage() {
     const [recommendation, setRecommendation] = useState(initialRecommendation);
     const [isAssignTaskOpen, setAssignTaskOpen] = useState(false);
     const [taskAssigned, setTaskAssigned] = useState(false);
+    const [isReviewed, setIsReviewed] = useState(false);
+
 
     const handleReviewed = () => {
         toast({
             title: "Recommendation Reviewed",
             description: "You have acknowledged the AI's recommendation."
         });
+        setIsReviewed(true);
     }
 
     const handleAssignTasks = (selectedActionIds: string[]) => {
@@ -277,7 +280,9 @@ export default function RecommendationsPage() {
                              <Button onClick={() => setAssignTaskOpen(true)} disabled={taskAssigned}>
                                 {taskAssigned ? 'All Tasks Assigned' : 'Assign Task'}
                             </Button>
-                            <Button variant="outline" onClick={handleReviewed}>Mark Reviewed</Button>
+                            <Button variant="outline" onClick={handleReviewed} disabled={isReviewed}>
+                                {isReviewed ? 'Reviewed' : 'Mark Reviewed'}
+                            </Button>
                         </div>
                         <Separator />
                         <div className="space-y-2">
@@ -321,7 +326,3 @@ export default function RecommendationsPage() {
     </div>
   );
 }
-
-    
-
-    
