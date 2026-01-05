@@ -24,8 +24,10 @@ import {
 } from "@/components/ui/sheet"
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 
-const recommendation = {
+
+const initialRecommendation = {
     facility: 'Whitefield Manufacturing Unit',
     lastEvaluated: '2 min ago',
     detectedIssue: {
@@ -34,8 +36,8 @@ const recommendation = {
     },
     analysis: 'Production load highest during this period. Filter efficiency degradation detected.',
     recommendedActions: [
-        { text: 'Schedule filter maintenance', status: 'pending' },
-        { text: 'Temporarily reduce output by 10%', status: 'pending' },
+        { id: 'action-1', text: 'Schedule filter maintenance', status: 'pending' },
+        { id: 'action-2', text: 'Temporarily reduce output by 10%', status: 'pending' },
     ],
     expectedOutcome: '↓ PM2.5 by ~12–15% within 24 hours',
     otherSuggestions: [
@@ -43,18 +45,47 @@ const recommendation = {
         'Enable secondary scrubber during peak',
     ],
     recentActions: [
-        { text: 'Filter maintenance', status: 'Completed' },
-        { text: 'Output reduction', status: 'Ignored' },
-        { text: 'Sensor recalibration', status: 'Completed' },
+        { id: 'action-3', text: 'Filter maintenance', status: 'Completed' },
+        { id: 'action-4', text: 'Output reduction', status: 'Ignored' },
+        { id: 'action-5', text: 'Sensor recalibration', status: 'Completed' },
     ]
 };
 
-const AssignTaskSheet = ({ open, onOpenChange, onTaskAssign }: { open: boolean, onOpenChange: (open: boolean) => void, onTaskAssign: () => void }) => {
+type Action = { id: string; text: string; status: 'pending' | 'Completed' | 'Ignored' };
+
+const AssignTaskSheet = ({
+    open,
+    onOpenChange,
+    actions,
+    onAssign
+}: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    actions: Action[];
+    onAssign: (selectedActionIds: string[]) => void;
+}) => {
     const { toast } = useToast();
+    const [selectedActions, setSelectedActions] = useState<string[]>([]);
+
+    const handleSelectAction = (actionId: string) => {
+        setSelectedActions(prev =>
+            prev.includes(actionId) ? prev.filter(id => id !== actionId) : [...prev, actionId]
+        );
+    };
     
     const handleAssign = () => {
-        toast({ title: "Task Assigned!", description: "Maintenance task has been assigned to the Maintenance Team." });
-        onTaskAssign();
+        if (selectedActions.length === 0) {
+            toast({
+                variant: 'destructive',
+                title: "No actions selected",
+                description: "Please select at least one action to assign.",
+            });
+            return;
+        }
+
+        toast({ title: "Tasks Assigned!", description: `${selectedActions.length} action(s) have been assigned to the Maintenance Team.` });
+        onAssign(selectedActions);
+        setSelectedActions([]);
         onOpenChange(false);
     }
 
@@ -62,9 +93,28 @@ const AssignTaskSheet = ({ open, onOpenChange, onTaskAssign }: { open: boolean, 
         <Sheet open={open} onOpenChange={onOpenChange}>
             <SheetContent>
                 <SheetHeader>
-                    <SheetTitle>Assign Task</SheetTitle>
+                    <SheetTitle>Assign Recommended Actions</SheetTitle>
+                    <SheetDescription>Select the actions you want to delegate to a team.</SheetDescription>
                 </SheetHeader>
                 <div className="py-4 space-y-4">
+                    <div className="space-y-3">
+                        <Label>Recommended Actions</Label>
+                        <div className="space-y-2 p-3 rounded-md border bg-muted/50">
+                            {actions.map(action => (
+                                <div key={action.id} className="flex items-center gap-3">
+                                    <Checkbox
+                                        id={action.id}
+                                        checked={selectedActions.includes(action.id)}
+                                        onCheckedChange={() => handleSelectAction(action.id)}
+                                    />
+                                    <label htmlFor={action.id} className="text-sm font-medium cursor-pointer">
+                                        {action.text}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     <div className="space-y-1">
                         <Label>Assign To</Label>
                          <DropdownMenu>
@@ -84,7 +134,7 @@ const AssignTaskSheet = ({ open, onOpenChange, onTaskAssign }: { open: boolean, 
                     </div>
                 </div>
                 <div className="mt-6">
-                    <Button onClick={handleAssign} className="w-full">Assign</Button>
+                    <Button onClick={handleAssign} className="w-full">Assign Selected Actions</Button>
                 </div>
             </SheetContent>
         </Sheet>
@@ -93,8 +143,8 @@ const AssignTaskSheet = ({ open, onOpenChange, onTaskAssign }: { open: boolean, 
 
 export default function RecommendationsPage() {
     const { toast } = useToast();
+    const [recommendation, setRecommendation] = useState(initialRecommendation);
     const [isAssignTaskOpen, setAssignTaskOpen] = useState(false);
-    const [isTaskAssigned, setIsTaskAssigned] = useState(false);
 
     const handleReviewed = () => {
         toast({
@@ -102,6 +152,25 @@ export default function RecommendationsPage() {
             description: "You have acknowledged the AI's recommendation."
         });
     }
+
+    const handleAssignTasks = (selectedActionIds: string[]) => {
+        const assignedActions: Action[] = [];
+        const remainingActions: Action[] = [];
+
+        recommendation.recommendedActions.forEach(action => {
+            if (selectedActionIds.includes(action.id)) {
+                assignedActions.push({ ...action, status: 'Completed' }); // Or 'In Progress'
+            } else {
+                remainingActions.push(action);
+            }
+        });
+
+        setRecommendation(prev => ({
+            ...prev,
+            recommendedActions: remainingActions,
+            recentActions: [...assignedActions, ...prev.recentActions],
+        }));
+    };
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
@@ -167,12 +236,16 @@ export default function RecommendationsPage() {
                         <CardTitle>Recommended Actions</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                        {recommendation.recommendedActions.map((action, index) => (
-                            <div key={index} className="flex items-center gap-2">
+                        {recommendation.recommendedActions.length > 0 ? (
+                            recommendation.recommendedActions.map((action, index) => (
+                            <div key={action.id} className="flex items-center gap-2">
                                 <Check className="h-5 w-5 text-primary" />
                                 <span className="font-medium">{action.text}</span>
                             </div>
-                        ))}
+                        ))
+                        ) : (
+                            <p className="text-muted-foreground text-center">All actions have been assigned.</p>
+                        )}
                     </CardContent>
                 </Card>
                  
@@ -197,13 +270,8 @@ export default function RecommendationsPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex flex-col gap-2">
-                            <Button onClick={() => setAssignTaskOpen(true)} disabled={isTaskAssigned}>
-                                {isTaskAssigned ? (
-                                    <>
-                                        <CheckCircle className="mr-2 h-4 w-4" />
-                                        Task Assigned
-                                    </>
-                                ) : 'Assign Task'}
+                             <Button onClick={() => setAssignTaskOpen(true)} disabled={recommendation.recommendedActions.length === 0}>
+                                {recommendation.recommendedActions.length === 0 ? 'All Tasks Assigned' : 'Assign Task'}
                             </Button>
                             <Button variant="outline" onClick={handleReviewed}>Mark Reviewed</Button>
                         </div>
@@ -227,7 +295,7 @@ export default function RecommendationsPage() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                         {recommendation.recentActions.map((action, index) => (
-                             <div key={index} className="flex items-center justify-between text-sm">
+                             <div key={action.id} className="flex items-center justify-between text-sm">
                                 <span className="flex items-center gap-2">
                                      {action.status === 'Completed' ? <CheckCircle className="h-4 w-4 text-green-500" /> : <XCircle className="h-4 w-4 text-red-500" />}
                                     {action.text}
@@ -239,8 +307,35 @@ export default function RecommendationsPage() {
                 </Card>
             </div>
         </div>
-        <AssignTaskSheet open={isAssignTaskOpen} onOpenChange={setAssignTaskOpen} onTaskAssign={() => setIsTaskAssigned(true)} />
+        <AssignTaskSheet
+            open={isAssignTaskOpen}
+            onOpenChange={setAssignTaskOpen}
+            actions={recommendation.recommendedActions}
+            onAssign={handleAssignTasks}
+        />
       </main>
     </div>
   );
 }
+
+// Add Checkbox component if it's not already in a ui/checkbox.tsx file
+// For this example, assuming it needs to be added here.
+const Checkbox = React.forwardRef<
+    React.ElementRef<typeof import('@radix-ui/react-checkbox').Root>,
+    React.ComponentPropsWithoutRef<typeof import('@radix-ui/react-checkbox').Root>
+>(({ className, ...props }, ref) => (
+    <import('@radix-ui/react-checkbox').Root
+        ref={ref}
+        className={
+            'peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground'
+        }
+        {...props}
+    >
+        <import('@radix-ui/react-checkbox').Indicator
+            className={'flex items-center justify-center text-current'}
+        >
+            <Check className="h-4 w-4" />
+        </import('@radix-ui/react-checkbox').Indicator>
+    </import('@radix-ui/react-checkbox').Root>
+));
+Checkbox.displayName = "Checkbox";
