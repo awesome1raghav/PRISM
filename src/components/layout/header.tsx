@@ -187,12 +187,16 @@ export default function Header() {
   const isLoggedInView = loggedInPaths.some(path => pathname.startsWith(path));
 
   let notifications;
+  let dashboardLink = '/';
   if (role === 'citizen') {
       notifications = citizenNotifications;
+      dashboardLink = '/citizen';
   } else if (role === 'company') {
       notifications = companyNotifications;
+      dashboardLink = '/company';
   } else {
       notifications = governmentNotifications;
+      dashboardLink = '/gov';
   }
   
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -274,8 +278,8 @@ export default function Header() {
                         ))}
                       </div>
                        <DropdownMenuSeparator />
-                       <DropdownMenuItem className="justify-center">
-                            See All Notifications
+                       <DropdownMenuItem asChild className="justify-center">
+                            <Link href={dashboardLink}>See All Notifications</Link>
                        </DropdownMenuItem>
                   </DropdownMenuContent>
               </DropdownMenu>
