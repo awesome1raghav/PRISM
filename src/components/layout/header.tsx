@@ -6,7 +6,7 @@ import Logo from '@/components/logo';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X, Bot, Gavel, HeartPulse, TrendingDown, Star } from 'lucide-react';
+import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X, Bot, Gavel, HeartPulse, TrendingDown, Star, Briefcase, CalendarClock } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,30 +33,30 @@ import { signOut } from 'firebase/auth';
 
 const governmentNotifications = [
     {
-        icon: <ShieldAlert className="h-4 w-4 text-red-500" />,
-        title: 'Severe pollution incident detected',
-        description: 'Multi-sensor confirmation of violation in Peenya.',
-        time: '5m ago',
+        icon: <Bot className="h-4 w-4 text-red-500" />,
+        title: 'AI Violation Detected',
+        description: 'High-confidence emission anomaly in Peenya. Open case?',
+        time: '2m ago',
         read: false,
     },
     {
-        icon: <Gavel className="h-4 w-4 text-yellow-500" />,
-        title: 'Facility crossed violation threshold',
-        description: 'Auto-generated notice issued to Whitefield Manufacturing.',
-        time: '30m ago',
+        icon: <Briefcase className="h-4 w-4 text-primary" />,
+        title: 'New Case Assigned',
+        description: 'You have been assigned Case #PR-2026-018 in Whitefield.',
+        time: '15m ago',
         read: false,
     },
     {
-        icon: <Bot className="h-4 w-4 text-primary" />,
-        title: 'New investigation case created',
-        description: 'AI recommends legal escalation for repeated offender.',
+        icon: <CalendarClock className="h-4 w-4 text-yellow-500" />,
+        title: 'Action Deadline Approaching',
+        description: '24 hours remaining for Case #PR-2026-014.',
         time: '1h ago',
-        read: true,
+        read: false,
     },
-     {
-        icon: <FileText className="h-4 w-4" />,
-        title: 'Daily Environmental Summary Ready',
-        description: 'View the comprehensive report for all regions.',
+    {
+        icon: <FileText className="h-4 w-4 text-blue-400" />,
+        title: 'Compliance Docs Submitted',
+        description: 'Documents received for Case #PR-2026-011.',
         time: '3h ago',
         read: true,
     }
