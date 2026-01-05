@@ -6,7 +6,7 @@ import Logo from '@/components/logo';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X, Bot, Gavel, HeartPulse, TrendingDown, Star, Briefcase, CalendarClock } from 'lucide-react';
+import { MoveRight, Bell, User, ShieldAlert, FileText, LogOut, Settings, UserCircle, X, Bot, Gavel, HeartPulse, TrendingDown, Star, Briefcase, CalendarClock, ShieldCheck, AlertTriangle, MapPin } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,9 +64,44 @@ const governmentNotifications = [
         read: true,
         href: '/gov?tab=incidents'
     }
-]
+];
 
-const loggedInPaths = ['/citizen', '/gov', '/company', '/profile', '/settings', '/report'];
+const citizenNotifications = [
+    {
+        icon: <AlertTriangle className="h-4 w-4 text-red-500" />,
+        title: 'High Pollution Alert',
+        description: 'Air quality in your area has dropped to "Poor". Limit outdoor activities.',
+        time: '5m ago',
+        read: false,
+        href: '/citizen'
+    },
+    {
+        icon: <ShieldCheck className="h-4 w-4 text-blue-400" />,
+        title: 'Report Verified',
+        description: 'Your report PR-183491 for water pollution has been verified by authorities.',
+        time: '45m ago',
+        read: false,
+        href: '/citizen/reports'
+    },
+     {
+        icon: <HeartPulse className="h-4 w-4 text-primary" />,
+        title: 'New Health Advisory',
+        description: 'A health advisory for high noise levels has been issued for your area.',
+        time: '2h ago',
+        read: true,
+        href: '/citizen'
+    },
+    {
+        icon: <MapPin className="h-4 w-4 text-green-500" />,
+        title: 'Issue Resolved Nearby',
+        description: 'A waste dumping issue near your location has been resolved.',
+        time: '1d ago',
+        read: true,
+        href: '/citizen'
+    }
+];
+
+const loggedInPaths = ['/citizen', '/gov', '/company', '/profile', '/settings', '/report', '/activate', '/access'];
 
 export default function Header() {
   const pathname = usePathname();
@@ -99,11 +134,24 @@ export default function Header() {
   const role = getRole(pathname);
 
   const navLinks = role === 'citizen' 
-    ? [{ href: '/report', label: 'Report Issue' }]
-    : [];
+    ? [
+        { href: '/citizen', label: 'Dashboard'},
+        { href: '/report', label: 'Report Issue' },
+        { href: '/citizen/reports', label: 'My Reports' },
+      ]
+    : role === 'government'
+    ? [
+        { href: '/gov', label: 'Command Center' },
+      ]
+    : [ // Company
+        { href: '/company', label: 'Dashboard' },
+        { href: '/company/facilities', label: 'Facilities' },
+        { href: '/company/reports', label: 'Compliance' },
+      ];
 
   const isLoggedInView = loggedInPaths.some(path => pathname.startsWith(path));
-  const notifications = governmentNotifications;
+
+  const notifications = role === 'citizen' ? citizenNotifications : governmentNotifications;
   const unreadCount = notifications.filter(n => !n.read).length;
 
 
@@ -123,8 +171,8 @@ export default function Header() {
         </Link>
         <nav className="flex-1">
           <ul className="flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <li key={link.href} className="relative">
+            {isLoggedInView && navLinks.map((link) => (
+              <li key={link.href} className="relative hidden md:block">
                 <Link
                   href={link.href}
                   className={cn(
