@@ -136,7 +136,7 @@ const companyNotifications = [
     },
 ];
 
-const loggedInPaths = ['/citizen', '/gov', '/company', '/profile', '/settings', '/report', '/activate', '/access'];
+const loggedInPaths = ['/citizen', '/gov', '/company', '/profile', '/settings', '/report', '/activate'];
 
 export default function Header() {
   const pathname = usePathname();
