@@ -1,7 +1,8 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, 'use client';
+import { useState } from 'react';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -145,6 +146,7 @@ export default function RecommendationsPage() {
     const { toast } = useToast();
     const [recommendation, setRecommendation] = useState(initialRecommendation);
     const [isAssignTaskOpen, setAssignTaskOpen] = useState(false);
+    const [taskAssigned, setTaskAssigned] = useState(false);
 
     const handleReviewed = () => {
         toast({
@@ -170,6 +172,9 @@ export default function RecommendationsPage() {
             recommendedActions: remainingActions,
             recentActions: [...assignedActions, ...prev.recentActions],
         }));
+        if(recommendation.recommendedActions.length === selectedActionIds.length) {
+          setTaskAssigned(true);
+        }
     };
 
   return (
@@ -214,7 +219,7 @@ export default function RecommendationsPage() {
                 </Card>
 
                  <div className="text-center">
-                    <ArrowDown className="h-6 w-6 text-muted-foreground mx-auto" />
+                    <ArrowDown className="h-6 w-6 text-foreground mx-auto" />
                 </div>
 
 
@@ -228,7 +233,7 @@ export default function RecommendationsPage() {
                 </Card>
 
                 <div className="text-center">
-                    <ArrowDown className="h-6 w-6 text-muted-foreground mx-auto" />
+                    <ArrowDown className="h-6 w-6 text-foreground mx-auto" />
                 </div>
 
                 <Card className="glassmorphism-card">
@@ -250,7 +255,7 @@ export default function RecommendationsPage() {
                 </Card>
                  
                 <div className="text-center">
-                    <ArrowDown className="h-6 w-6 text-muted-foreground mx-auto" />
+                    <ArrowDown className="h-6 w-6 text-foreground mx-auto" />
                 </div>
 
                 <Card className="bg-primary/10 border-primary/30">
@@ -270,8 +275,8 @@ export default function RecommendationsPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="flex flex-col gap-2">
-                             <Button onClick={() => setAssignTaskOpen(true)} disabled={recommendation.recommendedActions.length === 0}>
-                                {recommendation.recommendedActions.length === 0 ? 'All Tasks Assigned' : 'Assign Task'}
+                             <Button onClick={() => setAssignTaskOpen(true)} disabled={taskAssigned}>
+                                {taskAssigned ? 'All Tasks Assigned' : 'Assign Task'}
                             </Button>
                             <Button variant="outline" onClick={handleReviewed}>Mark Reviewed</Button>
                         </div>
@@ -317,3 +322,5 @@ export default function RecommendationsPage() {
     </div>
   );
 }
+
+    
