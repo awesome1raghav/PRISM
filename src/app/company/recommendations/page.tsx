@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/layout/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -317,25 +317,3 @@ export default function RecommendationsPage() {
     </div>
   );
 }
-
-// Add Checkbox component if it's not already in a ui/checkbox.tsx file
-// For this example, assuming it needs to be added here.
-const Checkbox = React.forwardRef<
-    React.ElementRef<typeof import('@radix-ui/react-checkbox').Root>,
-    React.ComponentPropsWithoutRef<typeof import('@radix-ui/react-checkbox').Root>
->(({ className, ...props }, ref) => (
-    <import('@radix-ui/react-checkbox').Root
-        ref={ref}
-        className={
-            'peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground'
-        }
-        {...props}
-    >
-        <import('@radix-ui/react-checkbox').Indicator
-            className={'flex items-center justify-center text-current'}
-        >
-            <Check className="h-4 w-4" />
-        </import('@radix-ui/react-checkbox').Indicator>
-    </import('@radix-ui/react-checkbox').Root>
-));
-Checkbox.displayName = "Checkbox";
