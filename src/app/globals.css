@@ -27,38 +27,6 @@ html, body, #root, * {
   }
 
   :root {
-    --background: 240 10% 97%; /* Light Gray */
-    --foreground: 222.2 84% 4.9%; /* Dark Text */
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%; /* Dark Blue/Black */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 240 5% 90%; /* Lighter Gray for secondary elements */
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 240 5% 90%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 340 85% 60%; /* Pink/Red from image */
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.8rem;
-    --chart-1: 190 80% 50%; /* Teal/Cyan */
-    --chart-2: 340 85% 60%; /* Pink/Red */
-    --chart-3: 45 80% 60%; /* Amber/Yellow */
-    --chart-4: 280 80% 65%; /* Magenta/Purple */
-    --chart-5: 120 70% 55%; /* Lime Green */
-    --status-green: 140 70% 45%;
-    --status-yellow: 45 90% 55%;
-    --status-red: 0 85% 60%;
-    --status-red-dark: 0 70% 50%;
-  }
-
-  .dark {
     --background: 224 10% 4%; /* #08070b */
     --foreground: 210 40% 98%;
     --card: 224 10% 9%; /* #151419 */
@@ -89,6 +57,50 @@ html, body, #root, * {
     --status-red: 0 90% 70%;
     --status-red-dark: 0 75% 65%;
   }
+
+  .dark {
+    --background: 224 10% 4%; /* #08070b */
+    --foreground: 210 40% 98%;
+    --card: 224 10% 9%; /* #151419 */
+    --card-foreground: 210 40% 98%;
+    --popover: 224 10% 4%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 173 97% 50%; /* Neon Teal */
+    --primary-foreground: 224 10% 4%;
+    --secondary: 224 10% 15%; /* #232228 */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 224 10% 15%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 330 90% 65%; /* Neon Pink/Magenta */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 70% 60%; /* Neon Red */
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 32.6% 17.5%;
+    --input: 217 32.6% 17.5%;
+    --ring: 173 97% 50%;
+  }
+
+  .light {
+    --background: 240 10% 97%; /* Light Gray */
+    --foreground: 222.2 84% 4.9%; /* Dark Text */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%; /* Dark Blue/Black */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 240 5% 90%; /* Lighter Gray for secondary elements */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 240 5% 90%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 340 85% 60%; /* Pink/Red from image */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+  }
 }
 
 @layer base {
@@ -104,6 +116,10 @@ html, body, #root, * {
 }
 
 @layer components {
+  .leaflet-container-z-index {
+    z-index: 0;
+  }
+
   /* Glassmorphism for dark theme */
   .dark .glassmorphism-card {
     @apply bg-card/60 backdrop-blur-lg border border-white/5 shadow-lg;
