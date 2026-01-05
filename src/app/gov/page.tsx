@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Header from '@/components/layout/header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MonitoringDashboard from '@/components/gov/MonitoringDashboard';
@@ -11,11 +11,13 @@ import { LayoutGrid, ListChecks, ShieldAlert } from 'lucide-react';
 import { type Violation, type Incident } from './types';
 import { initialViolations, initialIncidents } from './data';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { useSearchParams } from 'next/navigation';
 
-
-export default function GovernmentPage() {
+function GovernmentPageContent() {
   const [violations, setViolations] = useState<Violation[]>(initialViolations);
   const [incidents, setIncidents] = useState<Incident[]>(initialIncidents);
+  const searchParams = useSearchParams();
+  const defaultTab = searchParams.get('tab') || 'monitoring';
 
   const handleApproveViolation = (violationToApprove: Violation) => {
     // Create a new incident from the violation
@@ -28,7 +30,6 @@ export default function GovernmentPage() {
         status: 'New',
         assignee: 'Unassigned',
         source: violationToApprove.source === 'Industry' ? 'Both' : 'Sensor',
-        sourceName: violationToApprove.sourceName,
         evidence: {
             photos: [],
             description: violationToApprove.summary || 'AI-detected event.',
@@ -37,7 +38,6 @@ export default function GovernmentPage() {
         aiInsights: {
             violationId: violationToApprove.id,
             probableSource: violationToApprove.source,
-            sourceName: violationToApprove.sourceName,
             confidence: violationToApprove.confidence === 'High' ? 95 : violationToApprove.confidence === 'Medium' ? 75 : 50,
         },
         resolution: null,
@@ -62,7 +62,7 @@ export default function GovernmentPage() {
                 <CardDescription>Unified environmental monitoring, detection, and response system.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Tabs defaultValue="monitoring" className="w-full">
+                <Tabs defaultValue={defaultTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-3 mb-8 bg-card/80 p-1 h-auto rounded-lg">
                     <TabsTrigger value="monitoring">
                     <LayoutGrid className="mr-2 h-4 w-4" />
@@ -95,4 +95,13 @@ export default function GovernmentPage() {
       </main>
     </div>
   );
+}
+
+
+export default function GovernmentPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <GovernmentPageContent />
+        </Suspense>
+    )
 }

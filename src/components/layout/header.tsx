@@ -38,6 +38,7 @@ const governmentNotifications = [
         description: 'High-confidence emission anomaly in Peenya. Open case?',
         time: '2m ago',
         read: false,
+        href: '/gov?tab=violations'
     },
     {
         icon: <Briefcase className="h-4 w-4 text-primary" />,
@@ -45,6 +46,7 @@ const governmentNotifications = [
         description: 'You have been assigned Case #PR-2026-018 in Whitefield.',
         time: '15m ago',
         read: false,
+        href: '/gov?tab=incidents'
     },
     {
         icon: <CalendarClock className="h-4 w-4 text-yellow-500" />,
@@ -52,6 +54,7 @@ const governmentNotifications = [
         description: '24 hours remaining for Case #PR-2026-014.',
         time: '1h ago',
         read: false,
+        href: '/gov?tab=incidents'
     },
     {
         icon: <FileText className="h-4 w-4 text-blue-400" />,
@@ -59,6 +62,7 @@ const governmentNotifications = [
         description: 'Documents received for Case #PR-2026-011.',
         time: '3h ago',
         read: true,
+        href: '/gov?tab=incidents'
     }
 ]
 
@@ -166,13 +170,15 @@ export default function Header() {
                       <DropdownMenuSeparator />
                       <div className="max-h-96 overflow-y-auto">
                         {notifications.map((item, index) => (
-                            <DropdownMenuItem key={index} className={cn("flex items-start gap-3 p-3", !item.read && "bg-primary/5")}>
-                                <div className="mt-1">{item.icon}</div>
-                                <div>
-                                    <p className="font-semibold">{item.title}</p>
-                                    <p className="text-xs text-muted-foreground">{item.description}</p>
-                                    <p className="text-xs text-muted-foreground mt-1">{item.time}</p>
-                                </div>
+                            <DropdownMenuItem key={index} asChild className={cn("flex items-start gap-3 p-3", !item.read && "bg-primary/5")}>
+                                <Link href={item.href}>
+                                    <div className="mt-1">{item.icon}</div>
+                                    <div>
+                                        <p className="font-semibold">{item.title}</p>
+                                        <p className="text-xs text-muted-foreground">{item.description}</p>
+                                        <p className="text-xs text-muted-foreground mt-1">{item.time}</p>
+                                    </div>
+                                </Link>
                             </DropdownMenuItem>
                         ))}
                       </div>
