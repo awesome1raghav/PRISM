@@ -59,6 +59,7 @@ const LocationSelector = () => {
   const { location, setLocation, locationData } = useContext(LocationContext);
   const router = useRouter();
   const [inputValue, setInputValue] = useState(location);
+  const [isLocating, setIsLocating] = useState(false);
   const { toast } = useToast();
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -80,19 +81,76 @@ const LocationSelector = () => {
     }
   }
 
+  // Haversine formula to calculate distance between two points on Earth
+  const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
   const handleLocateMe = () => {
-    const locations = Object.keys(locationData);
-    const currentIndex = locations.findIndex(l => l.toLowerCase() === location.toLowerCase());
-    const nextIndex = (currentIndex + 1) % locations.length;
-    const newLocationKey = locations[nextIndex];
-    
-    if (newLocationKey !== location) {
-        setLocation(newLocationKey);
-        router.push(`/citizen?location=${newLocationKey}`, { scroll: false });
-        toast({
-            title: "Location Updated",
-            description: `Showing data for ${locationData[newLocationKey].name}.`,
-        });
+    setIsLocating(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          
+          let closestCity: string | null = null;
+          let minDistance = Infinity;
+
+          Object.keys(locationData).forEach(cityKey => {
+            const city = locationData[cityKey];
+            if (city.wards.length > 0) {
+              // Use first ward as a rough center point for the city
+              const cityLat = city.wards[0].live_data.lat;
+              const cityLng = city.wards[0].live_data.lng;
+              const distance = getDistance(latitude, longitude, cityLat, cityLng);
+              
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestCity = cityKey;
+              }
+            }
+          });
+
+          if (closestCity && closestCity !== location) {
+            setLocation(closestCity);
+            router.push(`/citizen?location=${closestCity}`, { scroll: false });
+            toast({
+              title: "Location Updated",
+              description: `Switched to ${locationData[closestCity].name}, your closest available city.`,
+            });
+          } else if (closestCity) {
+             toast({
+              title: "Location Confirmed",
+              description: `You are already viewing data for your closest city: ${locationData[closestCity].name}.`,
+            });
+          }
+          setIsLocating(false);
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          toast({
+            variant: "destructive",
+            title: "Location Error",
+            description: "Could not get your location. Please check browser permissions.",
+          });
+          setIsLocating(false);
+        }
+      );
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Unsupported",
+        description: "Geolocation is not supported by your browser.",
+      });
+      setIsLocating(false);
     }
   };
   
@@ -113,9 +171,9 @@ const LocationSelector = () => {
                 />
                 <div className="flex gap-2">
                     <Button type="submit">Set Location</Button>
-                    <Button variant="outline" type="button" onClick={handleLocateMe}>
-                    <LocateFixed className={cn('h-4 w-4')} />
-                    <span className="ml-2 hidden sm:inline">Use My Location</span>
+                    <Button variant="outline" type="button" onClick={handleLocateMe} disabled={isLocating}>
+                      <LocateFixed className={cn('h-4 w-4', isLocating && 'animate-spin')} />
+                      <span className="ml-2 hidden sm:inline">{isLocating ? 'Locating...' : 'Use My Location'}</span>
                     </Button>
                 </div>
             </form>
@@ -368,3 +426,5 @@ export default function CitizenPage() {
     </div>
   );
 }
+
+    
