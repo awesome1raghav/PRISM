@@ -1,32 +1,22 @@
-/**
- * Core Philosophy:
- * This ruleset implements a public, read-only data model for the Citizen Dashboard's
- * pollution heatmap. The primary goal is to make ward-level pollution data
- * freely and efficiently accessible for visualization by any user, including
- * anonymous visitors. Data integrity is maintained by disallowing all
- * client-side write operations, establishing the backend (e.g., Admin SDK,
- * Cloud Functions) as the sole source of truth for data management.
- *
- * Data Structure:
- * The data is organized under a single, static path:
- * /locations/bengaluru/wards/{wardId}
- * This flat structure contains documents representing pollution data for each
- * ward in Bengaluru, optimized for simple read and list queries.
- *
- * Key Security Decisions:
- * - Public Read Access: All data within the `/locations/bengaluru/wards`
- *   collection is publicly readable (`get` and `list`) to anyone, without
- *   requiring authentication.
- * - No Client Writes: All write operations (`create`, `update`, `delete`) are
- *   explicitly forbidden for all clients. This is a critical security measure
- *   to prevent tampering with a public dataset. Data is expected to be
- *   populated and managed exclusively through a trusted server environment.
- * - No User-Specific Data: The ruleset contains no logic for user-specific
- *   data, as all information is considered public.
- */
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isRole(role) {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
 
     // ----------------------------------------------------------------------
     // Collection Rules
@@ -34,12 +24,6 @@ service cloud.firestore {
 
     /**
      * @description Provides public read-only access to ward pollution data. Writes are disabled to protect data integrity.
-     * @path        /locations/bengaluru/wards/{wardId}
-     * @allow       (get) Any user (anonymous or signed-in) can read a specific ward's data.
-     * @allow       (list) Any user can list all ward data to populate the heatmap.
-     * @deny        (create) A user attempts to create a new ward document.
-     * @deny        (update) A user attempts to modify an existing ward's AQI value.
-     * @principle   Protects a public dataset by making it read-only for clients, assuming data is managed by a trusted backend.
      */
     match /locations/bengaluru/wards/{wardId} {
       allow get: if true;
@@ -47,6 +31,43 @@ service cloud.firestore {
       allow create: if false;
       allow update: if false;
       allow delete: if false;
+    }
+
+    /**
+     * @description User profile data. Users can read/write their own profile.
+     */
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    /**
+     * @description Citizen reports. Authenticated users can create them. They can only read their own reports.
+     */
+    match /reports/{reportId} {
+      allow create: if isSignedIn();
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      // Updates should only be done by government roles
+      allow update: if isRole('government');
+    }
+
+    /**
+     * @description Company and facility data. Generally read-only for clients.
+     */
+    match /companies/{companyId} {
+      allow read: if isSignedIn(); // Or more specific role-based access
+      allow write: if isRole('government'); // Only admins/gov can create/update companies
+
+      match /facilities/{facilityId} {
+        allow read: if isSignedIn();
+        allow write: if isRole('government');
+      }
+    }
+    
+    /**
+     * @description Investigation data. Highly restricted.
+     */
+    match /investigations/{investigationId} {
+       allow read, write: if isRole('government');
     }
   }
 }

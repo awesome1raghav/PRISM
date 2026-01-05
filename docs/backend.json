@@ -1,6 +1,135 @@
 
 {
   "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user's profile information.",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The user's unique ID from Firebase Auth."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "role": {
+          "type": "string",
+          "enum": ["citizen", "company", "government"],
+          "description": "The user's role in the system."
+        },
+        "companyId": {
+          "type": "string",
+          "description": "The ID of the company the user belongs to, if applicable."
+        }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Report": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Report",
+      "type": "object",
+      "description": "Represents an environmental issue report submitted by a citizen.",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the user who submitted the report."
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Air", "Water", "Noise", "Waste"]
+        },
+        "location": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "mediaUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Submitted", "Verified", "Action Taken", "Closed"],
+          "default": "Submitted"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["userId", "category", "location", "status", "createdAt"]
+    },
+    "Company": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Company",
+      "type": "object",
+      "description": "Represents a company registered in the system.",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "gstin": {
+          "type": "string"
+        }
+      },
+      "required": ["name"]
+    },
+    "Facility": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Facility",
+      "type": "object",
+      "description": "Represents a single industrial facility owned by a company.",
+      "properties": {
+        "companyId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        }
+      },
+      "required": ["companyId", "name", "location"]
+    },
+    "Investigation": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Investigation",
+      "type": "object",
+      "description": "Represents a government investigation into a company or facility.",
+      "properties": {
+        "companyId": {
+          "type": "string"
+        },
+        "facilityId": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["companyId", "status", "createdAt"]
+    },
     "WardPollutionData": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "WardPollutionData",
@@ -49,6 +178,36 @@
         "$ref": "#/entities/WardPollutionData"
       },
       "description": "Stores pollution data for each ward in Bengaluru. The data includes ward name, coordinates (lat/lng), and air quality index (aqi)."
+    },
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Stores public profile information for each user."
+    },
+    "/reports/{reportId}": {
+      "schema": {
+        "$ref": "#/entities/Report"
+      },
+      "description": "Stores environmental reports submitted by citizens."
+    },
+    "/companies/{companyId}": {
+      "schema": {
+        "$ref": "#/entities/Company"
+      },
+      "description": "Stores information about registered companies."
+    },
+    "/companies/{companyId}/facilities/{facilityId}": {
+      "schema": {
+        "$ref": "#/entities/Facility"
+      },
+      "description": "Stores information about a company's facilities."
+    },
+    "/investigations/{investigationId}": {
+      "schema": {
+        "$ref": "#/entities/Investigation"
+      },
+      "description": "Stores details of government investigations."
     }
   }
 }
